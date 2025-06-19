@@ -1,7 +1,12 @@
+using TeachSpark.Web;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register the assets service for webpack asset resolution
+builder.Services.AddSingleton<IAssetsService, AssetsService>();
 
 var app = builder.Build();
 

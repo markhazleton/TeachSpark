@@ -2,6 +2,7 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 module.exports = {
     mode: 'development',
@@ -123,7 +124,14 @@ module.exports = {
                     from: 'src/favicon.ico',
                     to: 'favicon.ico'
                 }
-            ]
+            ]        }),
+        new WebpackManifestPlugin({
+            fileName: 'assets-manifest.json',
+            publicPath: '',
+            filter: (file) => {
+                // Only include JS and CSS files
+                return file.name.endsWith('.js') || file.name.endsWith('.css');
+            }
         })
     ],
     resolve: {

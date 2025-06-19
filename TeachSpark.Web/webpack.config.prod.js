@@ -5,6 +5,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 module.exports = {
     mode: 'production',
@@ -135,14 +136,40 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: 'css/[name].[contenthash:8].css',
             chunkFilename: 'css/[name].[contenthash:8].chunk.css'
-        }),
-        new CopyWebpackPlugin({
+        }),        new CopyWebpackPlugin({
             patterns: [
                 {
                     from: 'src/favicon.ico',
                     to: 'favicon.ico'
                 }
-            ]
+            ]        }),        new WebpackManifestPlugin({
+            fileName: 'assets-manifest.json',
+            publicPath: '',
+            filter: (file) => {
+                // Only include JS and CSS files
+                return file.name.endsWith('.js') || file.name.endsWith('.css');
+            },
+            map: (file) => {
+                // Map actual filenames to logical names for easier lookup
+                const name = file.name;
+                let logicalName = name;
+                
+                // Map actual chunk names to logical asset paths
+                if (name.startsWith('site.') && name.endsWith('.js')) {
+                    logicalName = 'site.js';
+                } else if (name.startsWith('validation.') && name.endsWith('.js')) {
+                    logicalName = 'validation.js';
+                } else if (name.startsWith('site.') && name.endsWith('.css')) {
+                    logicalName = 'site.css';
+                } else if (name.startsWith('vendors.') && name.endsWith('.css')) {
+                    logicalName = 'vendors.css';
+                }
+                
+                return {
+                    ...file,
+                    name: logicalName
+                };
+            }
         }),
         // Uncomment for bundle analysis
         // new BundleAnalyzerPlugin({
