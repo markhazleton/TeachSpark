@@ -2,17 +2,40 @@
     ViewData["Title"] = "Home Page";
 }
 
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-person-check me-2"></i>
+        <strong>Welcome back, @User.Identity.Name!</strong>
+        You are successfully logged in.
+        <a asp-controller="Account" asp-action="Dashboard" class="alert-link ms-2">Go to Dashboard</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>New to TeachSpark?</strong>
+        <a asp-area="Identity" asp-page="/Account/Register" class="alert-link">Create an account</a> or
+        <a asp-area="Identity" asp-page="/Account/Login" class="alert-link">sign in</a> to get started.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="text-center">
     <h1 class="display-4">Welcome to TeachSpark.Web</h1>
-    <p class="lead">A modern ASP.NET Core MVC application with Bootstrap 5 and custom build process</p>
-    
+    <p class="lead">A modern ASP.NET Core MVC application with Bootstrap 5, Identity authentication, and custom build
+        process</p>
+
     <div class="row mt-5">
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body text-center">
                     <i class="bi bi-code-square display-4 text-primary-custom mb-3"></i>
                     <h5 class="card-title">Modern Development</h5>
-                    <p class="card-text">Built with .NET 9, Bootstrap 5, and modern tooling including Webpack and SCSS.</p>
+                    <p class="card-text">Built with .NET 9, Bootstrap 5, and modern tooling including Webpack and SCSS.
+                    </p>
                     <button class="btn btn-primary-custom" data-bs-toggle="tooltip" title="Click me!">
                         <i class="bi bi-arrow-right"></i> Learn More
                     </button>
@@ -24,7 +47,8 @@
                 <div class="card-body text-center">
                     <i class="bi bi-palette display-4 text-success mb-3"></i>
                     <h5 class="card-title">Beautiful UI</h5>
-                    <p class="card-text">Responsive design with Bootstrap Icons and custom styling for a professional look.</p>
+                    <p class="card-text">Responsive design with Bootstrap Icons and custom styling for a professional
+                        look.</p>
                     <button class="btn btn-success">
                         <i class="bi bi-eye"></i> View Design
                     </button>
@@ -44,7 +68,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="mt-5">
         <h3>Available Features <i class="bi bi-check-circle-fill text-success"></i></h3>
         <div class="d-flex justify-content-center flex-wrap gap-3 mt-3">
@@ -63,13 +87,19 @@
             <span class="badge bg-danger fs-6">
                 <i class="bi bi-microsoft"></i> .NET 9
             </span>
+            <span class="badge bg-secondary fs-6">
+                <i class="bi bi-shield-check"></i> Identity Auth
+            </span>
+            <span class="badge bg-dark fs-6">
+                <i class="bi bi-database"></i> SQLite
+            </span>
         </div>
     </div>
-    
+
     <div class="mt-4">
         <p>Learn about <a href="https://learn.microsoft.com/aspnet/core" class="text-decoration-none">
-            <i class="bi bi-book"></i> building Web apps with ASP.NET Core
-        </a>.</p>
+                <i class="bi bi-book"></i> building Web apps with ASP.NET Core
+            </a>.</p>
     </div>
 </div>
 

@@ -25,11 +25,18 @@
     <Exec Command="npm run build" Condition="'$(Configuration)' == 'Release'" />
     <Exec Command="npm run build:dev" Condition="'$(Configuration)' == 'Debug'" />
   </Target>
-
   <!-- Clean generated assets on clean -->
   <Target Name="CleanAssets" AfterTargets="Clean">
     <Message Text="Cleaning generated assets..." Importance="high" />
     <Exec Command="npm run clean" ContinueOnError="true" />
   </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+  </ItemGroup>
 
 </Project>
