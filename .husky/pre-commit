@@ -1,0 +1,1 @@
+cd TeachSpark.Web && npx lint-staged

@@ -1,0 +1,5 @@
+{
+  "TeachSpark.Web/src/**/*.js": ["eslint --fix", "prettier --write"],
+  "TeachSpark.Web/src/**/*.{css,scss}": ["stylelint --fix", "prettier --write"],
+  "TeachSpark.Web/src/**/*.{js,scss,css}": ["git add"]
+}

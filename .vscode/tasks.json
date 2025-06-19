@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run TeachSpark.Web",
+      "type": "shell",
+      "command": "dotnet",
+      "args": ["run", "--project", "TeachSpark.Web"],
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": ["$msCompile"]
+    },
+    {
+      "label": "Build Frontend Assets",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "build"],
+      "options": {
+        "cwd": "${workspaceFolder}/TeachSpark.Web"
+      },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Watch Frontend Assets",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "watch"],
+      "options": {
+        "cwd": "${workspaceFolder}/TeachSpark.Web"
+      },
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

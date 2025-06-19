@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Disable scoped CSS generation - we manage all CSS via webpack -->
+    <DisableScopedCss>true</DisableScopedCss>
+  </PropertyGroup>
+
+  <!-- NPM Build Integration -->
+  <ItemGroup>
+    <UpToDateCheckInput Include="src/**/*.scss;src/**/*.js;package.json;webpack.config.js" />
+    <UpToDateCheckOutput Include="wwwroot/css/site.css;wwwroot/js/site.js;wwwroot/js/validation.js" />
+  </ItemGroup>
+
+  <!-- Ensure npm packages are installed before build -->
+  <Target Name="NpmInstall" BeforeTargets="BuildAssets" Condition="!Exists('node_modules')">
+    <Message Text="Installing npm packages..." Importance="high" />
+    <Exec Command="npm install" />
+  </Target>
+  <!-- Build assets using webpack -->
+  <Target Name="BuildAssets" BeforeTargets="Build">
+    <Message Text="Building frontend assets with webpack..." Importance="high" />
+    <Exec Command="npm run build" Condition="'$(Configuration)' == 'Release'" />
+    <Exec Command="npm run build:dev" Condition="'$(Configuration)' == 'Debug'" />
+  </Target>
+
+  <!-- Clean generated assets on clean -->
+  <Target Name="CleanAssets" AfterTargets="Clean">
+    <Message Text="Cleaning generated assets..." Importance="high" />
+    <Exec Command="npm run clean" ContinueOnError="true" />
+  </Target>
+
+</Project>
