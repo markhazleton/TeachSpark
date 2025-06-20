@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TeachSpark.Web.Configuration;
 using TeachSpark.Web.Data;
-using TeachSpark.Web.Services.Models;
 using TeachSpark.Web.Services.Interfaces;
+using TeachSpark.Web.Services.Models;
 
 namespace TeachSpark.Web.Controllers
 {
@@ -86,7 +86,7 @@ namespace TeachSpark.Web.Controllers
 
             try
             {
-                _logger.LogInformation("Generating worksheet for user {User}: {WorksheetType}", 
+                _logger.LogInformation("Generating worksheet for user {User}: {WorksheetType}",
                     User.Identity?.Name, request.WorksheetType);
 
                 // Generate worksheet using LLM service
@@ -97,20 +97,20 @@ namespace TeachSpark.Web.Controllers
                     // Store the generated worksheet content in TempData for the display view
                     TempData["GeneratedWorksheet"] = System.Text.Json.JsonSerializer.Serialize(result.Data);
                     TempData["Success"] = "Worksheet generated successfully!";
-                    
+
                     // Redirect to a display page
                     return RedirectToAction("Display");
                 }
                 else
                 {
-                    ModelState.AddModelError("", $"Failed to generate worksheet: {result.ErrorMessage}");
+                    ModelState.AddModelError(string.Empty, $"Failed to generate worksheet: {result.ErrorMessage}");
                     _logger.LogWarning("Worksheet generation failed: {Error}", result.ErrorMessage);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error generating worksheet for user {User}", User.Identity?.Name);
-                ModelState.AddModelError("", "An unexpected error occurred while generating the worksheet. Please try again.");
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred while generating the worksheet. Please try again.");
             }
 
             await PrepareViewData();

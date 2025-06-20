@@ -1,9 +1,8 @@
-using Microsoft.Extensions.Options;
-using TeachSpark.Web.Configuration;
-using TeachSpark.Web.Services.Models;
-using TeachSpark.Web.Services.Interfaces;
-using OpenAI;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using OpenAI;
+using TeachSpark.Web.Services.Interfaces;
+using TeachSpark.Web.Services.Models;
 
 namespace TeachSpark.Web.Services.Implementations
 {

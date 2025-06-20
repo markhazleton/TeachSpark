@@ -75,7 +75,7 @@ namespace TeachSpark.Web.Services.Implementations
             {
                 stopwatch.Stop();
                 UpdateMetrics(false, 0, 0, stopwatch.Elapsed);
-                
+
                 _logger.LogError(ex, "Failed to generate worksheet content");
                 return ServiceResult<WorksheetContentResult>.ErrorResult(
                     $"Failed to generate worksheet: {ex.Message}");
@@ -124,8 +124,8 @@ namespace TeachSpark.Web.Services.Implementations
                 return ServiceResult<bool>.ErrorResult($"Configuration validation failed: {ex.Message}");
             }
         }        /// <summary>
-        /// Update LLM usage metrics
-        /// </summary>
+                 /// Update LLM usage metrics
+                 /// </summary>
         private void UpdateMetrics(bool success, decimal cost, int tokens, TimeSpan duration)
         {
             _metrics.TotalRequests++;

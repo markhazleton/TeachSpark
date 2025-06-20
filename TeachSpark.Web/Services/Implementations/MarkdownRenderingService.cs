@@ -1,7 +1,4 @@
 using Markdig;
-using Markdig.Extensions.Tables;
-using Markdig.Extensions.TaskLists;
-using Markdig.Extensions.AutoIdentifiers;
 using System.Text.RegularExpressions;
 
 namespace TeachSpark.Web.Services.Implementations
@@ -128,13 +125,13 @@ namespace TeachSpark.Web.Services.Implementations
             // Remove answer key section for student version
             var studentVersion = Regex.Replace(markdown,
                 @"## Answer Key.*?(?=##|\z)",
-                "",
+string.Empty,
                 RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
             // Remove assessment rubric (teacher-only)
             studentVersion = Regex.Replace(studentVersion,
                 @"## Assessment Rubric.*?(?=##|\z)",
-                "",
+string.Empty,
                 RegexOptions.Singleline | RegexOptions.IgnoreCase);
 
             // Clean up extra whitespace

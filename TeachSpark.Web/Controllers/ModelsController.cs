@@ -21,8 +21,8 @@ namespace TeachSpark.Web.Controllers
             _modelRegistry = modelRegistry;
             _logger = logger;
         }        /// <summary>
-        /// Get all available models
-        /// </summary>
+                 /// Get all available models
+                 /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAvailableModels([FromQuery] bool forceRefresh = false)
         {
@@ -96,8 +96,8 @@ namespace TeachSpark.Web.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }        /// <summary>
-        /// Get model recommendation based on worksheet type (GET method for easy frontend use)
-        /// </summary>
+                 /// Get model recommendation based on worksheet type (GET method for easy frontend use)
+                 /// </summary>
         [HttpGet("recommend")]
         public async Task<IActionResult> RecommendModelByWorksheetType([FromQuery] string worksheetType, [FromQuery] string difficulty = "standard")
         {
@@ -114,7 +114,7 @@ namespace TeachSpark.Web.Controllers
                     PrioritizeSpeed = false
                 };
 
-                var result = await _modelRegistry.RecommendModelAsync(criteria);                if (result.Success)
+                var result = await _modelRegistry.RecommendModelAsync(criteria); if (result.Success)
                 {
                     // Return the recommended model as the first item in a list for frontend compatibility
                     var recommendations = new List<object>
@@ -239,7 +239,7 @@ namespace TeachSpark.Web.Controllers
                 }
 
                 var model = modelResult.Data;
-                
+
                 // Calculate estimated cost
                 var inputCost = (decimal)request.InputTokens / 1000 * model.CostPer1kInputTokens;
                 var outputCost = (decimal)request.OutputTokens / 1000 * model.CostPer1kOutputTokens;
