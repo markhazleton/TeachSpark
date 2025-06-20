@@ -5,12 +5,13 @@ using System.Diagnostics;
 using TeachSpark.Web.Configuration;
 using TeachSpark.Web.Services.Interfaces;
 using TeachSpark.Web.Services.Models;
+using TeachSpark.Web.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace TeachSpark.Web.Services.Implementations
-{
-    /// <summary>
-    /// OpenAI implementation of the LLM service using Microsoft.Extensions.AI
-    /// </summary>
+{    /// <summary>
+     /// OpenAI implementation of the LLM service using Microsoft.Extensions.AI
+     /// </summary>
     public class OpenAILlmService : ILlmService
     {
         private readonly ChatClient _chatClient;
@@ -20,6 +21,7 @@ namespace TeachSpark.Web.Services.Implementations
         private readonly LlmUsageMetrics _metrics;
         private readonly MarkdownRenderingService _markdownService;
         private readonly ILlmLoggingService _llmLoggingService;
+        private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<OpenAILlmService> _logger;
 
         public OpenAILlmService(
@@ -30,6 +32,7 @@ namespace TeachSpark.Web.Services.Implementations
             LlmUsageMetrics metrics,
             MarkdownRenderingService markdownService,
             ILlmLoggingService llmLoggingService,
+            ApplicationDbContext dbContext,
             ILogger<OpenAILlmService> logger)
         {
             _chatClient = chatClient;
@@ -39,10 +42,11 @@ namespace TeachSpark.Web.Services.Implementations
             _metrics = metrics;
             _markdownService = markdownService;
             _llmLoggingService = llmLoggingService;
+            _dbContext = dbContext;
             _logger = logger;
-        }        /// <summary>
-                 /// Generate worksheet content using OpenAI
-                 /// </summary>
+        }/// <summary>
+         /// Generate worksheet content using OpenAI
+         /// </summary>
         public async Task<ServiceResult<WorksheetContentResult>> GenerateWorksheetContentAsync(
             WorksheetGenerationRequest request,
             string? userId = null,
@@ -61,11 +65,9 @@ namespace TeachSpark.Web.Services.Implementations
                 if (string.IsNullOrWhiteSpace(request.SourceText))
                 {
                     return ServiceResult<WorksheetContentResult>.ErrorResult("Source text is required");
-                }
-
-                // Generate prompts
+                }                // Generate prompts
                 var systemPrompt = GetSystemPrompt();
-                var userPrompt = GeneratePrompt(request);
+                var userPrompt = await GeneratePromptAsync(request);
 
                 _logger.LogDebug("Generated prompts for RequestId: {RequestId}", requestId);
 
@@ -165,7 +167,7 @@ namespace TeachSpark.Web.Services.Implementations
                 try
                 {
                     var systemPrompt = GetSystemPrompt();
-                    var userPrompt = GeneratePrompt(request);
+                    var userPrompt = await GeneratePromptAsync(request);
                     await _llmLoggingService.LogLlmErrorAsync(request, systemPrompt, userPrompt, ex, errorMetadata);
                 }
                 catch (Exception loggingEx)
@@ -247,12 +249,10 @@ namespace TeachSpark.Web.Services.Implementations
                 _metrics.SuccessfulRequests++;
             else
                 _metrics.FailedRequests++;
-        }
-
-        /// <summary>
-        /// Generate the appropriate prompt based on worksheet type and request parameters
-        /// </summary>
-        private string GeneratePrompt(WorksheetGenerationRequest request)
+        }        /// <summary>
+                 /// Generate the appropriate prompt based on worksheet type and request parameters
+                 /// </summary>
+        private async Task<string> GeneratePromptAsync(WorksheetGenerationRequest request)
         {
             var promptBuilder = new System.Text.StringBuilder();
 
@@ -268,6 +268,68 @@ namespace TeachSpark.Web.Services.Implementations
             };
 
             promptBuilder.AppendLine(basePrompt);
+
+            // Add Common Core Standard information if specified
+            if (request.CommonCoreStandardId.HasValue)
+            {
+                try
+                {
+                    var standard = await _dbContext.CommonCoreStandards
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(s => s.Id == request.CommonCoreStandardId.Value);
+
+                    if (standard != null)
+                    {
+                        promptBuilder.AppendLine($"\n**Common Core Standard Alignment:**");
+                        promptBuilder.AppendLine($"- Code: {standard.Code}");
+                        promptBuilder.AppendLine($"- Grade: {standard.Grade}");
+                        promptBuilder.AppendLine($"- Subject: {standard.Subject}");
+                        promptBuilder.AppendLine($"- Domain: {standard.Domain}");
+                        if (!string.IsNullOrEmpty(standard.Category))
+                        {
+                            promptBuilder.AppendLine($"- Category: {standard.Category}");
+                        }
+                        promptBuilder.AppendLine($"- Description: {standard.Description}");
+                        if (!string.IsNullOrEmpty(standard.ExampleActivities))
+                        {
+                            promptBuilder.AppendLine($"- Example Activities: {standard.ExampleActivities}");
+                        }
+                        promptBuilder.AppendLine("Ensure all questions and activities align with this specific standard's requirements and learning objectives.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to fetch Common Core Standard with ID: {StandardId}", request.CommonCoreStandardId);
+                }
+            }
+
+            // Add Bloom's Taxonomy level information if specified
+            if (request.BloomLevelId.HasValue)
+            {
+                try
+                {
+                    var bloomLevel = await _dbContext.BloomLevels
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(b => b.Id == request.BloomLevelId.Value);
+
+                    if (bloomLevel != null)
+                    {
+                        promptBuilder.AppendLine($"\n**Bloom's Taxonomy Level:**");
+                        promptBuilder.AppendLine($"- Level: {bloomLevel.Name} (Level {bloomLevel.Order}/6)");
+                        promptBuilder.AppendLine($"- Description: {bloomLevel.Description}");
+                        promptBuilder.AppendLine($"- Action Verbs: {bloomLevel.ActionVerbs}");
+                        if (!string.IsNullOrEmpty(bloomLevel.Examples))
+                        {
+                            promptBuilder.AppendLine($"- Examples: {bloomLevel.Examples}");
+                        }
+                        promptBuilder.AppendLine($"Focus your questions on the '{bloomLevel.Name}' cognitive level, using appropriate action verbs and cognitive demands for this level.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to fetch Bloom Level with ID: {BloomLevelId}", request.BloomLevelId);
+                }
+            }
 
             // Add source text
             promptBuilder.AppendLine("\n**Source Text:**");
