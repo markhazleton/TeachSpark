@@ -1,0 +1,41 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace TeachSpark.Web.Data.Entities
+{
+    public class WorksheetTemplate
+    {
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Name { get; set; } = string.Empty;
+
+        public string? Description { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        public string TemplateType { get; set; } = string.Empty; // reading-comprehension, vocabulary, grammar, etc.
+
+        [Required]
+        public string LayoutJson { get; set; } = string.Empty; // JSON template structure
+
+        public string? PreviewImageUrl { get; set; }
+
+        public bool IsPublic { get; set; } = false; // Can other users see this template?
+
+        public bool IsSystem { get; set; } = false; // Built-in template vs user-created
+
+        public string? UserId { get; set; } // Creator (null for system templates)
+
+        public ApplicationUser? User { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public int UsageCount { get; set; } = 0; // Track popularity
+
+        // Navigation Properties
+        public virtual ICollection<Worksheet> Worksheets { get; set; } = new List<Worksheet>();
+    }
+}

@@ -1,6 +1,14 @@
 // Import Bootstrap JavaScript
 const bootstrap = require('bootstrap');
 
+// Import jQuery (DataTables depends on it)
+const $ = require('jquery');
+window.$ = window.jQuery = $;
+
+// Import DataTables
+require('datatables.net');
+require('datatables.net-bs5');
+
 // Main application JavaScript
 (function () {
     'use strict';
@@ -37,6 +45,39 @@ const bootstrap = require('bootstrap');
 
         // Add click handlers for custom buttons
         addCustomEventHandlers();
+
+        // Initialize DataTables
+        initializeDataTables();
+    }
+
+    // Initialize DataTables for all tables with .datatable class
+    function initializeDataTables() {
+        // Check if DataTables is available and there are tables to initialize
+        if (typeof $.fn.DataTable !== 'undefined') {
+            $('.datatable').each(function () {
+                if (!$.fn.DataTable.isDataTable(this)) {
+                    $(this).DataTable({
+                        responsive: true,
+                        pageLength: 25,
+                        lengthMenu: [10, 25, 50, 100],
+                        order: [[0, 'asc']],
+                        language: {
+                            search: 'Search records:',
+                            lengthMenu: 'Show _MENU_ records per page',
+                            info: 'Showing _START_ to _END_ of _TOTAL_ records',
+                            infoEmpty: 'No records available',
+                            infoFiltered: '(filtered from _MAX_ total records)',
+                            paginate: {
+                                first: 'First',
+                                last: 'Last',
+                                next: 'Next',
+                                previous: 'Previous'
+                            }
+                        }
+                    });
+                }
+            });
+        }
     }
 
     // Set active navigation item based on current page
@@ -105,5 +146,37 @@ const bootstrap = require('bootstrap');
                 element.scrollIntoView({ behavior: 'smooth' });
             }
         },
+
+        // DataTables utilities
+        dataTable: {
+            // Initialize a specific table as DataTable
+            init: function (selector, options = {}) {
+                if (typeof $.fn.DataTable !== 'undefined') {
+                    const defaultOptions = {
+                        responsive: true,
+                        pageLength: 25,
+                        lengthMenu: [10, 25, 50, 100],
+                        order: [[0, 'asc']]
+                    };
+                    const mergedOptions = Object.assign(defaultOptions, options);
+                    return $(selector).DataTable(mergedOptions);
+                }
+                return null;
+            },
+
+            // Refresh/reload a DataTable
+            refresh: function (selector) {
+                if (typeof $.fn.DataTable !== 'undefined' && $.fn.DataTable.isDataTable(selector)) {
+                    $(selector).DataTable().ajax.reload();
+                }
+            },
+
+            // Destroy a DataTable
+            destroy: function (selector) {
+                if (typeof $.fn.DataTable !== 'undefined' && $.fn.DataTable.isDataTable(selector)) {
+                    $(selector).DataTable().destroy();
+                }
+            }
+        }
     };
 })();

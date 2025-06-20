@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeachSpark.Web.Data;
 
@@ -10,9 +11,11 @@ using TeachSpark.Web.Data;
 namespace TeachSpark.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250620015234_WorksheetGeneratorModels")]
+    partial class WorksheetGeneratorModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
@@ -773,40 +776,40 @@ namespace TeachSpark.Web.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 6, 19, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 6, 20, 1, 52, 33, 545, DateTimeKind.Utc).AddTicks(4565),
                             Description = "Standard reading comprehension worksheet with passage and questions",
                             IsPublic = true,
                             IsSystem = true,
                             LayoutJson = "{\"sections\": [{\"type\": \"passage\", \"title\": \"Reading Passage\"}, {\"type\": \"questions\", \"title\": \"Comprehension Questions\", \"questionCount\": 5}]}",
                             Name = "Reading Comprehension - Basic",
                             TemplateType = "reading-comprehension",
-                            UpdatedAt = new DateTime(2025, 6, 19, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 6, 20, 1, 52, 33, 545, DateTimeKind.Utc).AddTicks(4570),
                             UsageCount = 0
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 6, 19, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 6, 20, 1, 52, 33, 545, DateTimeKind.Utc).AddTicks(5164),
                             Description = "Vocabulary worksheet with definitions and context practice",
                             IsPublic = true,
                             IsSystem = true,
                             LayoutJson = "{\"sections\": [{\"type\": \"vocabulary\", \"title\": \"New Words\"}, {\"type\": \"definitions\", \"title\": \"Match Definitions\"}, {\"type\": \"sentences\", \"title\": \"Use in Sentences\"}]}",
                             Name = "Vocabulary Builder",
                             TemplateType = "vocabulary",
-                            UpdatedAt = new DateTime(2025, 6, 19, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 6, 20, 1, 52, 33, 545, DateTimeKind.Utc).AddTicks(5164),
                             UsageCount = 0
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 6, 19, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 6, 20, 1, 52, 33, 545, DateTimeKind.Utc).AddTicks(5165),
                             Description = "Grammar exercises with examples and practice problems",
                             IsPublic = true,
                             IsSystem = true,
                             LayoutJson = "{\"sections\": [{\"type\": \"explanation\", \"title\": \"Grammar Rule\"}, {\"type\": \"examples\", \"title\": \"Examples\"}, {\"type\": \"practice\", \"title\": \"Practice Exercises\"}]}",
                             Name = "Grammar Practice",
                             TemplateType = "grammar",
-                            UpdatedAt = new DateTime(2025, 6, 19, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 6, 20, 1, 52, 33, 545, DateTimeKind.Utc).AddTicks(5166),
                             UsageCount = 0
                         });
                 });
