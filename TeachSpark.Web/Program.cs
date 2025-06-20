@@ -2,10 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web;
 using TeachSpark.Web.Data;
 using TeachSpark.Web.Data.Entities;
+using TeachSpark.Web.Extensions;
 using TeachSpark.Web.Services;
 using TeachSpark.Web.Services.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LoggingUtility.ConfigureSerilogLogging(builder, "TeachSpark.Web");
 
 // Add database context
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -102,4 +105,12 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-app.Run();
+try
+{
+    app.Run();
+}
+finally
+{
+    // Cleanup logging resources
+    Console.WriteLine("Application shutting down...");
+}

@@ -40,6 +40,9 @@ public class CsvImportTool
     }
 }
 
+// Commented out to avoid conflicts with top-level statements in Program.cs
+// Uncomment and run separately if needed as a standalone tool
+/*
 /// <summary>
 /// Program entry point for running import tool
 /// </summary>
@@ -56,3 +59,4 @@ class Program
         Console.ReadKey();
     }
 }
+*/

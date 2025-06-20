@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TeachSpark.Web.Data;
 using TeachSpark.Web.Data.Entities;
 using TeachSpark.Web.Configuration;
@@ -12,10 +13,10 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         private readonly ApplicationDbContext _context;
         private readonly WorksheetGenerationConfiguration _config;
 
-        public WorksheetsController(ApplicationDbContext context, WorksheetGenerationConfiguration config)
+        public WorksheetsController(ApplicationDbContext context, IOptions<WorksheetGenerationConfiguration> config)
         {
             _context = context;
-            _config = config;
+            _config = config.Value;
         }// GET: Admin/Worksheets
         public IActionResult Index()
         {

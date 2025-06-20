@@ -1,6 +1,6 @@
-using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using OpenAI.Chat;
 using System.Diagnostics;
 using TeachSpark.Web.Configuration;
 using TeachSpark.Web.Services.Interfaces;
@@ -13,16 +13,14 @@ namespace TeachSpark.Web.Services.Implementations
     /// </summary>
     public class OpenAILlmService : ILlmService
     {
-        private readonly IChatClient _chatClient;
+        private readonly ChatClient _chatClient;
         private readonly IModelRegistryService _modelRegistry;
         private readonly IMemoryCache _cache;
         private readonly LlmConfiguration _config;
         private readonly LlmUsageMetrics _metrics;
         private readonly MarkdownRenderingService _markdownService;
-        private readonly ILogger<OpenAILlmService> _logger;
-
-        public OpenAILlmService(
-            IChatClient chatClient,
+        private readonly ILogger<OpenAILlmService> _logger; public OpenAILlmService(
+            ChatClient chatClient,
             IModelRegistryService modelRegistry,
             IMemoryCache cache,
             IOptions<LlmConfiguration> config,
@@ -58,35 +56,30 @@ namespace TeachSpark.Web.Services.Implementations
 
                 // Generate prompt based on worksheet type and requirements
                 var prompt = GeneratePrompt(request);
-                _logger.LogDebug("Generated prompt: {Prompt}", prompt);
-
-                // Create chat messages
-                var messages = new List<Microsoft.Extensions.AI.ChatMessage>
+                _logger.LogDebug("Generated prompt: {Prompt}", prompt);                // Create chat messages
+                var messages = new List<ChatMessage>
                 {
-                    new(Microsoft.Extensions.AI.ChatRole.System, GetSystemPrompt()),
-                    new(Microsoft.Extensions.AI.ChatRole.User, prompt)
+                    ChatMessage.CreateSystemMessage(GetSystemPrompt()),
+                    ChatMessage.CreateUserMessage(prompt)
                 };
 
                 // Configure chat options
-                var chatOptions = new Microsoft.Extensions.AI.ChatOptions
+                var chatOptions = new ChatCompletionOptions
                 {
                     Temperature = (float)_config.Temperature,
-                    MaxOutputTokens = _config.MaxTokens,
-                    ModelId = request.PreferredLlmModel ?? _config.DefaultModel
+                    MaxOutputTokenCount = _config.MaxTokens
                 };
 
                 // Call OpenAI API
-                var response = await _chatClient.CompleteAsync(messages, chatOptions, cancellationToken);
+                var response = await _chatClient.CompleteChatAsync(messages, chatOptions, cancellationToken);
 
-                if (response?.Message?.Text == null)
+                if (string.IsNullOrEmpty(response.Value.Content[0].Text))
                 {
                     return ServiceResult<WorksheetContentResult>.ErrorResult("Received empty response from AI service");
                 }
 
-                var markdownContent = response.Message.Text;
-
-                // Process and validate the response
-                var result = await ProcessAIResponse(markdownContent, request, response.Usage, stopwatch.Elapsed);
+                var markdownContent = response.Value.Content[0].Text;                // Process and validate the response
+                var result = await ProcessAIResponse(markdownContent, request, response.Value.Usage, stopwatch.Elapsed);
 
                 stopwatch.Stop();
                 UpdateMetrics(true, result.GenerationCost, result.TokensUsed, stopwatch.Elapsed);
@@ -131,22 +124,21 @@ namespace TeachSpark.Web.Services.Implementations
         public async Task<ServiceResult<bool>> ValidateConfigurationAsync(CancellationToken cancellationToken = default)
         {
             try
-            {
-                // Test the connection with a simple request
-                var testMessages = new List<Microsoft.Extensions.AI.ChatMessage>
+            {                // Test the connection with a simple request
+                var testMessages = new List<ChatMessage>
                 {
-                    new(Microsoft.Extensions.AI.ChatRole.User, "Test connection. Please respond with 'OK'.")
+                    ChatMessage.CreateUserMessage("Test connection. Please respond with 'OK'.")
                 };
 
-                var testOptions = new Microsoft.Extensions.AI.ChatOptions
+                var testOptions = new ChatCompletionOptions
                 {
-                    MaxOutputTokens = 10,
+                    MaxOutputTokenCount = 10,
                     Temperature = 0
                 };
 
-                var response = await _chatClient.CompleteAsync(testMessages, testOptions, cancellationToken);
+                var response = await _chatClient.CompleteChatAsync(testMessages, testOptions, cancellationToken);
 
-                bool isValid = response?.Message?.Text != null;
+                bool isValid = !string.IsNullOrEmpty(response.Value.Content[0].Text);
                 return ServiceResult<bool>.SuccessResult(isValid);
             }
             catch (Exception ex)
@@ -334,13 +326,15 @@ Always format your output as clean, well-organized Markdown with:
 - Separate sections for different types of content
 
 Maintain a professional, educational tone while keeping content engaging for students.";
-        }        /// <summary>
-                 /// Process the AI response and create the final worksheet content result
-                 /// </summary>
+        }
+
+        /// <summary>
+        /// Process the AI response and create the final worksheet content result
+        /// </summary>
         private async Task<WorksheetContentResult> ProcessAIResponse(
             string markdownContent,
             WorksheetGenerationRequest request,
-            Microsoft.Extensions.AI.UsageDetails? usage,
+            OpenAI.Chat.ChatTokenUsage? usage,
             TimeSpan generationTime)
         {
             // Calculate costs based on token usage

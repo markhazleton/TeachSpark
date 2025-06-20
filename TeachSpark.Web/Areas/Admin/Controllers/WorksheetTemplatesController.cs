@@ -6,17 +6,11 @@ using TeachSpark.Web.Data.Entities;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
 {
-    public class WorksheetTemplatesController : BaseAdminController
+    public class WorksheetTemplatesController(ApplicationDbContext context) : BaseAdminController
     {
-        private readonly ApplicationDbContext _context;
-
-        public WorksheetTemplatesController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
 
         // GET: Admin/WorksheetTemplates
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             ViewData["Title"] = "Worksheet Templates Management";
             return View();
@@ -30,7 +24,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var template = await _context.WorksheetTemplates
+            var template = await context.WorksheetTemplates
                 .Include(t => t.User)
                 .Include(t => t.Worksheets)
                     .ThenInclude(w => w.User)
@@ -49,7 +43,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         public IActionResult Create()
         {
             ViewData["Title"] = "Create New Worksheet Template";
-            ViewData["Users"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["Users"] = new SelectList(context.Users, "Id", "Email");
             return View();
         }
 
@@ -65,19 +59,19 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("LayoutJson", "Invalid JSON format.");
                     ViewData["Title"] = "Create New Worksheet Template";
-                    ViewData["Users"] = new SelectList(_context.Users, "Id", "Email", template.UserId);
+                    ViewData["Users"] = new SelectList(context.Users, "Id", "Email", template.UserId);
                     return View(template);
                 }
 
                 template.CreatedAt = DateTime.UtcNow;
                 template.UpdatedAt = DateTime.UtcNow;
-                _context.Add(template);
-                await _context.SaveChangesAsync();
+                context.Add(template);
+                await context.SaveChangesAsync();
                 SetSuccessMessage($"Worksheet Template '{template.Name}' has been created successfully.");
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Title"] = "Create New Worksheet Template";
-            ViewData["Users"] = new SelectList(_context.Users, "Id", "Email", template.UserId);
+            ViewData["Users"] = new SelectList(context.Users, "Id", "Email", template.UserId);
             return View(template);
         }
 
@@ -89,14 +83,14 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var template = await _context.WorksheetTemplates.FindAsync(id);
+            var template = await context.WorksheetTemplates.FindAsync(id);
             if (template == null)
             {
                 return NotFound();
             }
 
             ViewData["Title"] = $"Edit Template - {template.Name}";
-            ViewData["Users"] = new SelectList(_context.Users, "Id", "Email", template.UserId);
+            ViewData["Users"] = new SelectList(context.Users, "Id", "Email", template.UserId);
             return View(template);
         }
 
@@ -119,13 +113,13 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                     {
                         ModelState.AddModelError("LayoutJson", "Invalid JSON format.");
                         ViewData["Title"] = $"Edit Template - {template.Name}";
-                        ViewData["Users"] = new SelectList(_context.Users, "Id", "Email", template.UserId);
+                        ViewData["Users"] = new SelectList(context.Users, "Id", "Email", template.UserId);
                         return View(template);
                     }
 
                     template.UpdatedAt = DateTime.UtcNow;
-                    _context.Update(template);
-                    await _context.SaveChangesAsync();
+                    context.Update(template);
+                    await context.SaveChangesAsync();
                     SetSuccessMessage($"Worksheet Template '{template.Name}' has been updated successfully.");
                 }
                 catch (DbUpdateConcurrencyException)
@@ -142,7 +136,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Title"] = $"Edit Template - {template.Name}";
-            ViewData["Users"] = new SelectList(_context.Users, "Id", "Email", template.UserId);
+            ViewData["Users"] = new SelectList(context.Users, "Id", "Email", template.UserId);
             return View(template);
         }
 
@@ -154,7 +148,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var template = await _context.WorksheetTemplates
+            var template = await context.WorksheetTemplates
                 .Include(t => t.User)
                 .Include(t => t.Worksheets)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -173,7 +167,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var template = await _context.WorksheetTemplates
+            var template = await context.WorksheetTemplates
                 .Include(t => t.Worksheets)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
@@ -185,8 +179,8 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                     return RedirectToAction(nameof(Delete), new { id });
                 }
 
-                _context.WorksheetTemplates.Remove(template);
-                await _context.SaveChangesAsync();
+                context.WorksheetTemplates.Remove(template);
+                await context.SaveChangesAsync();
                 SetSuccessMessage($"Worksheet Template '{template.Name}' has been deleted successfully.");
             }
 
@@ -195,13 +189,13 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
 
         private bool WorksheetTemplateExists(int id)
         {
-            return _context.WorksheetTemplates.Any(e => e.Id == id);
+            return context.WorksheetTemplates.Any(e => e.Id == id);
         }        // API endpoint for DataTables
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetTemplatesData()
         {
-            var templates = await _context.WorksheetTemplates
+            var templates = await context.WorksheetTemplates
                 .Include(t => t.User)
                 .Include(t => t.Worksheets)
                 .OrderByDescending(t => t.CreatedAt)

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
+using OpenAI;
 using TeachSpark.Web.Configuration;
 using TeachSpark.Web.Services.Implementations;
 using TeachSpark.Web.Services.Interfaces;
@@ -54,15 +55,20 @@ namespace TeachSpark.Web.Services.Extensions
                 }
 
                 return new OpenAI.OpenAIClient(apiKey);
-            });
-
-            // Register OpenAI chat client using Microsoft.Extensions.AI
-            services.AddSingleton<IChatClient>(serviceProvider =>
+            });            // Register OpenAI chat client using Microsoft.Extensions.AI
+            // We'll register the native OpenAI client and handle conversion in the service
+            services.AddSingleton<OpenAI.Chat.ChatClient>(serviceProvider =>
             {
                 var config = serviceProvider.GetRequiredService<IOptions<LlmConfiguration>>().Value;
-                var openAiClient = serviceProvider.GetRequiredService<OpenAI.OpenAIClient>();
+                var apiKey = config.ApiKey;
 
-                return openAiClient.AsChatClient(config.DefaultModel);
+                if (string.IsNullOrEmpty(apiKey))
+                {
+                    throw new InvalidOperationException("OpenAI API key not configured. Please set LlmConfiguration:ApiKey in appsettings.json or user secrets.");
+                }
+
+                var openAiClient = new OpenAIClient(apiKey);
+                return openAiClient.GetChatClient(config.DefaultModel);
             });
 
             // Register LLM service implementations

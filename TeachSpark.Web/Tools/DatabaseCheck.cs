@@ -5,6 +5,9 @@ namespace TeachSpark.Web.Tools
 {
     public class DatabaseCheck
     {
+        // Commented out to avoid conflicts with top-level statements in Program.cs
+        // Uncomment and run separately if needed as a standalone tool
+        /*
         public static async Task Main(string[] args)
         {
             Console.WriteLine("TeachSpark Database Check Tool");
@@ -68,11 +71,11 @@ namespace TeachSpark.Web.Tools
 
                 Console.WriteLine("\nDatabase check completed successfully!");
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex)            {
                 Console.WriteLine($"❌ Error: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
             }
         }
+        */
     }
 }

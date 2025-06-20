@@ -18,7 +18,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         }
 
         // GET: Admin/ApiKeys
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             ViewData["Title"] = "API Keys Management";
             return View();
