@@ -135,16 +135,31 @@ namespace TeachSpark.Web.Services.Models
         public bool RequireStructuredOutput { get; set; }
         public bool PrioritizeSpeed { get; set; }
         public bool PrioritizeQuality { get; set; }
-    }
-
-    /// <summary>
-    /// Model recommendation result
-    /// </summary>
+    }    /// <summary>
+         /// Model recommendation result
+         /// </summary>
     public class ModelRecommendation
     {
         public OpenAIModel RecommendedModel { get; set; } = new();
         public string Reason { get; set; } = string.Empty;
         public decimal EstimatedCost { get; set; }
         public List<OpenAIModel> AlternativeModels { get; set; } = new();
+    }
+
+    /// <summary>
+    /// Metadata about an LLM call for logging purposes
+    /// </summary>
+    public class LlmCallMetadata
+    {
+        public string UserId { get; set; } = string.Empty;
+        public string UserEmail { get; set; } = string.Empty;
+        public string ModelUsed { get; set; } = string.Empty;
+        public TimeSpan Duration { get; set; }
+        public int TokensUsed { get; set; }
+        public decimal Cost { get; set; }
+        public float Temperature { get; set; }
+        public int MaxTokens { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        public string RequestId { get; set; } = Guid.NewGuid().ToString();
     }
 }

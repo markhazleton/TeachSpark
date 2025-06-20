@@ -7,8 +7,7 @@ using TeachSpark.Web.Services.Interfaces;
 using TeachSpark.Web.Services.Models;
 
 namespace TeachSpark.Web.Services.Implementations
-{
-    /// <summary>
+{    /// <summary>
     /// OpenAI implementation of the LLM service using Microsoft.Extensions.AI
     /// </summary>
     public class OpenAILlmService : ILlmService
@@ -40,13 +39,10 @@ namespace TeachSpark.Web.Services.Implementations
             _markdownService = markdownService;
             _llmLoggingService = llmLoggingService;
             _logger = logger;
-        }        /// <summary>
-                 /// Generate worksheet content using OpenAI
-                 /// </summary>
-        public async Task<ServiceResult<WorksheetContentResult>> GenerateWorksheetContentAsync(
+        }/// <summary>
+         /// Generate worksheet content using OpenAI
+         /// </summary>        public async Task<ServiceResult<WorksheetContentResult>> GenerateWorksheetContentAsync(
             WorksheetGenerationRequest request,
-            string? userId = null,
-            string? userEmail = null,
             CancellationToken cancellationToken = default)
         {
             var stopwatch = Stopwatch.StartNew();
@@ -54,7 +50,7 @@ namespace TeachSpark.Web.Services.Implementations
 
             try
             {
-                _logger.LogInformation("Starting worksheet generation for type: {WorksheetType}, RequestId: {RequestId}",
+                _logger.LogInformation("Starting worksheet generation for type: {WorksheetType}, RequestId: {RequestId}", 
                     request.WorksheetType, requestId);
 
                 // Validate input
@@ -66,7 +62,7 @@ namespace TeachSpark.Web.Services.Implementations
                 // Generate prompts
                 var systemPrompt = GetSystemPrompt();
                 var userPrompt = GeneratePrompt(request);
-
+                
                 _logger.LogDebug("Generated prompts for RequestId: {RequestId}", requestId);
 
                 // Create chat messages
@@ -81,12 +77,12 @@ namespace TeachSpark.Web.Services.Implementations
                 {
                     Temperature = (float)_config.Temperature,
                     MaxOutputTokenCount = _config.MaxTokens
-                };                // Prepare metadata for logging
+                };
+
+                // Prepare metadata for logging
                 var metadata = new LlmCallMetadata
                 {
                     RequestId = requestId,
-                    UserId = userId ?? "Unknown",
-                    UserEmail = userEmail ?? "Unknown",
                     ModelUsed = request.PreferredLlmModel ?? _config.DefaultModel,
                     Temperature = (float)_config.Temperature,
                     MaxTokens = _config.MaxTokens,
@@ -99,20 +95,20 @@ namespace TeachSpark.Web.Services.Implementations
                 if (string.IsNullOrEmpty(response.Value.Content[0].Text))
                 {
                     var error = new InvalidOperationException("Received empty response from AI service");
-
+                    
                     // Log the error to the special LLM log file
                     await _llmLoggingService.LogLlmErrorAsync(request, systemPrompt, userPrompt, error, metadata);
-
+                    
                     return ServiceResult<WorksheetContentResult>.ErrorResult("Received empty response from AI service");
                 }
 
                 var markdownContent = response.Value.Content[0].Text;
-
+                
                 // Update metadata with response information
                 stopwatch.Stop();
                 metadata.Duration = stopwatch.Elapsed;
                 metadata.TokensUsed = (response.Value.Usage?.OutputTokenCount ?? 0) + (response.Value.Usage?.InputTokenCount ?? 0);
-
+                
                 // Calculate cost
                 try
                 {
@@ -148,12 +144,12 @@ namespace TeachSpark.Web.Services.Implementations
             catch (Exception ex)
             {
                 stopwatch.Stop();
-                UpdateMetrics(false, 0, 0, stopwatch.Elapsed);                // Create metadata for error logging
+                UpdateMetrics(false, 0, 0, stopwatch.Elapsed);
+
+                // Create metadata for error logging
                 var errorMetadata = new LlmCallMetadata
                 {
                     RequestId = requestId,
-                    UserId = userId ?? "Unknown",
-                    UserEmail = userEmail ?? "Unknown",
                     ModelUsed = request.PreferredLlmModel ?? _config.DefaultModel,
                     Temperature = (float)_config.Temperature,
                     MaxTokens = _config.MaxTokens,
@@ -178,6 +174,8 @@ namespace TeachSpark.Web.Services.Implementations
                     $"Failed to generate worksheet: {ex.Message}");
             }
         }
+            }
+        }
 
         /// <summary>
         /// Get available models for user selection
@@ -200,16 +198,13 @@ namespace TeachSpark.Web.Services.Implementations
                 _logger.LogError(ex, "Failed to get available models");
                 return ServiceResult<List<string>>.ErrorResult("Failed to retrieve available models");
             }
-        }
-
-        /// <summary>
-        /// Validate OpenAI configuration
-        /// </summary>
+        }        /// <summary>
+                 /// Validate OpenAI configuration
+                 /// </summary>
         public async Task<ServiceResult<bool>> ValidateConfigurationAsync(CancellationToken cancellationToken = default)
         {
             try
-            {
-                // Test the connection with a simple request
+            {                // Test the connection with a simple request
                 var testMessages = new List<ChatMessage>
                 {
                     ChatMessage.CreateUserMessage("Test connection. Please respond with 'OK'.")
@@ -231,11 +226,9 @@ namespace TeachSpark.Web.Services.Implementations
                 _logger.LogError(ex, "OpenAI configuration validation failed");
                 return ServiceResult<bool>.ErrorResult($"Configuration validation failed: {ex.Message}");
             }
-        }
-
-        /// <summary>
-        /// Update LLM usage metrics
-        /// </summary>
+        }/// <summary>
+         /// Update LLM usage metrics
+         /// </summary>
         private void UpdateMetrics(bool success, decimal cost, int tokens, TimeSpan duration)
         {
             _metrics.TotalRequests++;
@@ -482,11 +475,9 @@ Maintain a professional, educational tone while keeping content engaging for stu
                 HasAnswerKey = hasAnswerKey,
                 EstimatedDurationMinutes = estimatedDuration
             };
-        }
-
-        /// <summary>
-        /// Render markdown content to HTML
-        /// </summary>
+        }        /// <summary>
+                 /// Render markdown content to HTML
+                 /// </summary>
         private string RenderMarkdownToHtml(string markdownContent)
         {
             try
@@ -495,19 +486,16 @@ Maintain a professional, educational tone while keeping content engaging for stu
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to render markdown to HTML, returning original content");
-                return $"<pre>{System.Web.HttpUtility.HtmlEncode(markdownContent)}</pre>";
+                _logger.LogWarning(ex, "Failed to render markdown to HTML, returning plain text");
+                return $"<div class=\"worksheet-content\"><pre>{System.Web.HttpUtility.HtmlEncode(markdownContent)}</pre></div>";
             }
         }
 
         /// <summary>
-        /// Extract questions from markdown content
+        /// Extract questions from the generated content
         /// </summary>
         private List<string> ExtractQuestions(string content)
         {
-            if (string.IsNullOrEmpty(content))
-                return new List<string>();
-
             var questions = new List<string>();
             var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
@@ -530,17 +518,17 @@ Maintain a professional, educational tone while keeping content engaging for stu
         private string? ExtractTitle(string content)
         {
             var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-            var firstLine = lines.FirstOrDefault()?.Trim();
-            return firstLine?.StartsWith("#") == true ? firstLine.TrimStart('#').Trim() : null;
+            var titleLine = lines.FirstOrDefault(l => l.Trim().StartsWith("# "));
+            return titleLine?.Replace("# ", "").Trim();
         }
 
         /// <summary>
-        /// Calculate estimated duration for completing the worksheet
+        /// Calculate estimated duration for worksheet completion
         /// </summary>
         private int CalculateEstimatedDuration(int questionCount, string worksheetType)
         {
-            // Base time per question by type (in minutes)
-            var baseTimePerQuestion = worksheetType switch
+            // Base time per question varies by type
+            var baseMinutesPerQuestion = worksheetType switch
             {
                 "reading-comprehension" => 3,
                 "vocabulary" => 2,
@@ -550,47 +538,54 @@ Maintain a professional, educational tone while keeping content engaging for stu
                 _ => 3
             };
 
-            return Math.Max(10, questionCount * baseTimePerQuestion);
+            return Math.Max(10, questionCount * baseMinutesPerQuestion);
         }
 
         /// <summary>
-        /// Calculate confidence score for the generated content
+        /// Calculate confidence score based on content quality
         /// </summary>
         private double CalculateConfidenceScore(string content, WorksheetGenerationRequest request)
         {
             double score = 0.5; // Base score
 
             // Check content length
+            if (content.Length > 200) score += 0.1;
             if (content.Length > 500) score += 0.1;
-            if (content.Length > 1000) score += 0.1;
 
             // Check for proper formatting
-            if (content.Contains("#")) score += 0.1; // Has headings
+            if (content.Contains("#")) score += 0.1; // Has headers
             if (content.Contains("?")) score += 0.1; // Has questions
 
-            // Check for answer key if requested
-            if (request.IncludeAnswerKey && content.ToLower().Contains("answer"))
-                score += 0.1;
+            // Check if requirements were met
+            var extractedQuestions = ExtractQuestions(content);
+            if (extractedQuestions.Count >= request.MaxQuestions - 2) score += 0.1;
+            if (extractedQuestions.Count <= request.MaxQuestions + 2) score += 0.1;
 
             return Math.Min(1.0, score);
         }
 
         /// <summary>
-        /// Generate warnings for the content
+        /// Generate warnings based on content analysis
         /// </summary>
         private List<string> GenerateWarnings(string content, WorksheetGenerationRequest request)
         {
             var warnings = new List<string>();
 
-            if (content.Length < 200)
-                warnings.Add("Generated content is shorter than expected");
+            if (content.Length < 100)
+            {
+                warnings.Add("Generated content appears to be shorter than expected");
+            }
 
-            if (request.IncludeAnswerKey && !content.ToLower().Contains("answer"))
-                warnings.Add("Answer key was requested but may not be present in the generated content");
+            var extractedQuestions = ExtractQuestions(content);
+            if (extractedQuestions.Count < request.MaxQuestions - 2)
+            {
+                warnings.Add($"Generated fewer questions ({extractedQuestions.Count}) than requested ({request.MaxQuestions})");
+            }
 
-            var questionCount = ExtractQuestions(content).Count;
-            if (questionCount < request.MaxQuestions)
-                warnings.Add($"Generated {questionCount} questions instead of requested {request.MaxQuestions}");
+            if (!content.Contains("?"))
+            {
+                warnings.Add("No question marks found in generated content");
+            }
 
             return warnings;
         }

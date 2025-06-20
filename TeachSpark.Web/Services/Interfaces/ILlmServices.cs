@@ -18,15 +18,15 @@ namespace TeachSpark.Web.Services.Interfaces
         Task<ServiceResult<decimal>> EstimateCostAsync(string modelId, int estimatedTokens, CancellationToken cancellationToken = default);
 
         Task<ServiceResult<bool>> RefreshModelRegistryAsync(CancellationToken cancellationToken = default);
-    }
-
-    /// <summary>
-    /// Core LLM service for content generation
-    /// </summary>
+    }    /// <summary>
+         /// Core LLM service for content generation
+         /// </summary>
     public interface ILlmService
     {
         Task<ServiceResult<WorksheetContentResult>> GenerateWorksheetContentAsync(
             WorksheetGenerationRequest request,
+            string? userId = null,
+            string? userEmail = null,
             CancellationToken cancellationToken = default);
 
         Task<ServiceResult<List<string>>> GetAvailableModelsAsync(CancellationToken cancellationToken = default);

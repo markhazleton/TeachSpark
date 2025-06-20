@@ -69,10 +69,9 @@ namespace TeachSpark.Web.Services.Extensions
 
                 var openAiClient = new OpenAIClient(apiKey);
                 return openAiClient.GetChatClient(config.DefaultModel);
-            });
-
-            // Register LLM service implementations
+            });            // Register LLM service implementations
             services.AddScoped<ILlmService, OpenAILlmService>();
+            services.AddScoped<ILlmLoggingService, LlmLoggingService>();
 
             // TODO: Implement these services
             // services.AddScoped<IPromptEngineService, PromptEngineService>();

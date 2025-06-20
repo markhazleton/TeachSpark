@@ -40,13 +40,13 @@ namespace TeachSpark.Web.Services.Implementations
             _markdownService = markdownService;
             _llmLoggingService = llmLoggingService;
             _logger = logger;
-        }        /// <summary>
-                 /// Generate worksheet content using OpenAI
-                 /// </summary>
+        }
+
+        /// <summary>
+        /// Generate worksheet content using OpenAI
+        /// </summary>
         public async Task<ServiceResult<WorksheetContentResult>> GenerateWorksheetContentAsync(
             WorksheetGenerationRequest request,
-            string? userId = null,
-            string? userEmail = null,
             CancellationToken cancellationToken = default)
         {
             var stopwatch = Stopwatch.StartNew();
@@ -81,12 +81,12 @@ namespace TeachSpark.Web.Services.Implementations
                 {
                     Temperature = (float)_config.Temperature,
                     MaxOutputTokenCount = _config.MaxTokens
-                };                // Prepare metadata for logging
+                };
+
+                // Prepare metadata for logging
                 var metadata = new LlmCallMetadata
                 {
                     RequestId = requestId,
-                    UserId = userId ?? "Unknown",
-                    UserEmail = userEmail ?? "Unknown",
                     ModelUsed = request.PreferredLlmModel ?? _config.DefaultModel,
                     Temperature = (float)_config.Temperature,
                     MaxTokens = _config.MaxTokens,
@@ -148,12 +148,12 @@ namespace TeachSpark.Web.Services.Implementations
             catch (Exception ex)
             {
                 stopwatch.Stop();
-                UpdateMetrics(false, 0, 0, stopwatch.Elapsed);                // Create metadata for error logging
+                UpdateMetrics(false, 0, 0, stopwatch.Elapsed);
+
+                // Create metadata for error logging
                 var errorMetadata = new LlmCallMetadata
                 {
                     RequestId = requestId,
-                    UserId = userId ?? "Unknown",
-                    UserEmail = userEmail ?? "Unknown",
                     ModelUsed = request.PreferredLlmModel ?? _config.DefaultModel,
                     Temperature = (float)_config.Temperature,
                     MaxTokens = _config.MaxTokens,

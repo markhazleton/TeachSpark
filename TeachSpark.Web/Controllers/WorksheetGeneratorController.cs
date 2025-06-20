@@ -85,8 +85,12 @@ namespace TeachSpark.Web.Controllers
                 _logger.LogInformation("Starting worksheet generation for user {User}: {WorksheetType}, MaxQuestions: {MaxQuestions}",
                     User.Identity?.Name, request.WorksheetType, request.MaxQuestions);
 
+                // Get user information for logging
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var userEmail = User.Identity?.Name;
+
                 // Generate worksheet using LLM service
-                var result = await _llmService.GenerateWorksheetContentAsync(request);
+                var result = await _llmService.GenerateWorksheetContentAsync(request, userId, userEmail);
 
                 _logger.LogInformation("LLM service returned: Success={Success}, HasData={HasData}, ErrorMessage={ErrorMessage}",
                     result.Success, result.Data != null, result.ErrorMessage);
