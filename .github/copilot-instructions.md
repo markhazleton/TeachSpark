@@ -10,7 +10,7 @@ This is a .NET 9.0 MVC Web Application with npm build process for client-side as
 
 - Use .NET 9.0 MVC patterns with dependency injection
 - Frontend assets managed via webpack and npm
-- JavaScript should be vanilla JS, no frameworks like jQuery
+- JavaScript can be vanilla JS, jQuery is used for DataTables and Bootstrap 5 components
 - SCSS imports Bootstrap 5 only, no custom styles
 - Forms use Bootstrap 5 validation classes and patterns
 
@@ -19,7 +19,7 @@ This is a .NET 9.0 MVC Web Application with npm build process for client-side as
 - Follow async/await patterns for all async operations
 - Use data annotations for model validation
 - Razor views must use Bootstrap 5 markup exclusively
-- JavaScript integrates with Bootstrap 5 components and validation
+- JavaScript must integrate with Bootstrap 5 components and validation
 - File organization follows MVC conventions with src/ for pre-build assets
 
 ## Build Process
