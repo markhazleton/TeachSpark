@@ -110,16 +110,16 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="ContentJson" class="form-label">Content JSON <span
+                            <label asp-for="ContentMarkdown" class="form-label">Content Markdown <span
                                     class="text-danger">*</span></label>
-                            <textarea asp-for="ContentJson" class="form-control font-monospace" rows="8"
+                            <textarea asp-for="ContentMarkdown" class="form-control font-monospace" rows="8"
                                 placeholder='{"questions": [{"text": "Question 1", "type": "multiple-choice"}]}'
                                 required></textarea>
                             <div class="form-text">Define the worksheet content in JSON format.</div>
                             <div class="invalid-feedback">
                                 Please provide valid JSON content.
                             </div>
-                            <span asp-validation-for="ContentJson" class="text-danger"></span>
+                            <span asp-validation-for="ContentMarkdown" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
@@ -243,7 +243,7 @@
         })();
 
         // JSON validation
-        document.getElementById('ContentJson').addEventListener('blur', function ()
+        document.getElementById('ContentMarkdown').addEventListener('blur', function ()
         {
             try
             {
@@ -258,21 +258,3 @@
         });
     </script>
 }
-
-                               
-                               
-                                           
-                                       
-                                       
-                               
-                                   
-                               
-                               
-                                
-        
-            
-               
-                    
-       
-           
-           

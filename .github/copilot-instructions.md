@@ -37,3 +37,7 @@ When generating HTML/Razor views:
 - Implement responsive design with Bootstrap utility classes
 - Include accessibility attributes
 - No custom CSS classes or inline styles allowed
+
+## Documentation
+- Use XML comments for public methods and classes
+ - Any markdown documentation should be in the Docs folder

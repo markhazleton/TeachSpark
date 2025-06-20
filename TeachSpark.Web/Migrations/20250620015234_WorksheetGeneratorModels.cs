@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
@@ -19,7 +19,7 @@ namespace TeachSpark.Web.Migrations
                 type: "TEXT",
                 maxLength: 50,
                 nullable: false,
-                defaultValue: "",
+                defaultValue: string.Empty,
                 oldClrType: typeof(string),
                 oldType: "TEXT",
                 oldMaxLength: 100,
@@ -31,7 +31,7 @@ namespace TeachSpark.Web.Migrations
                 type: "TEXT",
                 maxLength: 50,
                 nullable: false,
-                defaultValue: "",
+                defaultValue: string.Empty,
                 oldClrType: typeof(string),
                 oldType: "TEXT",
                 oldMaxLength: 100,

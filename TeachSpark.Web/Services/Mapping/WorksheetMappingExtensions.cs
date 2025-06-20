@@ -24,7 +24,7 @@ namespace TeachSpark.Web.Services.Mapping
                 BloomLevelName = entity.BloomLevel?.Name,
                 TemplateId = entity.TemplateId,
                 TemplateName = entity.Template?.Name,
-                ContentJson = entity.ContentJson,
+                ContentJson = entity.ContentMarkdown, // Using ContentMarkdown as JSON content
                 SourceText = entity.SourceText,
                 WorksheetType = entity.WorksheetType,
                 DifficultyLevel = entity.DifficultyLevel,
@@ -48,7 +48,7 @@ namespace TeachSpark.Web.Services.Mapping
                 AcademicStandardId = viewModel.AcademicStandardId,
                 BloomLevelId = viewModel.BloomLevelId,
                 TemplateId = viewModel.TemplateId,
-                ContentJson = viewModel.ContentJson,
+                ContentMarkdown = viewModel.ContentJson, // Using ContentJson as ContentMarkdown
                 SourceText = viewModel.SourceText,
                 WorksheetType = viewModel.WorksheetType,
                 DifficultyLevel = viewModel.DifficultyLevel,
@@ -69,7 +69,7 @@ namespace TeachSpark.Web.Services.Mapping
             entity.AcademicStandardId = viewModel.AcademicStandardId;
             entity.BloomLevelId = viewModel.BloomLevelId;
             entity.TemplateId = viewModel.TemplateId;
-            entity.ContentJson = viewModel.ContentJson;
+            entity.ContentMarkdown = viewModel.ContentJson; // Using ContentJson as ContentMarkdown
             entity.SourceText = viewModel.SourceText;
             entity.WorksheetType = viewModel.WorksheetType;
             entity.DifficultyLevel = viewModel.DifficultyLevel;

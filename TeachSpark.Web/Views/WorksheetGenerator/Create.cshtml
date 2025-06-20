@@ -1,0 +1,413 @@
+@model TeachSpark.Web.Services.Models.WorksheetGenerationRequest
+@{
+    ViewData["Title"] = "Create New Worksheet";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header -->
+            <div class="mb-4">
+                <h1 class="h2">Create New Worksheet</h1>
+                <p class="text-muted">Use AI to generate engaging, standards-aligned educational content.</p>
+            </div>
+
+            <!-- Form -->
+            <form asp-action="Create" method="post" id="worksheetForm">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-bottom">
+                        <h5 class="mb-0"><i class="bi bi-gear-fill me-2"></i>Worksheet Configuration</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Source Text -->
+                        <div class="mb-4">
+                            <label asp-for="SourceText" class="form-label fw-bold">
+                                Source Text <span class="text-danger">*</span>
+                                <small class="text-muted fw-normal">(Paste the text you want to base the worksheet
+                                    on)</small>
+                            </label>
+                            <textarea asp-for="SourceText" class="form-control" rows="6"
+                                placeholder="Paste your reading passage, story excerpt, or text content here..."></textarea>
+                            <span asp-validation-for="SourceText" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Tip: Longer passages work better for reading comprehension, while shorter texts are
+                                ideal for vocabulary exercises.
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Worksheet Type -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="WorksheetType" class="form-label fw-bold">Worksheet Type</label>
+                                <select asp-for="WorksheetType" asp-items="ViewBag.WorksheetTypes" class="form-select">
+                                    <option value="">Select worksheet type...</option>
+                                </select>
+                                <span asp-validation-for="WorksheetType" class="text-danger"></span>
+                            </div>
+
+                            <!-- Difficulty Level -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DifficultyLevel" class="form-label fw-bold">Difficulty Level</label>
+                                <select asp-for="DifficultyLevel" asp-items="ViewBag.DifficultyLevels"
+                                    class="form-select">
+                                </select>
+                                <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Standards Alignment -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Standards Alignment</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="CommonCoreStandardId" class="form-label">Common Core
+                                        Standard</label>
+                                    <select asp-for="CommonCoreStandardId" asp-items="ViewBag.CommonCoreStandards"
+                                        class="form-select">
+                                        <option value="">No specific standard (optional)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="BloomLevelId" class="form-label">Bloom's Taxonomy Focus</label>
+                                    <select asp-for="BloomLevelId" asp-items="ViewBag.BloomLevels" class="form-select">
+                                        <option value="">Mixed levels (recommended)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div> <!-- AI Model Selection -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">AI Model Selection</h6>
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label asp-for="PreferredLlmModel" class="form-label">
+                                        AI Model
+                                        <small class="text-muted">(Choose based on quality vs. cost)</small>
+                                    </label>
+                                    <select asp-for="PreferredLlmModel" asp-items="ViewBag.AvailableModels"
+                                        class="form-select" id="modelSelect">
+                                        <option value="">Auto-select best model</option>
+                                    </select>
+                                    <span asp-validation-for="PreferredLlmModel" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Estimated Cost</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text" class="form-control" id="estimatedCost" readonly
+                                            placeholder="0.00">
+                                    </div>
+                                    <div class="form-text">
+                                        <small id="costDetails" class="text-muted">Select a model to see cost
+                                            estimate</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Model Information Panel -->
+                            <div id="modelInfo" class="alert alert-light d-none">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="mb-1" id="modelName"></h6>
+                                        <p class="mb-1" id="modelDescription"></p>
+                                        <small class="text-muted" id="modelCapabilities"></small>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <div class="badge bg-primary mb-1" id="qualityBadge"></div>
+                                        <div class="badge bg-success mb-1" id="speedBadge"></div>
+                                        <div class="badge bg-warning mb-1" id="costBadge"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Generation Options -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Generation Options</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="MaxQuestions" class="form-label">Number of Questions</label>
+                                    <input asp-for="MaxQuestions" type="number" class="form-control" min="1"
+                                        max="@ViewBag.MaxQuestions" id="maxQuestions">
+                                    <span asp-validation-for="MaxQuestions" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="TemplateId" class="form-label">Template (Optional)</label>
+                                    <select asp-for="TemplateId" asp-items="ViewBag.Templates" class="form-select">
+                                        <option value="">Use default template</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Options -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">Advanced Options</h6>
+                            <div class="mb-3">
+                                <label asp-for="CustomInstructions" class="form-label">Custom Instructions
+                                    (Optional)</label>
+                                <textarea asp-for="CustomInstructions" class="form-control" rows="2"
+                                    placeholder="Any specific requirements or preferences for the worksheet..."></textarea>
+                                <div class="form-text">
+                                    Example: "Focus on character analysis", "Include vocabulary from the text", "Add
+                                    visual elements"
+                                </div>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input asp-for="IncludeAnswerKey" class="form-check-input" type="checkbox" checked>
+                                <label asp-for="IncludeAnswerKey" class="form-check-label">
+                                    Include Answer Key
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- LLM Implementation Notice -->
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <strong>Development Notice:</strong> LLM integration is currently in development.
+                            This form will capture your preferences and display a preview of the planned functionality.
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-white border-top">
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Back
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-magic me-2"></i>Generate Worksheet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        let availableModels = [];
+
+        // Load available models on page load
+        document.addEventListener('DOMContentLoaded', function ()
+        {
+            loadAvailableModels();
+        });
+
+        // Dynamic form updates based on worksheet type
+        document.getElementById('WorksheetType').addEventListener('change', function ()
+        {
+            const selectedType = this.value;
+
+            // Update suggestions based on worksheet type
+            updateFormSuggestions(selectedType);
+
+            // Update model recommendations
+            updateModelRecommendations();
+        });
+
+        // Model selection change handler
+        document.getElementById('modelSelect').addEventListener('change', function ()
+        {
+            const selectedModel = this.value;
+            updateModelInfo(selectedModel);
+            updateCostEstimate();
+        });
+
+        // Update cost estimate when questions change
+        document.getElementById('maxQuestions').addEventListener('input', function ()
+        {
+            updateCostEstimate();
+        });
+
+        function loadAvailableModels()
+        {
+            fetch('/api/models')
+                .then(response => response.json())
+                .then(data =>
+                {
+                    if (data.success)
+                    {
+                        availableModels = data.data;
+                        console.log('Loaded models:', availableModels);
+                    }
+                })
+                .catch(error =>
+                {
+                    console.error('Error loading models:', error);
+                });
+        }
+
+        function updateModelRecommendations()
+        {
+            const worksheetType = document.getElementById('WorksheetType').value;
+            if (!worksheetType) return;
+
+            fetch(`/api/models/recommend?worksheetType=${encodeURIComponent(worksheetType)}`)
+                .then(response => response.json())
+                .then(data =>
+                {
+                    if (data.success && data.data.length > 0)
+                    {
+                        const recommendedModel = data.data[0];
+                        const modelSelect = document.getElementById('modelSelect');
+
+                        // Update the placeholder text to show recommendation
+                        const autoOption = modelSelect.querySelector('option[value=""]');
+                        if (autoOption)
+                        {
+                            autoOption.textContent = `Auto-select best model (${recommendedModel.name} recommended)`;
+                        }
+                    }
+                })
+                .catch(error =>
+                {
+                    console.error('Error getting model recommendations:', error);
+                });
+        }        function updateModelInfo(modelId)
+        {
+            const modelInfoPanel = document.getElementById('modelInfo');
+
+            if (!modelId)
+            {
+                modelInfoPanel.classList.add('d-none');
+                return;
+            }
+
+            const model = availableModels.find(m => m.id === modelId);
+            if (!model) return;
+
+            // Update model information display
+            document.getElementById('modelName').textContent = model.name;
+            document.getElementById('modelDescription').textContent = model.description || 'No description available';
+            
+            // Update capabilities based on available properties
+            const capabilities = [];
+            if (model.supportsStructuredOutput) capabilities.push('Structured Output');
+            if (model.isRecommendedForEducation) capabilities.push('Education Optimized');
+            if (model.strengths && model.strengths.length > 0) capabilities.push(...model.strengths);
+            
+            document.getElementById('modelCapabilities').textContent =
+                `Features: ${capabilities.length > 0 ? capabilities.join(', ') : 'General purpose'}`;
+
+            // Update badges with calculated values
+            const costTier = model.costPer1kInputTokens < 0.001 ? 'Low' : 
+                            model.costPer1kInputTokens < 0.01 ? 'Medium' : 'High';
+            const qualityScore = model.isRecommendedForEducation ? '9' : '7'; // Simplified scoring
+            const speedScore = model.maxTokens > 100000 ? '8' : '6'; // Simplified scoring
+
+            document.getElementById('qualityBadge').textContent = `Quality: ${qualityScore}/10`;
+            document.getElementById('speedBadge').textContent = `Speed: ${speedScore}/10`;
+            document.getElementById('costBadge').textContent = `Cost: ${costTier}`;
+
+            modelInfoPanel.classList.remove('d-none');
+        }
+
+        function updateCostEstimate()
+        {
+            const modelId = document.getElementById('modelSelect').value;
+            const maxQuestions = document.getElementById('maxQuestions').value || 10;
+            const sourceText = document.getElementById('SourceText').value || '';
+
+            if (!modelId)
+            {
+                document.getElementById('estimatedCost').value = '';
+                document.getElementById('costDetails').textContent = 'Select a model to see cost estimate';
+                return;
+            }
+
+            const requestData = {
+                modelId: modelId,
+                inputTokens: Math.max(100, Math.floor(sourceText.length / 4)), // Rough token estimate
+                outputTokens: maxQuestions * 50, // Estimate ~50 tokens per question
+                worksheetType: document.getElementById('WorksheetType').value
+            };
+
+            fetch('/api/models/estimate-cost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => response.json())
+                .then(data =>
+                {
+                    if (data.success)
+                    {
+                        const cost = data.data.estimatedCost;
+                        document.getElementById('estimatedCost').value = cost.toFixed(4);
+                        document.getElementById('costDetails').innerHTML =
+                            `<i class="bi bi-info-circle me-1"></i>Based on ~${data.data.inputTokens} input + ${data.data.outputTokens} output tokens`;
+                    } else
+                    {
+                        document.getElementById('estimatedCost').value = 'Error';
+                        document.getElementById('costDetails').textContent = 'Unable to estimate cost';
+                    }
+                })
+                .catch(error =>
+                {
+                    console.error('Error estimating cost:', error);
+                    document.getElementById('estimatedCost').value = 'Error';
+                    document.getElementById('costDetails').textContent = 'Unable to estimate cost';
+                });
+        }
+
+        function updateFormSuggestions(worksheetType)
+        {
+            const customInstructions = document.getElementById('CustomInstructions');
+
+            const suggestions = {
+                'reading-comprehension': 'Focus on main idea, supporting details, and inference questions',
+                'vocabulary': 'Include context clues, synonyms, antonyms, and word usage exercises',
+                'grammar': 'Target specific grammar concepts with clear examples and practice',
+                'creative-writing': 'Provide engaging prompts with scaffolding and assessment rubrics',
+                'literary-analysis': 'Focus on theme, character development, and literary devices'
+            };
+
+            if (suggestions[worksheetType])
+            {
+                customInstructions.placeholder = suggestions[worksheetType];
+            }
+        }
+    </script>
+}
+
+                                   
+                               
+                                   
+                                       
+                                       
+                                       
+                                                   estimatesmall        </div>
+
+                                       
+                                   
+                                    
+        
+        
+        
+       
+       
+               
+                   
+               
+       
+               
+                   
+                       
+               
+       
+           
+       
+                   
+                   
+                                       
+                                       
+                               
+       
+           

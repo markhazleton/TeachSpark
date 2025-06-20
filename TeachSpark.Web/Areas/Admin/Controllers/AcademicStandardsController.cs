@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web.Data;
-using TeachSpark.Web.Data.Entities;
 using TeachSpark.Web.Services;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
@@ -90,7 +89,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error refreshing academic standards from CSV");
-                var innerException = ex.InnerException != null ? $" Inner: {ex.InnerException.Message}" : "";
+                var innerException = ex.InnerException != null ? $" Inner: {ex.InnerException.Message}" : string.Empty;
                 TempData["ErrorMessage"] = $"Error refreshing data: {ex.Message}{innerException}";
                 return RedirectToAction(nameof(Index));
             }
@@ -192,7 +191,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                     grade = s.Grade,
                     gleCode = s.GleCode,
                     statement = s.Statement.Length > 100 ? s.Statement.Substring(0, 100) + "..." : s.Statement,
-                    subheading = string.IsNullOrEmpty(s.Subheading) ? "" : (s.Subheading.Length > 50 ? s.Subheading.Substring(0, 50) + "..." : s.Subheading)
+                    subheading = string.IsNullOrEmpty(s.Subheading) ? string.Empty : (s.Subheading.Length > 50 ? s.Subheading.Substring(0, 50) + "..." : s.Subheading)
                 })
             });
         }
@@ -263,7 +262,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error refreshing academic standards from CSV");
-                var innerException = ex.InnerException != null ? $" Inner: {ex.InnerException.Message}" : "";
+                var innerException = ex.InnerException != null ? $" Inner: {ex.InnerException.Message}" : string.Empty;
                 return Json(new { success = false, message = $"Error refreshing data: {ex.Message}{innerException}" });
             }
         }

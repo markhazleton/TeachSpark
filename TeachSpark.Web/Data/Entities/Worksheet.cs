@@ -26,9 +26,10 @@ namespace TeachSpark.Web.Data.Entities
 
         public int? TemplateId { get; set; }
         public virtual WorksheetTemplate? Template { get; set; }
-
         [Required]
-        public string ContentJson { get; set; } = string.Empty; // Generated worksheet content
+        public string ContentMarkdown { get; set; } = string.Empty; // Generated worksheet content in Markdown
+
+        public string? RenderedHtml { get; set; } // Cached HTML rendering for performance
 
         public string? SourceText { get; set; } // Original text used for generation
 

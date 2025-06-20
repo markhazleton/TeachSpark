@@ -208,7 +208,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                     order = b.Order,
                     colorCode = b.ColorCode,
                     worksheetCount = b.Worksheets.Count,
-                    actionVerbs = b.ActionVerbs != null && b.ActionVerbs.Length > 50 ? b.ActionVerbs.Substring(0, 50) + "..." : b.ActionVerbs ?? ""
+                    actionVerbs = b.ActionVerbs != null && b.ActionVerbs.Length > 50 ? b.ActionVerbs.Substring(0, 50) + "..." : b.ActionVerbs ?? string.Empty
                 })
                 .ToListAsync();
 

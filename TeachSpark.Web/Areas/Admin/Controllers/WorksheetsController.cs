@@ -61,14 +61,14 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         // POST: Admin/Worksheets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,UserId,CommonCoreStandardId,BloomLevelId,TemplateId,ContentJson,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite")] Worksheet worksheet)
+        public async Task<IActionResult> Create([Bind("Title,Description,UserId,CommonCoreStandardId,BloomLevelId,TemplateId,ContentMarkdown,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite")] Worksheet worksheet)
         {
             if (ModelState.IsValid)
             {
                 // Validate JSON formats
-                if (!string.IsNullOrEmpty(worksheet.ContentJson) && !IsValidJson(worksheet.ContentJson))
+                if (!string.IsNullOrEmpty(worksheet.ContentMarkdown) && !IsValidJson(worksheet.ContentMarkdown))
                 {
-                    ModelState.AddModelError("ContentJson", "Invalid JSON format for Content.");
+                    ModelState.AddModelError("ContentMarkdown", "Invalid JSON format for Content.");
                 }
                 if (!string.IsNullOrEmpty(worksheet.AccessibilityOptions) && !IsValidJson(worksheet.AccessibilityOptions))
                 {
@@ -116,7 +116,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         // POST: Admin/Worksheets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,UserId,CommonCoreStandardId,BloomLevelId,TemplateId,ContentJson,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite,CreatedAt,ViewCount,DownloadCount,LastAccessedAt,LlmModel,GenerationPrompt,GenerationCost,GenerationTime")] Worksheet worksheet)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,UserId,CommonCoreStandardId,BloomLevelId,TemplateId,ContentMarkdown,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite,CreatedAt,ViewCount,DownloadCount,LastAccessedAt,LlmModel,GenerationPrompt,GenerationCost,GenerationTime")] Worksheet worksheet)
         {
             if (id != worksheet.Id)
             {
@@ -126,11 +126,10 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {
-                    // Validate JSON formats
-                    if (!string.IsNullOrEmpty(worksheet.ContentJson) && !IsValidJson(worksheet.ContentJson))
+                {                    // Validate JSON formats
+                    if (!string.IsNullOrEmpty(worksheet.ContentMarkdown) && !IsValidJson(worksheet.ContentMarkdown))
                     {
-                        ModelState.AddModelError("ContentJson", "Invalid JSON format for Content.");
+                        ModelState.AddModelError("ContentMarkdown", "Invalid JSON format for Content.");
                     }
                     if (!string.IsNullOrEmpty(worksheet.AccessibilityOptions) && !IsValidJson(worksheet.AccessibilityOptions))
                     {
@@ -238,12 +237,12 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 .Select(w => new
                 {
                     id = w.Id,
-                    title = w.Title ?? "",
-                    user = w.User != null ? w.User.Email : "",
-                    bloomLevel = w.BloomLevel != null ? w.BloomLevel.Name : "",
-                    commonCoreStandard = w.CommonCoreStandard != null ? w.CommonCoreStandard.Code : "",
-                    template = w.Template != null ? w.Template.Name : "",
-                    worksheetType = w.WorksheetType ?? "",
+                    title = w.Title ?? string.Empty,
+                    user = w.User != null ? w.User.Email : string.Empty,
+                    bloomLevel = w.BloomLevel != null ? w.BloomLevel.Name : string.Empty,
+                    commonCoreStandard = w.CommonCoreStandard != null ? w.CommonCoreStandard.Code : string.Empty,
+                    template = w.Template != null ? w.Template.Name : string.Empty,
+                    worksheetType = w.WorksheetType ?? string.Empty,
                     difficultyLevel = w.DifficultyLevel,
                     isPublic = w.IsPublic,
                     viewCount = w.ViewCount,

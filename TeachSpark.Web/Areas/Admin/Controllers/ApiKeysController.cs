@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using TeachSpark.Web.Data;
-using TeachSpark.Web.Data.Entities;
 using System.Security.Cryptography;
 using System.Text;
+using TeachSpark.Web.Data;
+using TeachSpark.Web.Data.Entities;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
 {
@@ -244,15 +244,15 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 .Select(a => new
                 {
                     id = a.Id,
-                    name = a.Name ?? "",
-                    user = a.User != null ? a.User.Email : "",
-                    keyPrefix = a.KeyPrefix ?? "",
+                    name = a.Name ?? string.Empty,
+                    user = a.User != null ? a.User.Email : string.Empty,
+                    keyPrefix = a.KeyPrefix ?? string.Empty,
                     isActive = a.IsActive,
                     requestCount = a.RequestCount,
                     dailyRequestLimit = a.DailyRequestLimit,
                     monthlyRequestLimit = a.MonthlyRequestLimit,
                     createdAt = a.CreatedAt.ToString("yyyy-MM-dd"),
-                    expiresAt = a.ExpiresAt != null ? a.ExpiresAt.Value.ToString("yyyy-MM-dd") : "",
+                    expiresAt = a.ExpiresAt != null ? a.ExpiresAt.Value.ToString("yyyy-MM-dd") : string.Empty,
                     lastUsedAt = a.LastUsedAt != null ? a.LastUsedAt.Value.ToString("yyyy-MM-dd HH:mm") : "Never",
                     usageCount = a.ApiUsages.Count
                 })

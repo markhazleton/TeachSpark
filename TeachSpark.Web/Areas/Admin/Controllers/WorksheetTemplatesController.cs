@@ -208,11 +208,11 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 .Select(t => new
                 {
                     id = t.Id,
-                    name = t.Name ?? "",
+                    name = t.Name ?? string.Empty,
                     description = t.Description != null && t.Description.Length > 80
                         ? t.Description.Substring(0, 80) + "..."
-                        : t.Description ?? "",
-                    templateType = t.TemplateType ?? "",
+                        : t.Description ?? string.Empty,
+                    templateType = t.TemplateType ?? string.Empty,
                     isPublic = t.IsPublic,
                     isSystem = t.IsSystem,
                     createdBy = t.User != null ? t.User.Email : "System",

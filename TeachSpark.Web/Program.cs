@@ -3,6 +3,7 @@ using TeachSpark.Web;
 using TeachSpark.Web.Data;
 using TeachSpark.Web.Data.Entities;
 using TeachSpark.Web.Services;
+using TeachSpark.Web.Services.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,12 @@ builder.Services.AddSingleton<IAssetsService, AssetsService>();
 
 // Register the academic standards import service
 builder.Services.AddScoped<AcademicStandardsImportService>();
+
+// Register CRUD services
+builder.Services.AddCrudServices();
+
+// Register worksheet generation services (LLM preparation)
+builder.Services.AddWorksheetGenerationServices(builder.Configuration);
 
 var app = builder.Build();
 

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web.Data;
-using TeachSpark.Web.Data.Entities;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
 {
@@ -213,15 +212,15 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 .Select(e => new
                 {
                     id = e.Id,
-                    fileName = e.FileName ?? "",
-                    worksheetTitle = e.Worksheet != null ? e.Worksheet.Title : "",
-                    user = e.Worksheet != null && e.Worksheet.User != null ? e.Worksheet.User.Email : "",
-                    exportFormat = e.ExportFormat ?? "",
+                    fileName = e.FileName ?? string.Empty,
+                    worksheetTitle = e.Worksheet != null ? e.Worksheet.Title : string.Empty,
+                    user = e.Worksheet != null && e.Worksheet.User != null ? e.Worksheet.User.Email : string.Empty,
+                    exportFormat = e.ExportFormat ?? string.Empty,
                     fileSizeMB = Math.Round(e.FileSizeBytes / 1024.0 / 1024.0, 2),
                     downloadCount = e.DownloadCount,
                     isTemporary = e.IsTemporary,
                     createdAt = e.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
-                    expiresAt = e.ExpiresAt != null ? e.ExpiresAt.Value.ToString("yyyy-MM-dd HH:mm") : "",
+                    expiresAt = e.ExpiresAt != null ? e.ExpiresAt.Value.ToString("yyyy-MM-dd HH:mm") : string.Empty,
                     isExpired = e.ExpiresAt < DateTime.UtcNow
                 })
                 .ToListAsync();

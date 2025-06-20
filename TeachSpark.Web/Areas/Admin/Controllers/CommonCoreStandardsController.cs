@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 using TeachSpark.Web.Data;
 using TeachSpark.Web.Data.Entities;
-using System.Text;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
 {
@@ -202,8 +202,8 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                     grade = s.Grade,
                     subject = s.Subject,
                     domain = s.Domain,
-                    category = s.Category ?? "",
-                    description = s.Description != null && s.Description.Length > 100 ? s.Description.Substring(0, 100) + "..." : s.Description ?? "",
+                    category = s.Category ?? string.Empty,
+                    description = s.Description != null && s.Description.Length > 100 ? s.Description.Substring(0, 100) + "..." : s.Description ?? string.Empty,
                     isActive = s.IsActive,
                     worksheetCount = s.Worksheets.Count,
                     sortOrder = s.SortOrder
@@ -387,7 +387,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         private static string ExtractGradeFromCode(string code)
         {
             if (string.IsNullOrEmpty(code))
-                return "";
+                return string.Empty;
 
             // Handle patterns like "K.RL.1", "1.RL.2", "11-12.WHST.10"
             var dotIndex = code.IndexOf('.');
@@ -396,7 +396,7 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 return code.Substring(0, dotIndex);
             }
 
-            return "";
+            return string.Empty;
         }
 
         private static string[] ParseCsvLine(string line)

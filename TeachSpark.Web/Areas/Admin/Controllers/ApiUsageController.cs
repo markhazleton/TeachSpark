@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web.Data;
-using TeachSpark.Web.Data.Entities;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
 {
@@ -169,15 +168,15 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 .Select(a => new
                 {
                     id = a.Id,
-                    endpoint = a.Endpoint ?? "",
-                    httpMethod = a.HttpMethod ?? "",
-                    apiKeyName = a.ApiKey != null ? a.ApiKey.Name : "",
-                    user = a.ApiKey != null && a.ApiKey.User != null ? a.ApiKey.User.Email : "",
-                    ipAddress = a.IpAddress ?? "",
+                    endpoint = a.Endpoint ?? string.Empty,
+                    httpMethod = a.HttpMethod ?? string.Empty,
+                    apiKeyName = a.ApiKey != null ? a.ApiKey.Name : string.Empty,
+                    user = a.ApiKey != null && a.ApiKey.User != null ? a.ApiKey.User.Email : string.Empty,
+                    ipAddress = a.IpAddress ?? string.Empty,
                     responseStatusCode = a.ResponseStatusCode,
                     responseTime = $"{a.ResponseTime.TotalMilliseconds:F0} ms",
                     tokensUsed = a.TokensUsed,
-                    cost = a.CostIncurred != null ? $"${a.CostIncurred:F4}" : "",
+                    cost = a.CostIncurred != null ? $"${a.CostIncurred:F4}" : string.Empty,
                     requestedAt = a.RequestedAt.ToString("yyyy-MM-dd HH:mm:ss"),
                     hasError = !string.IsNullOrEmpty(a.ErrorMessage)
                 })
