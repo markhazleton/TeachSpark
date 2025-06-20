@@ -1,10 +1,10 @@
-// Import Bootstrap 5
-@import '~bootstrap/scss/bootstrap';
+// Import Bootstrap 5 using modern @use syntax
+@use '~bootstrap/scss/bootstrap';
 
-// Import Bootstrap Icons
+// Import Bootstrap Icons (CSS files must use @import)
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 
-// Import DataTables CSS for Bootstrap 5
+// Import DataTables CSS for Bootstrap 5 (CSS files must use @import)
 @import '~datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 
 // Custom styles for TeachSpark.Web (migrated from _Layout.cshtml.css)

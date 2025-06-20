@@ -57,21 +57,27 @@ module.exports = {
                             importLoaders: 3,
                             sourceMap: false
                         }
-                    },
-                    {
+                    },                    {
                         loader: 'postcss-loader',
                         options: {
                             postcssOptions: {
                                 plugins: [
-                                    ['autoprefixer'],
+                                    ['autoprefixer', {
+                                        overrideBrowserslist: ['> 1%', 'last 2 versions', 'not dead', 'not ie 11'],
+                                        grid: 'autoplace',
+                                        flexbox: 'no-2009'
+                                    }],
                                     ['postcss-preset-env', {
-                                        stage: 1,
+                                        stage: 2,
                                         features: {
-                                            'nesting-rules': true
-                                        }
+                                            'nesting-rules': true,
+                                            'custom-properties': true
+                                        },
+                                        autoprefixer: false
                                     }]
                                 ]
-                            }
+                            },
+                            sourceMap: false
                         }
                     },
                     {
@@ -94,14 +100,20 @@ module.exports = {
                         options: {
                             importLoaders: 1,
                             sourceMap: false
-                        }
-                    },
+                        }                    },
                     {
                         loader: 'postcss-loader',
                         options: {
                             postcssOptions: {
-                                plugins: [['autoprefixer']]
-                            }
+                                plugins: [
+                                    ['autoprefixer', {
+                                        overrideBrowserslist: ['> 1%', 'last 2 versions', 'not dead', 'not ie 11'],
+                                        grid: 'autoplace',
+                                        flexbox: 'no-2009'
+                                    }]
+                                ]
+                            },
+                            sourceMap: false
                         }
                     }
                 ]

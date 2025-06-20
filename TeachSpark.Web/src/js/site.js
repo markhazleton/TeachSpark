@@ -71,9 +71,9 @@ require('datatables.net-bs5');
                                 first: 'First',
                                 last: 'Last',
                                 next: 'Next',
-                                previous: 'Previous'
-                            }
-                        }
+                                previous: 'Previous',
+                            },
+                        },
                     });
                 }
             });
@@ -156,7 +156,7 @@ require('datatables.net-bs5');
                         responsive: true,
                         pageLength: 25,
                         lengthMenu: [10, 25, 50, 100],
-                        order: [[0, 'asc']]
+                        order: [[0, 'asc']],
                     };
                     const mergedOptions = Object.assign(defaultOptions, options);
                     return $(selector).DataTable(mergedOptions);
@@ -176,7 +176,7 @@ require('datatables.net-bs5');
                 if (typeof $.fn.DataTable !== 'undefined' && $.fn.DataTable.isDataTable(selector)) {
                     $(selector).DataTable().destroy();
                 }
-            }
-        }
+            },
+        },
     };
 })();

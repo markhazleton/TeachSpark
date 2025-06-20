@@ -49,13 +49,27 @@ module.exports = {
                             importLoaders: 3,
                             sourceMap: true
                         }
-                    },
-                    {
+                    },                    {
                         loader: 'postcss-loader',
                         options: {
                             postcssOptions: {
-                                plugins: [['autoprefixer']]
-                            }
+                                plugins: [
+                                    ['autoprefixer', {
+                                        overrideBrowserslist: ['> 1%', 'last 2 versions', 'not dead', 'not ie 11'],
+                                        grid: 'autoplace',
+                                        flexbox: 'no-2009'
+                                    }],
+                                    ['postcss-preset-env', {
+                                        stage: 2,
+                                        features: {
+                                            'nesting-rules': true,
+                                            'custom-properties': true
+                                        },
+                                        autoprefixer: false
+                                    }]
+                                ]
+                            },
+                            sourceMap: true
                         }
                     },
                     {
@@ -76,13 +90,19 @@ module.exports = {
                             importLoaders: 1,
                             sourceMap: true
                         }
-                    },
-                    {
+                    },                    {
                         loader: 'postcss-loader',
                         options: {
                             postcssOptions: {
-                                plugins: [['autoprefixer']]
-                            }
+                                plugins: [
+                                    ['autoprefixer', {
+                                        overrideBrowserslist: ['> 1%', 'last 2 versions', 'not dead', 'not ie 11'],
+                                        grid: 'autoplace',
+                                        flexbox: 'no-2009'
+                                    }]
+                                ]
+                            },
+                            sourceMap: true
                         }
                     }
                 ]
