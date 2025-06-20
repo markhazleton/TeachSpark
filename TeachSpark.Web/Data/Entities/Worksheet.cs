@@ -15,10 +15,11 @@ namespace TeachSpark.Web.Data.Entities
         [Required]
         public string UserId { get; set; } = string.Empty;
 
-        public virtual ApplicationUser User { get; set; } = null!;
-
-        public int? CommonCoreStandardId { get; set; }
+        public virtual ApplicationUser User { get; set; } = null!; public int? CommonCoreStandardId { get; set; }
         public virtual CommonCoreStandard? CommonCoreStandard { get; set; }
+
+        public int? AcademicStandardId { get; set; }
+        public virtual AcademicStandard? AcademicStandard { get; set; }
 
         public int? BloomLevelId { get; set; }
         public virtual BloomLevel? BloomLevel { get; set; }

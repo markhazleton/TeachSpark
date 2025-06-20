@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web;
 using TeachSpark.Web.Data;
 using TeachSpark.Web.Data.Entities;
+using TeachSpark.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +52,9 @@ builder.Services.AddControllersWithViews();
 
 // Register the assets service for webpack asset resolution
 builder.Services.AddSingleton<IAssetsService, AssetsService>();
+
+// Register the academic standards import service
+builder.Services.AddScoped<AcademicStandardsImportService>();
 
 var app = builder.Build();
 

@@ -24,7 +24,9 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 TotalRequests = await _context.ApiUsages.CountAsync(),
                 TotalToday = await _context.ApiUsages.CountAsync(u => u.RequestedAt.Date == DateTime.UtcNow.Date),
                 TotalThisMonth = await _context.ApiUsages.CountAsync(u => u.RequestedAt.Month == DateTime.UtcNow.Month && u.RequestedAt.Year == DateTime.UtcNow.Year),
-                AverageResponseTime = await _context.ApiUsages.AverageAsync(u => u.ResponseTime.TotalMilliseconds),
+                AverageResponseTime = _context.ApiUsages
+                    .AsEnumerable() // Switch to client-side evaluation
+                    .Average(u => u.ResponseTime.TotalMilliseconds),
                 TotalTokensUsed = await _context.ApiUsages.SumAsync(u => u.TokensUsed ?? 0),
                 TotalCost = await _context.ApiUsages.SumAsync(u => u.CostIncurred ?? 0),
                 ErrorRate = await CalculateErrorRate(),

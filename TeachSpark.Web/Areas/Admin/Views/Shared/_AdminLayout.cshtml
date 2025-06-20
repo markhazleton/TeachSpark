@@ -31,45 +31,59 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownContent" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownContent" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-book"></i> Content Management
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownContent">
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="BloomLevels" asp-action="Index">
-                                    <i class="bi bi-diagram-3"></i> Bloom Levels
-                                </a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="CommonCoreStandards" asp-action="Index">
-                                    <i class="bi bi-bookmarks"></i> Common Core Standards
-                                </a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="WorksheetTemplates" asp-action="Index">
-                                    <i class="bi bi-file-earmark-text"></i> Worksheet Templates
-                                </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="AcademicStandards"
+                                        asp-action="Index">
+                                        <i class="bi bi-mortarboard"></i> Academic Standards
+                                    </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="BloomLevels"
+                                        asp-action="Index">
+                                        <i class="bi bi-diagram-3"></i> Bloom Levels
+                                    </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="CommonCoreStandards"
+                                        asp-action="Index">
+                                        <i class="bi bi-bookmarks"></i> Common Core Standards
+                                    </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="WorksheetTemplates"
+                                        asp-action="Index">
+                                        <i class="bi bi-file-earmark-text"></i> Worksheet Templates
+                                    </a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWorksheets" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWorksheets" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-files"></i> Worksheets
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownWorksheets">
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Worksheets" asp-action="Index">
-                                    <i class="bi bi-file-text"></i> All Worksheets
-                                </a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="WorksheetExports" asp-action="Index">
-                                    <i class="bi bi-download"></i> Worksheet Exports
-                                </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Worksheets"
+                                        asp-action="Index">
+                                        <i class="bi bi-file-text"></i> All Worksheets
+                                    </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="WorksheetExports"
+                                        asp-action="Index">
+                                        <i class="bi bi-download"></i> Worksheet Exports
+                                    </a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownApi" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownApi" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-key"></i> API Management
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownApi">
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="ApiKeys" asp-action="Index">
-                                    <i class="bi bi-key-fill"></i> API Keys
-                                </a></li>
-                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="ApiUsage" asp-action="Index">
-                                    <i class="bi bi-bar-chart"></i> API Usage
-                                </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="ApiKeys"
+                                        asp-action="Index">
+                                        <i class="bi bi-key-fill"></i> API Keys
+                                    </a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="ApiUsage"
+                                        asp-action="Index">
+                                        <i class="bi bi-bar-chart"></i> API Usage
+                                    </a></li>
                             </ul>
                         </li>
                     </ul>
@@ -80,12 +94,16 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-person-circle"></i> @User.Identity?.Name
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
-                                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Profile</a></li>
-                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-area="Identity"
+                                        asp-page="/Account/Manage/Index">Profile</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li>
                                     <form class="d-inline" asp-area="Identity" asp-page="/Account/Logout" method="post">
                                         <button type="submit" class="dropdown-item">

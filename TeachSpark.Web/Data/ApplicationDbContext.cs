@@ -12,9 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
-    }
-
-    // DbSets for worksheet generator functionality
+    }    // DbSets for worksheet generator functionality
     public DbSet<CommonCoreStandard> CommonCoreStandards { get; set; }
     public DbSet<BloomLevel> BloomLevels { get; set; }
     public DbSet<WorksheetTemplate> WorksheetTemplates { get; set; }
@@ -22,6 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<WorksheetExport> WorksheetExports { get; set; }
     public DbSet<ApiKey> ApiKeys { get; set; }
     public DbSet<ApiUsage> ApiUsages { get; set; }
+    public DbSet<AcademicStandard> AcademicStandards { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -59,12 +58,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasOne(w => w.User)
             .WithMany(u => u.Worksheets)
             .HasForeignKey(w => w.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Entity<Worksheet>()
+            .OnDelete(DeleteBehavior.Cascade); builder.Entity<Worksheet>()
             .HasOne(w => w.CommonCoreStandard)
             .WithMany(s => s.Worksheets)
             .HasForeignKey(w => w.CommonCoreStandardId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<Worksheet>()
+            .HasOne(w => w.AcademicStandard)
+            .WithMany(a => a.Worksheets)
+            .HasForeignKey(w => w.AcademicStandardId)
             .OnDelete(DeleteBehavior.SetNull);
 
         builder.Entity<Worksheet>()
@@ -114,10 +117,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         builder.Entity<ApiKey>()
             .HasIndex(a => a.KeyValue)
-            .IsUnique();
+            .IsUnique(); builder.Entity<ApiUsage>()
+            .HasIndex(u => u.RequestedAt); builder.Entity<AcademicStandard>()
+            .HasIndex(a => a.GleCode);
 
-        builder.Entity<ApiUsage>()
-            .HasIndex(u => u.RequestedAt);
+        builder.Entity<AcademicStandard>()
+            .HasIndex(a => new { a.Subject, a.Grade });
 
         // Seed Data
         SeedBloomLevels(builder);

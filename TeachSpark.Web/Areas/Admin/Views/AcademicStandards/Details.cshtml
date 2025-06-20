@@ -1,0 +1,202 @@
+@model TeachSpark.Web.Data.Entities.AcademicStandard
+
+@{
+    ViewData["Title"] = "Academic Standard Details";
+    ViewData["PageHeader"] = "Academic Standard Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>@Model.GleCode
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-muted">GLE Code:</td>
+                                        <td>
+                                            <span class="badge bg-primary">@Model.GleCode</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Grade:</td>
+                                        <td>
+                                            <span class="badge bg-info">@Model.Grade</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Subject:</td>
+                                        <td>@Model.Subject</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Subheading:</td>
+                                        <td>@Model.Subheading</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Created:</td>
+                                        <td>@Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Updated:</td>
+                                        <td>@Model.UpdatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Details -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-file-text me-2"></i>Standard Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-muted">Standard:</h6>
+                        <p class="mb-0">@Model.Standard</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-muted">Grade Level Expectation:</h6>
+                        <p class="mb-0">@Model.GradeLevelExpectation</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-muted">Statement:</h6>
+                        <p class="mb-0">@Model.Statement</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prepared Graduates -->
+            @if (!string.IsNullOrEmpty(Model.PreparedGraduate1) || !string.IsNullOrEmpty(Model.PreparedGraduate2) ||
+                        !string.IsNullOrEmpty(Model.PreparedGraduate3) || !string.IsNullOrEmpty(Model.PreparedGraduate4) ||
+                        !string.IsNullOrEmpty(Model.PreparedGraduate5))
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-mortarboard me-2"></i>Prepared Graduate Competencies
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.PreparedGraduate1))
+                        {
+                            <div class="mb-2">
+                                <span class="badge bg-secondary me-2">1</span>
+                                @Model.PreparedGraduate1
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PreparedGraduate2))
+                        {
+                            <div class="mb-2">
+                                <span class="badge bg-secondary me-2">2</span>
+                                @Model.PreparedGraduate2
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PreparedGraduate3))
+                        {
+                            <div class="mb-2">
+                                <span class="badge bg-secondary me-2">3</span>
+                                @Model.PreparedGraduate3
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PreparedGraduate4))
+                        {
+                            <div class="mb-2">
+                                <span class="badge bg-secondary me-2">4</span>
+                                @Model.PreparedGraduate4
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.PreparedGraduate5))
+                        {
+                            <div class="mb-2">
+                                <span class="badge bg-secondary me-2">5</span>
+                                @Model.PreparedGraduate5
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-4">
+            <!-- Related Worksheets -->
+            @if (Model.Worksheets != null && Model.Worksheets.Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-file-earmark-text me-2"></i>Related Worksheets
+                            <span class="badge bg-primary ms-2">@Model.Worksheets.Count()</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            @foreach (var worksheet in Model.Worksheets.Take(10))
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">@worksheet.Title</div>
+                                        <small class="text-muted">Created by @worksheet.User.FirstName
+                                            @worksheet.User.LastName</small>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill">@worksheet.ViewCount views</span>
+                                </div>
+                            }
+                        </div>
+
+                        @if (Model.Worksheets.Count() > 10)
+                        {
+                            <div class="text-center mt-3">
+                                <small class="text-muted">... and @(Model.Worksheets.Count() - 10) more</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-file-earmark-text me-2"></i>Related Worksheets
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-0">No worksheets have been created using this standard yet.</p>
+                    </div>
+                </div>
+            }
+
+            <!-- Quick Actions -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-gear me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Index" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+              
+                                           
