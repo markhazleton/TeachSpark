@@ -8,8 +8,9 @@
     <!-- Worksheet Header -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-start">                <div>
-                    <h1 class="h2">@Model.GeneratedTitle</h1>
+            <div class="d-flex justify-content-between align-items-start flex-wrap">
+                <div class="mb-3 mb-md-0">
+                    <h1 class="h2 text-primary">@Model.GeneratedTitle</h1>
                     <p class="text-muted mb-0">@Model.GeneratedDescription</p>
                 </div>
                 <div class="btn-group" role="group">
@@ -53,59 +54,87 @@
     <div class="row">
         <div class="col-12">
             <!-- Formatted HTML View -->
-            <div id="formatted-content" class="worksheet-content border rounded p-4 bg-white">
-                @Html.Raw(Model.RenderedHtml)
-            </div>            <!-- Markdown Source View -->
+            <div id="formatted-content" class="card border-0 shadow-sm bg-white"
+                style="max-width: 8.5in; margin: 0 auto;">
+                <div class="card-body p-4" style="font-family: 'Georgia', serif; line-height: 1.6;">
+                    @Html.Raw(Model.RenderedHtml)
+                </div>
+            </div>
+
+            <!-- Markdown Source View -->
             <div id="markdown-content" class="d-none">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Markdown Source</h5>
                         <small class="text-muted">Copy this text to reuse or edit in any Markdown editor</small>
                     </div>
                     <div class="card-body p-0">
-                        <pre
-                            class="language-markdown mb-0"><code class="language-markdown">@Model.MarkdownContent</code></pre>
+                        <pre class="language-markdown mb-0 p-3 bg-light border-0"
+                            style="font-size: 0.9rem; max-height: 400px; overflow-y: auto;"><code class="language-markdown">@Model.MarkdownContent</code></pre>
                     </div>
                 </div>
             </div>
 
             <!-- Student Print Version -->
-            <div id="print-content" class="worksheet-content border rounded p-4 bg-white d-none">
-                <!-- This will be populated via JavaScript -->
+            <div id="print-content" class="card border-0 shadow-sm bg-white d-none"
+                style="max-width: 8.5in; margin: 0 auto;">
+                <div class="card-body p-4" style="font-family: 'Georgia', serif; line-height: 1.6;">
+                    <!-- This will be populated via JavaScript -->
+                </div>
             </div>
         </div>
-    </div>    <!-- Worksheet Metadata -->
+    </div>
+
+    <!-- Worksheet Metadata -->
     <div class="row mt-4">
         <div class="col-12">
-            <div class="card border-0 bg-light">
+            <div class="card border-0 bg-light shadow-sm">
                 <div class="card-body">
-                    <h6 class="card-title">Worksheet Information</h6>
+                    <h6 class="card-title text-primary">
+                        <i class="bi bi-info-circle me-2"></i>Worksheet Information
+                    </h6>
                     <div class="row">
-                        <div class="col-md-3">
-                            <small class="text-muted">Generated:</small><br>
-                            <span>@DateTime.Now.ToString("MMM dd, yyyy")</span>
+                        <div class="col-md-3 mb-2">
+                            <small class="text-muted fw-bold">Generated:</small><br>
+                            <span class="fw-semibold">@DateTime.Now.ToString("MMM dd, yyyy")</span>
                         </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Model Used:</small><br>
-                            <span>@Model.LlmModel</span>
+                        <div class="col-md-3 mb-2">
+                            <small class="text-muted fw-bold">Model Used:</small><br>
+                            <span class="fw-semibold">@Model.LlmModel</span>
                         </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Generation Time:</small><br>
-                            <span>@Model.GenerationTime.TotalSeconds.ToString("F1")s</span>
+                        <div class="col-md-3 mb-2">
+                            <small class="text-muted fw-bold">Generation Time:</small><br>
+                            <span class="fw-semibold">@Model.GenerationTime.TotalSeconds.ToString("F1")s</span>
                         </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Cost:</small><br>
-                            <span>$@Model.GenerationCost.ToString("F4")</span>
+                        <div class="col-md-3 mb-2">
+                            <small class="text-muted fw-bold">Cost:</small><br>
+                            <span class="fw-semibold">$@Model.GenerationCost.ToString("F4")</span>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-4 mb-2">
+                            <small class="text-muted fw-bold">Questions:</small><br>
+                            <span class="fw-semibold">@Model.ExtractedQuestions.Count</span>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <small class="text-muted fw-bold">Estimated Duration:</small><br>
+                            <span class="fw-semibold">@Model.EstimatedDurationMinutes min</span>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <small class="text-muted fw-bold">Confidence Score:</small><br>
+                            <span class="fw-semibold">@((Model.ConfidenceScore * 100).ToString("F0"))%</span>
                         </div>
                     </div>
                     @if (Model.Warnings.Any())
                     {
-                        <div class="row mt-2">
+                        <div class="row mt-3">
                             <div class="col-12">
-                                <small class="text-muted">Warnings:</small><br>
+                                <small class="text-muted fw-bold">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>Warnings:
+                                </small><br>
                                 @foreach (var warning in Model.Warnings)
                                 {
-                                    <span class="badge bg-warning text-dark me-1">@warning</span>
+                                    <span class="badge bg-warning text-dark me-1 mb-1">@warning</span>
                                 }
                             </div>
                         </div>
@@ -114,67 +143,22 @@
             </div>
         </div>
     </div>
+
+    <!-- Actions -->
+    <div class="row mt-4 mb-4">
+        <div class="col-12 text-center">
+            <a href="@Url.Action("Create")" class="btn btn-primary me-2">
+                <i class="bi bi-plus-circle me-1"></i>Generate Another
+            </a>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back to Generator
+            </a>
+        </div>
+    </div>
 </div>
 
 <!-- Hidden elements for copying -->
 <textarea id="markdown-copy-source" class="d-none">@Model.MarkdownContent</textarea>
-<div id="print-copy-source" class="d-none"></div>
-
-@section Styles {
-    <style>
-        .worksheet-content {
-            font-family: 'Georgia', serif;
-            line-height: 1.6;
-            max-width: 8.5in;
-            margin: 0 auto;
-        }
-
-        .worksheet-content h1 {
-            text-align: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-        }
-
-        .worksheet-content h2 {
-            color: #2c5aa0;
-            margin-top: 2rem;
-        }
-
-        .worksheet-content table {
-            width: 100%;
-            margin: 1rem 0;
-        }
-
-        .worksheet-content .answer-key-header {
-            background-color: #f8f9fa;
-            padding: 0.5rem;
-            border-left: 4px solid #007bff;
-        }
-
-        pre code {
-            font-size: 0.9rem;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        @@media print {
-
-            .btn-group,
-            .card-title,
-            .card,
-            .row.mt-4 {
-                display: none !important;
-            }
-
-            .worksheet-content {
-                border: none !important;
-                box-shadow: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-        }
-    </style>
-}
 
 @section Scripts {
     <script>
@@ -207,33 +191,35 @@
                     document.getElementById('print-content').classList.remove('d-none');
                     break;
             }
-        }        async function loadPrintVersion()
+        }
+
+        async function loadPrintVersion()
         {
-            const printContent = document.getElementById('print-content');
+            const printContent = document.getElementById('print-content').querySelector('.card-body');
             if (printContent.innerHTML.trim() === '')
             {
                 try
                 {
                     // For generated worksheets, create a student-friendly version by removing answer keys
-                    const formattedContent = document.getElementById('formatted-content').innerHTML;
-                    
+                    const formattedContent = document.getElementById('formatted-content').querySelector('.card-body').innerHTML;
+
                     // Simple regex to remove answer key sections
                     const studentVersion = formattedContent
                         .replace(/<h[1-6][^>]*>.*?answer.*?key.*?<\/h[1-6]>/gi, '')
                         .replace(/<div[^>]*answer[^>]*>.*?<\/div>/gi, '')
                         .replace(/<!--.*?answer.*?-->/gi, '');
-                    
-                    printContent.innerHTML = studentVersion;
+
+                            printContent.innerHTML = studentVersion;
                 } catch (error)
                 {
-                    printContent.innerHTML = '<div class="alert alert-warning">Unable to load student version</div>';
+                    printContent.innerHTML = '<div class="alert alert-warning"><i class="bi bi-exclamation-triangle me-2"></i>Unable to load student version</div>';
                 }
             }
         }
 
         function copyFormatted()
         {
-            const content = document.getElementById('formatted-content');
+            const content = document.getElementById('formatted-content').querySelector('.card-body');
             if (navigator.clipboard && window.getSelection)
             {
                 const selection = window.getSelection();
@@ -248,7 +234,7 @@
                     showToast('Formatted content copied to clipboard!', 'success');
                 } catch (err)
                 {
-                    showToast('Failed to copy content', 'error');
+                    showToast('Failed to copy content', 'danger');
                 }
 
                 selection.removeAllRanges();
@@ -265,31 +251,92 @@
                     showToast('Markdown copied to clipboard!', 'success');
                 }).catch(() =>
                 {
-                    showToast('Failed to copy markdown', 'error');
+                    showToast('Failed to copy markdown', 'danger');
                 });
             }
         }
 
         function printWorksheet()
         {
-            window.print();
+            // Switch to print view first if not already active
+            const printRadio = document.getElementById('viewPrint');
+            if (!printRadio.checked)
+            {
+                printRadio.checked = true;
+                switchViewMode('viewPrint');
+
+                // Wait a moment for content to load, then print
+                setTimeout(() =>
+                {
+                    window.print();
+                }, 500);
+            } else
+            {
+                window.print();
+            }
         }
 
         function showToast(message, type)
         {
-            // Simple toast notification
-            const toast = document.createElement('div');
-            toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} position-fixed top-0 end-0 m-3`;
-            toast.style.zIndex = '9999';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() =>
+            // Create toast container if it doesn't exist
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer)
             {
-                toast.remove();
-            }, 3000);
-        }
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+                toastContainer.style.zIndex = '9999';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create toast
+            const toastEl = document.createElement('div');
+            toastEl.className = `toast align-items-center text-white bg-${type} border-0`;
+            toastEl.setAttribute('role', 'alert');
+            toastEl.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+
+            toastContainer.appendChild(toastEl);
+
+            // Initialize and show toast
+            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
+
+            // Remove from DOM after hidden
+            toastEl.addEventListener('hidden.bs.toast', () =>
+            {
+                toastEl.remove();
+            });
+        }        // Print styles
+        const printStyles = `
+                @@media print {
+                    .btn-group, .card-title, .row.mt-4, .btn, nav, footer {
+                        display: none !important;
+                    }
+                    .card {
+                        border: none !important;
+                        box-shadow: none !important;
+                    }
+                    .card-body {
+                        padding: 0 !important;
+                    }
+                    body {
+                        background: white !important;
+                    }
+                }
+            `;
+
+        // Add print styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = printStyles;
+        document.head.appendChild(styleSheet);
     </script>
 }
 
-      

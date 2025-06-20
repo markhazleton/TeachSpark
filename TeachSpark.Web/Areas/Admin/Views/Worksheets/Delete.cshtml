@@ -1,0 +1,194 @@
+@model TeachSpark.Web.Data.Entities.Worksheet
+
+@{
+    ViewData["Title"] = $"Delete Worksheet - {Model.Title}";
+    ViewData["PageHeader"] = "Delete Worksheet";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Delete Worksheet
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h6 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Warning!</h6>
+                        <p class="mb-0">You are about to permanently delete this worksheet. This action cannot be undone.</p>
+                    </div>
+
+                    <h4 class="text-danger mb-3">Are you sure you want to delete this worksheet?</h4>
+
+                    <!-- Worksheet Details -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">Worksheet Details</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <strong>ID:</strong> @Model.Id
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Title:</strong> @Model.Title
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Description:</strong> @(string.IsNullOrEmpty(Model.Description) ? "No description" : Model.Description)
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>User:</strong> @(Model.User?.Email ?? "Unknown")
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <strong>Type:</strong> 
+                                        <span class="badge bg-primary">@Model.WorksheetType.Replace("-", " ").Replace("_", " ")</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Difficulty:</strong> 
+                                        @{
+                                            var difficultyColor = Model.DifficultyLevel switch
+                                            {
+                                                "simplified" => "success",
+                                                "standard" => "primary", 
+                                                "advanced" => "warning",
+                                                _ => "secondary"
+                                            };
+                                        }
+                                        <span class="badge bg-@difficultyColor">@Model.DifficultyLevel.First().ToString().ToUpper()@Model.DifficultyLevel.Substring(1)</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Status:</strong>
+                                        @if (Model.IsPublic)
+                                        {
+                                            <span class="badge bg-success"><i class="bi bi-globe me-1"></i>Public</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary"><i class="bi bi-lock me-1"></i>Private</span>
+                                        }
+                                        @if (Model.IsFavorite)
+                                        {
+                                            <span class="badge bg-warning ms-1"><i class="bi bi-star-fill me-1"></i>Favorite</span>
+                                        }
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy 'at' HH:mm")
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Usage Statistics -->
+                            @if (Model.ViewCount > 0 || Model.DownloadCount > 0)
+                            {
+                                <div class="alert alert-warning mt-3">
+                                    <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Usage Impact</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Views:</strong> @Model.ViewCount
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Downloads:</strong> @Model.DownloadCount
+                                        </div>
+                                    </div>
+                                    <p class="mb-0 mt-2">This worksheet has been used by teachers and students. Deleting it may affect those who have bookmarked or referenced it.</p>
+                                </div>
+                            }
+
+                            <!-- Standards Information -->
+                            @if (Model.CommonCoreStandard != null || Model.AcademicStandard != null || Model.BloomLevel != null)
+                            {
+                                <div class="mt-3">
+                                    <h6>Associated Standards:</h6>
+                                    <div class="row">
+                                        @if (Model.CommonCoreStandard != null)
+                                        {
+                                            <div class="col-md-4">
+                                                <strong>Common Core:</strong> <span class="badge bg-info">@Model.CommonCoreStandard.Code</span>
+                                            </div>
+                                        }
+                                        @if (Model.AcademicStandard != null)
+                                        {
+                                            <div class="col-md-4">
+                                                <strong>Academic:</strong> <span class="badge bg-info">@Model.AcademicStandard.GleCode</span>
+                                            </div>
+                                        }
+                                        @if (Model.BloomLevel != null)
+                                        {
+                                            <div class="col-md-4">
+                                                <strong>Bloom's:</strong> <span class="badge" style="background-color: @Model.BloomLevel.ColorCode">@Model.BloomLevel.Name</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- LLM Generation Info -->
+                            @if (!string.IsNullOrEmpty(Model.LlmModel))
+                            {
+                                <div class="mt-3">
+                                    <h6>LLM Generation Data:</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Model:</strong> <span class="badge bg-info">@Model.LlmModel</span>
+                                        </div>
+                                        @if (Model.GenerationCost.HasValue)
+                                        {
+                                            <div class="col-md-6">
+                                                <strong>Cost:</strong> <span class="badge bg-success">$@Model.GenerationCost.Value.ToString("F4")</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Export History -->
+                            @if (Model.Exports.Any())
+                            {
+                                <div class="alert alert-info mt-3">
+                                    <h6 class="alert-heading"><i class="bi bi-download me-2"></i>Export History</h6>
+                                    <p class="mb-2">This worksheet has @Model.Exports.Count export(s) that will also be deleted:</p>
+                                    <ul class="mb-0">
+                                        @foreach (var export in Model.Exports.OrderByDescending(e => e.CreatedAt))
+                                        {
+                                            <li>
+                                                <span class="badge bg-secondary">@export.ExportFormat.ToUpper()</span> 
+                                                - @export.CreatedAt.ToString("MMM dd, yyyy") 
+                                                (@export.DownloadCount downloads)
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Confirmation Actions -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Cancel - Back to List
+                        </a>
+                        
+                        <div>
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info me-2">
+                                <i class="bi bi-eye me-1"></i>View Details Instead
+                            </a>
+                            
+                            <form asp-action="Delete" method="post" style="display: inline;">
+                                <input type="hidden" asp-for="Id" />
+                                <button type="submit" class="btn btn-danger" 
+                                        onclick="return confirm('Are you absolutely sure you want to delete this worksheet? This action cannot be undone.')">
+                                    <i class="bi bi-trash me-1"></i>Yes, Delete Permanently
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

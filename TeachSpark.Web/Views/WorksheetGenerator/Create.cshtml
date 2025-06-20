@@ -162,11 +162,11 @@
                             </div>
                         </div>
 
-                        <!-- LLM Implementation Notice -->
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle-fill me-2"></i>
-                            <strong>Development Notice:</strong> LLM integration is currently in development.
-                            This form will capture your preferences and display a preview of the planned functionality.
+                        <!-- Success Notice -->
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <strong>Ready to Generate!</strong> The AI-powered worksheet generator is fully operational
+                            and ready to create educational content.
                         </div>
                     </div>
 
@@ -222,11 +222,9 @@
         document.getElementById('maxQuestions').addEventListener('input', function ()
         {
             updateCostEstimate();
-        });
-
-        function loadAvailableModels()
+        }); function loadAvailableModels()
         {
-            fetch('/api/models')
+            fetch('/api/worksheet-generator/models')
                 .then(response => response.json())
                 .then(data =>
                 {
@@ -247,7 +245,7 @@
             const worksheetType = document.getElementById('WorksheetType').value;
             if (!worksheetType) return;
 
-            fetch(`/api/models/recommend?worksheetType=${encodeURIComponent(worksheetType)}`)
+            fetch(`/api/worksheet-generator/models/recommend?worksheetType=${encodeURIComponent(worksheetType)}`)
                 .then(response => response.json())
                 .then(data =>
                 {
@@ -268,7 +266,7 @@
                 {
                     console.error('Error getting model recommendations:', error);
                 });
-        }        function updateModelInfo(modelId)
+        } function updateModelInfo(modelId)
         {
             const modelInfoPanel = document.getElementById('modelInfo');
 
@@ -284,19 +282,19 @@
             // Update model information display
             document.getElementById('modelName').textContent = model.name;
             document.getElementById('modelDescription').textContent = model.description || 'No description available';
-            
+
             // Update capabilities based on available properties
             const capabilities = [];
             if (model.supportsStructuredOutput) capabilities.push('Structured Output');
             if (model.isRecommendedForEducation) capabilities.push('Education Optimized');
             if (model.strengths && model.strengths.length > 0) capabilities.push(...model.strengths);
-            
+
             document.getElementById('modelCapabilities').textContent =
                 `Features: ${capabilities.length > 0 ? capabilities.join(', ') : 'General purpose'}`;
 
             // Update badges with calculated values
-            const costTier = model.costPer1kInputTokens < 0.001 ? 'Low' : 
-                            model.costPer1kInputTokens < 0.01 ? 'Medium' : 'High';
+            const costTier = model.costPer1kInputTokens < 0.001 ? 'Low' :
+                model.costPer1kInputTokens < 0.01 ? 'Medium' : 'High';
             const qualityScore = model.isRecommendedForEducation ? '9' : '7'; // Simplified scoring
             const speedScore = model.maxTokens > 100000 ? '8' : '6'; // Simplified scoring
 
@@ -327,7 +325,7 @@
                 worksheetType: document.getElementById('WorksheetType').value
             };
 
-            fetch('/api/models/estimate-cost', {
+            fetch('/api/worksheet-generator/models/estimate-cost', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -376,4 +374,3 @@
         }
     </script>
 }
-          

@@ -55,13 +55,19 @@ namespace TeachSpark.Web.Data.Entities
 
         public int ViewCount { get; set; } = 0;
 
-        public int DownloadCount { get; set; } = 0;
-
-        // Generation metadata
+        public int DownloadCount { get; set; } = 0;        // Generation metadata
         public string? LlmModel { get; set; } // Which LLM model was used
         public string? GenerationPrompt { get; set; } // The prompt used for generation
         public decimal? GenerationCost { get; set; } // Cost in tokens/credits
         public TimeSpan? GenerationTime { get; set; } // How long it took to generate
+        public int? TokensUsed { get; set; } // Total tokens consumed
+        public double? ConfidenceScore { get; set; } // AI confidence in the generated content (0.0 to 1.0)
+
+        // Content analysis metadata
+        public string? Warnings { get; set; } // JSON array of generation warnings
+        public int QuestionCount { get; set; } = 0; // Number of questions extracted from content
+        public bool HasAnswerKey { get; set; } = false; // Whether content includes answer key
+        public int EstimatedDurationMinutes { get; set; } = 0; // Estimated time to complete worksheet
 
         // Navigation Properties
         public virtual ICollection<WorksheetExport> Exports { get; set; } = new List<WorksheetExport>();

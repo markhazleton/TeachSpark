@@ -13,10 +13,8 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         public WorksheetsController(ApplicationDbContext context)
         {
             _context = context;
-        }
-
-        // GET: Admin/Worksheets
-        public async Task<IActionResult> Index()
+        }        // GET: Admin/Worksheets
+        public IActionResult Index()
         {
             ViewData["Title"] = "Worksheets Management";
             return View();
@@ -45,34 +43,31 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
 
             ViewData["Title"] = $"Worksheet Details - {worksheet.Title}";
             return View(worksheet);
-        }
-
-        // GET: Admin/Worksheets/Create
+        }        // GET: Admin/Worksheets/Create
         public IActionResult Create()
         {
             ViewData["Title"] = "Create New Worksheet";
             ViewData["Users"] = new SelectList(_context.Users, "Id", "Email");
             ViewData["BloomLevels"] = new SelectList(_context.BloomLevels.OrderBy(b => b.Order), "Id", "Name");
             ViewData["CommonCoreStandards"] = new SelectList(_context.CommonCoreStandards.OrderBy(s => s.Code), "Id", "Code");
+            ViewData["AcademicStandards"] = new SelectList(_context.AcademicStandards.OrderBy(s => s.GleCode), "Id", "GleCode");
             ViewData["Templates"] = new SelectList(_context.WorksheetTemplates.OrderBy(t => t.Name), "Id", "Name");
             return View();
-        }
-
-        // POST: Admin/Worksheets/Create
+        }// POST: Admin/Worksheets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,Description,UserId,CommonCoreStandardId,BloomLevelId,TemplateId,ContentMarkdown,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite")] Worksheet worksheet)
+        public async Task<IActionResult> Create([Bind("Title,Description,UserId,CommonCoreStandardId,AcademicStandardId,BloomLevelId,TemplateId,ContentMarkdown,RenderedHtml,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite,LlmModel,GenerationPrompt,GenerationCost,GenerationTime,TokensUsed,ConfidenceScore,Warnings,QuestionCount,HasAnswerKey,EstimatedDurationMinutes")] Worksheet worksheet)
         {
             if (ModelState.IsValid)
             {
                 // Validate JSON formats
-                if (!string.IsNullOrEmpty(worksheet.ContentMarkdown) && !IsValidJson(worksheet.ContentMarkdown))
-                {
-                    ModelState.AddModelError("ContentMarkdown", "Invalid JSON format for Content.");
-                }
                 if (!string.IsNullOrEmpty(worksheet.AccessibilityOptions) && !IsValidJson(worksheet.AccessibilityOptions))
                 {
                     ModelState.AddModelError("AccessibilityOptions", "Invalid JSON format for Accessibility Options.");
+                }
+                if (!string.IsNullOrEmpty(worksheet.Warnings) && !IsValidJson(worksheet.Warnings))
+                {
+                    ModelState.AddModelError("Warnings", "Invalid JSON format for Warnings.");
                 }
 
                 if (!ModelState.IsValid)
@@ -111,12 +106,10 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             ViewData["Title"] = $"Edit Worksheet - {worksheet.Title}";
             PopulateDropDowns(worksheet);
             return View(worksheet);
-        }
-
-        // POST: Admin/Worksheets/Edit/5
+        }        // POST: Admin/Worksheets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,UserId,CommonCoreStandardId,BloomLevelId,TemplateId,ContentMarkdown,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite,CreatedAt,ViewCount,DownloadCount,LastAccessedAt,LlmModel,GenerationPrompt,GenerationCost,GenerationTime")] Worksheet worksheet)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,UserId,CommonCoreStandardId,AcademicStandardId,BloomLevelId,TemplateId,ContentMarkdown,RenderedHtml,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite,CreatedAt,ViewCount,DownloadCount,LastAccessedAt,LlmModel,GenerationPrompt,GenerationCost,GenerationTime,TokensUsed,ConfidenceScore,Warnings,QuestionCount,HasAnswerKey,EstimatedDurationMinutes")] Worksheet worksheet)
         {
             if (id != worksheet.Id)
             {
@@ -127,13 +120,13 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             {
                 try
                 {                    // Validate JSON formats
-                    if (!string.IsNullOrEmpty(worksheet.ContentMarkdown) && !IsValidJson(worksheet.ContentMarkdown))
-                    {
-                        ModelState.AddModelError("ContentMarkdown", "Invalid JSON format for Content.");
-                    }
                     if (!string.IsNullOrEmpty(worksheet.AccessibilityOptions) && !IsValidJson(worksheet.AccessibilityOptions))
                     {
                         ModelState.AddModelError("AccessibilityOptions", "Invalid JSON format for Accessibility Options.");
+                    }
+                    if (!string.IsNullOrEmpty(worksheet.Warnings) && !IsValidJson(worksheet.Warnings))
+                    {
+                        ModelState.AddModelError("Warnings", "Invalid JSON format for Warnings.");
                     }
 
                     if (!ModelState.IsValid)
@@ -211,19 +204,18 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
         private void PopulateDropDowns(Worksheet worksheet)
         {
             ViewData["Users"] = new SelectList(_context.Users, "Id", "Email", worksheet.UserId);
             ViewData["BloomLevels"] = new SelectList(_context.BloomLevels.OrderBy(b => b.Order), "Id", "Name", worksheet.BloomLevelId);
             ViewData["CommonCoreStandards"] = new SelectList(_context.CommonCoreStandards.OrderBy(s => s.Code), "Id", "Code", worksheet.CommonCoreStandardId);
+            ViewData["AcademicStandards"] = new SelectList(_context.AcademicStandards.OrderBy(s => s.GleCode), "Id", "GleCode", worksheet.AcademicStandardId);
             ViewData["Templates"] = new SelectList(_context.WorksheetTemplates.OrderBy(t => t.Name), "Id", "Name", worksheet.TemplateId);
         }
-
         private bool WorksheetExists(int id)
         {
             return _context.Worksheets.Any(e => e.Id == id);
-        }        // API endpoint for DataTables
+        }// API endpoint for DataTables
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GetWorksheetsData()
@@ -247,7 +239,15 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                     isPublic = w.IsPublic,
                     viewCount = w.ViewCount,
                     downloadCount = w.DownloadCount,
-                    createdAt = w.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                    createdAt = w.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
+                    // LLM Generation metadata
+                    llmModel = w.LlmModel ?? string.Empty,
+                    generationCost = w.GenerationCost ?? 0,
+                    tokensUsed = w.TokensUsed ?? 0,
+                    confidenceScore = w.ConfidenceScore ?? 0,
+                    questionCount = w.QuestionCount,
+                    hasAnswerKey = w.HasAnswerKey,
+                    estimatedDurationMinutes = w.EstimatedDurationMinutes
                 })
                 .ToListAsync();
 

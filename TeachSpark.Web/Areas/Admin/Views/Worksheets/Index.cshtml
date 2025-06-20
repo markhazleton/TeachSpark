@@ -1,0 +1,199 @@
+@{
+    ViewData["Title"] = "Worksheets Management";
+    ViewData["PageHeader"] = "Worksheets Management";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-file-text me-2"></i>Worksheets Management
+        </h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-2"></i>Create New Worksheet
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-table me-2"></i>All Worksheets
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="worksheetsTable" class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>User</th>
+                            <th>Type</th>
+                            <th>Difficulty</th>
+                            <th>LLM Model</th>
+                            <th>Questions</th>
+                            <th>Confidence</th>
+                            <th>Cost</th>
+                            <th>Views</th>
+                            <th>Public</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be loaded via AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function ()
+        {
+            $('#worksheetsTable').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: '@Url.Action("GetWorksheetsData")',
+                    type: 'POST',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    }
+                },
+                columns: [
+                    { data: 'id', width: '50px' },
+                    {
+                        data: 'title',
+                        render: function (data, type, row)
+                        {
+                            return '<strong>' + data + '</strong>';
+                        }
+                    },
+                    { data: 'user' },
+                    {
+                        data: 'worksheetType',
+                        render: function (data, type, row)
+                        {
+                            const typeColors = {
+                                'reading-comprehension': 'primary',
+                                'vocabulary': 'success',
+                                'grammar': 'info',
+                                'math-practice': 'warning',
+                                'writing-prompt': 'secondary',
+                                'science-lab': 'dark',
+                                'assessment': 'danger'
+                            };
+                            const color = typeColors[data] || 'secondary';
+                            const displayName = data.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                            return '<span class="badge bg-' + color + '">' + displayName + '</span>';
+                        }
+                    },
+                    {
+                        data: 'difficultyLevel',
+                        render: function (data, type, row)
+                        {
+                            const colors = {
+                                'simplified': 'success',
+                                'standard': 'primary',
+                                'advanced': 'warning'
+                            };
+                            const color = colors[data] || 'secondary';
+                            return '<span class="badge bg-' + color + '">' + data.charAt(0).toUpperCase() + data.slice(1) + '</span>';
+                        }
+                    },
+                    {
+                        data: 'llmModel',
+                        render: function (data, type, row)
+                        {
+                            return data ? '<span class="badge bg-info">' + data + '</span>' : '<span class="text-muted">Manual</span>';
+                        }
+                    },
+                    {
+                        data: 'questionCount',
+                        render: function (data, type, row)
+                        {
+                            return data > 0 ? '<span class="badge bg-primary">' + data + '</span>' : '-';
+                        }
+                    },
+                    {
+                        data: 'confidenceScore',
+                        render: function (data, type, row)
+                        {
+                            if (data > 0)
+                            {
+                                const percentage = Math.round(data * 100);
+                                const color = percentage >= 80 ? 'success' : percentage >= 60 ? 'warning' : 'danger';
+                                return '<span class="badge bg-' + color + '">' + percentage + '%</span>';
+                            }
+                            return '-';
+                        }
+                    },
+                    {
+                        data: 'generationCost',
+                        render: function (data, type, row)
+                        {
+                            return data > 0 ? '$' + data.toFixed(4) : '-';
+                        }
+                    },
+                    { data: 'viewCount' },
+                    {
+                        data: 'isPublic',
+                        render: function (data, type, row)
+                        {
+                            return data ?
+                                '<i class="bi bi-globe text-success" title="Public"></i>' :
+                                '<i class="bi bi-lock text-secondary" title="Private"></i>';
+                        }
+                    },
+                    { data: 'createdAt' },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: function (data, type, row)
+                        {
+                            return `
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="@Url.Action("Details")/${row.id}" class="btn btn-outline-info" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Edit")/${row.id}" class="btn btn-outline-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete")/${row.id}" class="btn btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                `;
+                        }
+                    }
+                ],
+                order: [[11, 'desc']], // Sort by Created date descending
+                pageLength: 25,
+                responsive: true,
+                language: {
+                    processing: "Loading worksheets..."
+                },
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip'
+            });
+        });
+    </script>
+}
+
+@* Required for AJAX CSRF protection *@
+<form style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+ 
+        
+                        
+                        
+                        
+                        
+                        
+                       
+                            
+                        
+                        
+                                                                       

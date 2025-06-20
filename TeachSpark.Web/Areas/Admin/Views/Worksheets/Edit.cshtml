@@ -1,8 +1,8 @@
 @model TeachSpark.Web.Data.Entities.Worksheet
 
 @{
-    ViewData["Title"] = "Create Worksheet";
-    ViewData["PageHeader"] = "Create Worksheet";
+    ViewData["Title"] = $"Edit Worksheet - {Model.Title}";
+    ViewData["PageHeader"] = "Edit Worksheet";
 }
 
 <div class="container-fluid">
@@ -11,33 +11,34 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
-                        <i class="bi bi-plus-circle me-2"></i>Create New Worksheet
+                        <i class="bi bi-pencil-square me-2"></i>Edit Worksheet - @Model.Title
                     </h5>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                    <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="CreatedAt" />
+                        <input type="hidden" asp-for="ViewCount" />
+                        <input type="hidden" asp-for="DownloadCount" />
+                        <input type="hidden" asp-for="LastAccessedAt" />
+
                         <div class="mb-3">
                             <label asp-for="Title" class="form-label">Title <span class="text-danger">*</span></label>
-                            <input asp-for="Title" class="form-control" placeholder="Enter worksheet title..."
-                                required />
-                            <div class="invalid-feedback">
-                                Please provide a worksheet title.
-                            </div>
+                            <input asp-for="Title" class="form-control" placeholder="Enter worksheet title..." required />
+                            <div class="invalid-feedback">Please provide a worksheet title.</div>
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" rows="3"
-                                placeholder="Describe the worksheet purpose and content..."></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="3" placeholder="Describe the worksheet purpose and content..."></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label asp-for="WorksheetType" class="form-label">Worksheet Type <span
-                                            class="text-danger">*</span></label>
+                                    <label asp-for="WorksheetType" class="form-label">Worksheet Type <span class="text-danger">*</span></label>
                                     <select asp-for="WorksheetType" class="form-select" required>
                                         <option value="">Select type...</option>
                                         <option value="reading-comprehension">Reading Comprehension</option>
@@ -50,9 +51,7 @@
                                         <option value="assessment">Assessment</option>
                                         <option value="other">Other</option>
                                     </select>
-                                    <div class="invalid-feedback">
-                                        Please select a worksheet type.
-                                    </div>
+                                    <div class="invalid-feedback">Please select a worksheet type.</div>
                                     <span asp-validation-for="WorksheetType" class="text-danger"></span>
                                 </div>
                             </div>
@@ -61,20 +60,19 @@
                                     <label asp-for="DifficultyLevel" class="form-label">Difficulty Level</label>
                                     <select asp-for="DifficultyLevel" class="form-select">
                                         <option value="simplified">Simplified</option>
-                                        <option value="standard" selected>Standard</option>
+                                        <option value="standard">Standard</option>
                                         <option value="advanced">Advanced</option>
                                     </select>
                                     <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
-                                    <label asp-for="CommonCoreStandardId" class="form-label">Common Core
-                                        Standard</label>
-                                    <select asp-for="CommonCoreStandardId" class="form-select"
-                                        asp-items="ViewBag.CommonCoreStandards">
+                                    <label asp-for="CommonCoreStandardId" class="form-label">Common Core Standard</label>
+                                    <select asp-for="CommonCoreStandardId" class="form-select" asp-items="ViewBag.CommonCoreStandards">
                                         <option value="">Select standard...</option>
                                     </select>
                                     <span asp-validation-for="CommonCoreStandardId" class="text-danger"></span>
@@ -83,8 +81,7 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label asp-for="AcademicStandardId" class="form-label">Academic Standard</label>
-                                    <select asp-for="AcademicStandardId" class="form-select"
-                                        asp-items="ViewBag.AcademicStandards">
+                                    <select asp-for="AcademicStandardId" class="form-select" asp-items="ViewBag.AcademicStandards">
                                         <option value="">Select standard...</option>
                                     </select>
                                     <span asp-validation-for="AcademicStandardId" class="text-danger"></span>
@@ -112,28 +109,29 @@
 
                         <div class="mb-3">
                             <label asp-for="SourceText" class="form-label">Source Text</label>
-                            <textarea asp-for="SourceText" class="form-control" rows="4"
-                                placeholder="Enter the source text to generate worksheet content from..."></textarea>
+                            <textarea asp-for="SourceText" class="form-control" rows="4" placeholder="Enter the source text to generate worksheet content from..."></textarea>
                             <div class="form-text">Optional: Provide source material for content generation.</div>
                             <span asp-validation-for="SourceText" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="ContentMarkdown" class="form-label">Content Markdown <span
-                                    class="text-danger">*</span></label>
-                            <textarea asp-for="ContentMarkdown" class="form-control font-monospace" rows="8"
-                                placeholder='{"questions": [{"text": "Question 1", "type": "multiple-choice"}]}'
-                                required></textarea>
-                            <div class="form-text">Define the worksheet content in JSON format.</div>
-                            <div class="invalid-feedback">
-                                Please provide valid JSON content.
-                            </div>
+                            <label asp-for="ContentMarkdown" class="form-label">Content Markdown <span class="text-danger">*</span></label>
+                            <textarea asp-for="ContentMarkdown" class="form-control font-monospace" rows="8" required></textarea>
+                            <div class="form-text">Worksheet content in Markdown format.</div>
+                            <div class="invalid-feedback">Please provide content.</div>
                             <span asp-validation-for="ContentMarkdown" class="text-danger"></span>
                         </div>
+
+                        <div class="mb-3">
+                            <label asp-for="RenderedHtml" class="form-label">Rendered HTML</label>
+                            <textarea asp-for="RenderedHtml" class="form-control font-monospace" rows="6"></textarea>
+                            <div class="form-text">Optional: Cached HTML rendering of the markdown content.</div>
+                            <span asp-validation-for="RenderedHtml" class="text-danger"></span>
+                        </div>
+
                         <div class="mb-3">
                             <label asp-for="Tags" class="form-label">Tags</label>
-                            <input asp-for="Tags" class="form-control"
-                                placeholder="reading, comprehension, grade-8 (comma-separated)" />
+                            <input asp-for="Tags" class="form-control" placeholder="reading, comprehension, grade-8 (comma-separated)" />
                             <div class="form-text">Comma-separated tags for organization and search.</div>
                             <span asp-validation-for="Tags" class="text-danger"></span>
                         </div>
@@ -142,70 +140,56 @@
                         <div class="accordion mb-3" id="llmMetadataAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="llmMetadataHeading">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#llmMetadataCollapse" aria-expanded="false"
-                                        aria-controls="llmMetadataCollapse">
-                                        <i class="bi bi-robot me-2"></i>LLM Generation Metadata (Optional)
+                                    <button class="accordion-button @(string.IsNullOrEmpty(Model.LlmModel) ? "collapsed" : "")" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#llmMetadataCollapse" aria-expanded="@(!string.IsNullOrEmpty(Model.LlmModel) ? "true" : "false")" aria-controls="llmMetadataCollapse">
+                                        <i class="bi bi-robot me-2"></i>LLM Generation Metadata
                                     </button>
                                 </h2>
-                                <div id="llmMetadataCollapse" class="accordion-collapse collapse"
-                                    aria-labelledby="llmMetadataHeading">
+                                <div id="llmMetadataCollapse" class="accordion-collapse collapse @(string.IsNullOrEmpty(Model.LlmModel) ? "" : "show")" aria-labelledby="llmMetadataHeading">
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <label asp-for="LlmModel" class="form-label">LLM Model</label>
-                                                    <input asp-for="LlmModel" class="form-control"
-                                                        placeholder="e.g., gpt-4o-mini" />
+                                                    <input asp-for="LlmModel" class="form-control" placeholder="e.g., gpt-4o-mini" />
                                                     <span asp-validation-for="LlmModel" class="text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label asp-for="GenerationCost" class="form-label">Generation
-                                                        Cost</label>
+                                                    <label asp-for="GenerationCost" class="form-label">Generation Cost</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">$</span>
-                                                        <input asp-for="GenerationCost" class="form-control"
-                                                            type="number" step="0.0001" placeholder="0.0000" />
+                                                        <input asp-for="GenerationCost" class="form-control" type="number" step="0.0001" placeholder="0.0000" />
                                                     </div>
-                                                    <span asp-validation-for="GenerationCost"
-                                                        class="text-danger"></span>
+                                                    <span asp-validation-for="GenerationCost" class="text-danger"></span>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="mb-3">
                                                     <label asp-for="TokensUsed" class="form-label">Tokens Used</label>
-                                                    <input asp-for="TokensUsed" class="form-control" type="number"
-                                                        placeholder="0" />
+                                                    <input asp-for="TokensUsed" class="form-control" type="number" placeholder="0" />
                                                     <span asp-validation-for="TokensUsed" class="text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mb-3">
-                                                    <label asp-for="ConfidenceScore" class="form-label">Confidence
-                                                        Score</label>
+                                                    <label asp-for="ConfidenceScore" class="form-label">Confidence Score</label>
                                                     <div class="input-group">
-                                                        <input asp-for="ConfidenceScore" class="form-control"
-                                                            type="number" step="0.01" min="0" max="1"
-                                                            placeholder="0.85" />
-                                                        <span class="input-group-text">%</span>
+                                                        <input asp-for="ConfidenceScore" class="form-control" type="number" step="0.01" min="0" max="1" placeholder="0.85" />
+                                                        <span class="input-group-text">0-1</span>
                                                     </div>
-                                                    <span asp-validation-for="ConfidenceScore"
-                                                        class="text-danger"></span>
+                                                    <span asp-validation-for="ConfidenceScore" class="text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="mb-3">
-                                                    <label asp-for="EstimatedDurationMinutes" class="form-label">Est.
-                                                        Duration (min)</label>
-                                                    <input asp-for="EstimatedDurationMinutes" class="form-control"
-                                                        type="number" placeholder="30" />
-                                                    <span asp-validation-for="EstimatedDurationMinutes"
-                                                        class="text-danger"></span>
+                                                    <label asp-for="EstimatedDurationMinutes" class="form-label">Est. Duration (min)</label>
+                                                    <input asp-for="EstimatedDurationMinutes" class="form-control" type="number" placeholder="30" />
+                                                    <span asp-validation-for="EstimatedDurationMinutes" class="text-danger"></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -213,38 +197,29 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label asp-for="QuestionCount" class="form-label">Question
-                                                        Count</label>
-                                                    <input asp-for="QuestionCount" class="form-control" type="number"
-                                                        placeholder="10" />
+                                                    <label asp-for="QuestionCount" class="form-label">Question Count</label>
+                                                    <input asp-for="QuestionCount" class="form-control" type="number" placeholder="10" />
                                                     <span asp-validation-for="QuestionCount" class="text-danger"></span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-check mt-4">
-                                                    <input asp-for="HasAnswerKey" class="form-check-input"
-                                                        type="checkbox" />
-                                                    <label asp-for="HasAnswerKey" class="form-check-label">
-                                                        Has Answer Key
-                                                    </label>
+                                                    <input asp-for="HasAnswerKey" class="form-check-input" type="checkbox" />
+                                                    <label asp-for="HasAnswerKey" class="form-check-label">Has Answer Key</label>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label asp-for="GenerationPrompt" class="form-label">Generation
-                                                Prompt</label>
-                                            <textarea asp-for="GenerationPrompt" class="form-control" rows="3"
-                                                placeholder="The prompt used to generate this worksheet..."></textarea>
+                                            <label asp-for="GenerationPrompt" class="form-label">Generation Prompt</label>
+                                            <textarea asp-for="GenerationPrompt" class="form-control" rows="3" placeholder="The prompt used to generate this worksheet..."></textarea>
                                             <span asp-validation-for="GenerationPrompt" class="text-danger"></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label asp-for="Warnings" class="form-label">Warnings (JSON)</label>
-                                            <textarea asp-for="Warnings" class="form-control font-monospace" rows="2"
-                                                placeholder='["Warning message 1", "Warning message 2"]'></textarea>
-                                            <div class="form-text">JSON array of warning messages from generation
-                                                process.</div>
+                                            <textarea asp-for="Warnings" class="form-control font-monospace" rows="2" placeholder='["Warning message 1", "Warning message 2"]'></textarea>
+                                            <div class="form-text">JSON array of warning messages from generation process.</div>
                                             <span asp-validation-for="Warnings" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -256,18 +231,14 @@
                             <div class="col-md-6">
                                 <div class="form-check mb-3">
                                     <input asp-for="IsPublic" class="form-check-input" type="checkbox" />
-                                    <label asp-for="IsPublic" class="form-check-label">
-                                        Make Public
-                                    </label>
+                                    <label asp-for="IsPublic" class="form-check-label">Make Public</label>
                                     <div class="form-text">Allow other teachers to see and use this worksheet.</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-check mb-3">
                                     <input asp-for="IsFavorite" class="form-check-input" type="checkbox" />
-                                    <label asp-for="IsFavorite" class="form-check-label">
-                                        Add to Favorites
-                                    </label>
+                                    <label asp-for="IsFavorite" class="form-check-label">Add to Favorites</label>
                                     <div class="form-text">Mark this worksheet as a favorite.</div>
                                 </div>
                             </div>
@@ -277,9 +248,14 @@
                             <a asp-action="Index" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left me-1"></i>Back to List
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-lg me-1"></i>Create Worksheet
-                            </button>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info me-2">
+                                    <i class="bi bi-eye me-1"></i>View Details
+                                </a>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-check-lg me-1"></i>Update Worksheet
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -290,22 +266,22 @@
             <div class="card">
                 <div class="card-header">
                     <h6 class="card-title mb-0">
-                        <i class="bi bi-info-circle me-2"></i>Creation Guidelines
+                        <i class="bi bi-info-circle me-2"></i>Editing Guidelines
                     </h6>
                 </div>
                 <div class="card-body">
                     <ul class="list-unstyled">
                         <li class="mb-2">
                             <i class="bi bi-check-circle text-success me-2"></i>
-                            <strong>Title:</strong> Use descriptive, clear titles
+                            <strong>Content:</strong> Use Markdown formatting
                         </li>
                         <li class="mb-2">
                             <i class="bi bi-check-circle text-success me-2"></i>
-                            <strong>Standards:</strong> Align with educational goals
+                            <strong>Standards:</strong> Update when content changes
                         </li>
                         <li class="mb-2">
                             <i class="bi bi-check-circle text-success me-2"></i>
-                            <strong>Content:</strong> Use valid JSON structure
+                            <strong>Metadata:</strong> Keep LLM data accurate
                         </li>
                         <li class="mb-2">
                             <i class="bi bi-check-circle text-success me-2"></i>
@@ -315,29 +291,28 @@
                 </div>
             </div>
 
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h6 class="card-title mb-0">
-                        <i class="bi bi-code-slash me-2"></i>Content JSON Example
-                    </h6>
+            @if (Model.ViewCount > 0 || Model.DownloadCount > 0)
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-graph-up me-2"></i>Usage Statistics
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <h4 class="text-primary">@Model.ViewCount</h4>
+                                <small class="text-muted">Views</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-success">@Model.DownloadCount</h4>
+                                <small class="text-muted">Downloads</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <pre class="bg-light p-2 rounded small"><code>{
-  "questions": [
-    {
-      "type": "multiple-choice",
-      "text": "What is the main idea?",
-      "options": ["A", "B", "C", "D"],
-      "correct": "A"
-    },
-    {
-      "type": "short-answer",
-      "text": "Explain the concept."
-    }
-  ]
-}</code></pre>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>
@@ -346,16 +321,12 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         // Bootstrap form validation
-        (function ()
-        {
+        (function () {
             'use strict';
             const forms = document.querySelectorAll('.needs-validation');
-            Array.prototype.slice.call(forms).forEach(function (form)
-            {
-                form.addEventListener('submit', function (event)
-                {
-                    if (!form.checkValidity())
-                    {
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
                     }
@@ -364,22 +335,21 @@
             });
         })();
 
-        // JSON validation
-        document.getElementById('ContentMarkdown').addEventListener('blur', function ()
-        {
-            try
-            {
+        // JSON validation for warnings field
+        document.getElementById('Warnings').addEventListener('blur', function () {
+            if (this.value.trim() === '') {
+                this.classList.remove('is-invalid', 'is-valid');
+                return;
+            }
+            
+            try {
                 JSON.parse(this.value);
                 this.classList.remove('is-invalid');
                 this.classList.add('is-valid');
-            } catch (e)
-            {
+            } catch (e) {
                 this.classList.remove('is-valid');
                 this.classList.add('is-invalid');
             }
         });
     </script>
 }
-
-       
-       
