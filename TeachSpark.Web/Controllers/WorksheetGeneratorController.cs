@@ -14,36 +14,21 @@ namespace TeachSpark.Web.Controllers
     /// Controller for public worksheet generation functionality
     /// </summary>
     [Authorize]
-    public class WorksheetGeneratorController : Controller
+    public class WorksheetGeneratorController(
+        ApplicationDbContext context,
+        IOptions<WorksheetGenerationConfiguration> config,
+        IModelRegistryService modelRegistry,
+        ILlmService llmService,
+        ILogger<WorksheetGeneratorController> logger) : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly WorksheetGenerationConfiguration _config;
-        private readonly IModelRegistryService _modelRegistry;
-        private readonly ILlmService _llmService;
-        private readonly ILogger<WorksheetGeneratorController> _logger;
+        private readonly WorksheetGenerationConfiguration _config = config.Value;
 
-        public WorksheetGeneratorController(
-            ApplicationDbContext context,
-            IOptions<WorksheetGenerationConfiguration> config,
-            IModelRegistryService modelRegistry,
-            ILlmService llmService,
-            ILogger<WorksheetGeneratorController> logger)
-        {
-            _context = context;
-            _config = config.Value;
-            _modelRegistry = modelRegistry;
-            _llmService = llmService;
-            _logger = logger;
-        }        /// <summary>
-                 /// Main worksheet generator landing page
-                 /// </summary>
+        /// <summary>
+        /// Main worksheet generator landing page
+        /// </summary>
         public IActionResult Index()
         {
             ViewData["Title"] = "Worksheet Generator";
-
-            // The Index view doesn't need dropdown data
-            // It just shows overview and links to Create
-
             return View();
         }
 
@@ -74,7 +59,7 @@ namespace TeachSpark.Web.Controllers
         {
             ViewData["Title"] = "Create New Worksheet"; if (!ModelState.IsValid)
             {
-                _logger.LogWarning("ModelState is invalid. Errors: {Errors}",
+                logger.LogWarning("ModelState is invalid. Errors: {Errors}",
                     string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
                 await PopulateDropdownLists(request);
                 return View(request);
@@ -82,7 +67,7 @@ namespace TeachSpark.Web.Controllers
 
             try
             {
-                _logger.LogInformation("Starting worksheet generation for user {User}: {WorksheetType}, MaxQuestions: {MaxQuestions}",
+                logger.LogInformation("Starting worksheet generation for user {User}: {WorksheetType}, MaxQuestions: {MaxQuestions}",
                     User.Identity?.Name, request.WorksheetType, request.MaxQuestions);
 
                 // Get user information for logging
@@ -90,23 +75,23 @@ namespace TeachSpark.Web.Controllers
                 var userEmail = User.Identity?.Name;
 
                 // Generate worksheet using LLM service
-                var result = await _llmService.GenerateWorksheetContentAsync(request, userId, userEmail);
+                var result = await llmService.GenerateWorksheetContentAsync(request, userId, userEmail);
 
-                _logger.LogInformation("LLM service returned: Success={Success}, HasData={HasData}, ErrorMessage={ErrorMessage}",
+                logger.LogInformation("LLM service returned: Success={Success}, HasData={HasData}, ErrorMessage={ErrorMessage}",
                     result.Success, result.Data != null, result.ErrorMessage);
 
                 if (result.Success && result.Data != null)
                 {
-                    _logger.LogInformation("Generated worksheet data: Title={Title}, ContentLength={ContentLength}, QuestionCount={QuestionCount}",
+                    logger.LogInformation("Generated worksheet data: Title={Title}, ContentLength={ContentLength}, QuestionCount={QuestionCount}",
                         result.Data.GeneratedTitle, result.Data.MarkdownContent?.Length ?? 0, result.Data.ExtractedQuestions?.Count ?? 0);
 
                     // Save the generated worksheet to the database
-                    _logger.LogInformation("Attempting to save worksheet to database");
+                    logger.LogInformation("Attempting to save worksheet to database");
                     var worksheet = await SaveGeneratedWorksheetAsync(request, result.Data);
 
                     if (worksheet != null)
                     {
-                        _logger.LogInformation("Worksheet saved successfully with ID: {WorksheetId}", worksheet.Id);
+                        logger.LogInformation("Worksheet saved successfully with ID: {WorksheetId}", worksheet.Id);
 
                         // Store the generated worksheet content in TempData for the display view
                         TempData["GeneratedWorksheet"] = System.Text.Json.JsonSerializer.Serialize(result.Data);
@@ -118,7 +103,7 @@ namespace TeachSpark.Web.Controllers
                     }
                     else
                     {
-                        _logger.LogWarning("Worksheet generation succeeded but saving to database failed");
+                        logger.LogWarning("Worksheet generation succeeded but saving to database failed");
 
                         // Generation succeeded but saving failed - still show the result
                         TempData["GeneratedWorksheet"] = System.Text.Json.JsonSerializer.Serialize(result.Data);
@@ -129,12 +114,12 @@ namespace TeachSpark.Web.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, $"Failed to generate worksheet: {result.ErrorMessage}");
-                    _logger.LogWarning("Worksheet generation failed: {Error}", result.ErrorMessage);
+                    logger.LogWarning("Worksheet generation failed: {Error}", result.ErrorMessage);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error generating worksheet for user {User}. Error: {ErrorMessage}",
+                logger.LogError(ex, "Error generating worksheet for user {User}. Error: {ErrorMessage}",
                     User.Identity?.Name, ex.Message);
                 ModelState.AddModelError(string.Empty, "An unexpected error occurred while generating the worksheet. Please try again.");
             }
@@ -155,7 +140,7 @@ namespace TeachSpark.Web.Controllers
                 {                    // Get the actual user ID (not email)
                     var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-                    var worksheet = await _context.Worksheets
+                    var worksheet = await context.Worksheets
                         .Include(w => w.CommonCoreStandard)
                         .Include(w => w.BloomLevel)
                         .Include(w => w.Template)
@@ -166,7 +151,7 @@ namespace TeachSpark.Web.Controllers
                         // Increment view count
                         worksheet.ViewCount++;
                         worksheet.LastAccessedAt = DateTime.UtcNow;
-                        await _context.SaveChangesAsync();
+                        await context.SaveChangesAsync();
 
                         // Convert database entity to display model
                         var content = ConvertWorksheetToContentResult(worksheet);
@@ -177,7 +162,7 @@ namespace TeachSpark.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to load worksheet {Id} from database", id.Value);
+                    logger.LogError(ex, "Failed to load worksheet {Id} from database", id.Value);
                     TempData["Error"] = "Failed to load the requested worksheet.";
                 }
             }
@@ -195,7 +180,7 @@ namespace TeachSpark.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to deserialize worksheet data");
+                    logger.LogError(ex, "Failed to deserialize worksheet data");
                     TempData["Error"] = "Failed to load worksheet data.";
                 }
             }
@@ -209,7 +194,7 @@ namespace TeachSpark.Web.Controllers
         /// </summary>
         public async Task<IActionResult> PreviewTemplate(int id)
         {
-            var template = await _context.WorksheetTemplates
+            var template = await context.WorksheetTemplates
                 .FirstOrDefaultAsync(t => t.Id == id && t.IsPublic);
 
             if (template == null)
@@ -242,7 +227,7 @@ namespace TeachSpark.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTemplatesForType(string worksheetType)
         {
-            var templates = await _context.WorksheetTemplates
+            var templates = await context.WorksheetTemplates
                 .Where(t => t.TemplateType == worksheetType && t.IsPublic)
                 .Select(t => new
                 {
@@ -261,7 +246,7 @@ namespace TeachSpark.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetStandardsForGrade(string grade = "8")
         {
-            var standards = await _context.CommonCoreStandards
+            var standards = await context.CommonCoreStandards
                 .Where(s => s.Grade == grade)
                 .Select(s => new
                 {
@@ -272,33 +257,35 @@ namespace TeachSpark.Web.Controllers
                 .ToListAsync();
 
             return Json(standards);
-        }        /// <summary>
-                 /// Populate dropdown lists in the view model
-                 /// </summary>
+        }
+
+        /// <summary>
+        /// Populate dropdown lists in the view model
+        /// </summary>
         private async Task PopulateDropdownLists(WorksheetGenerationRequest model)
         {
             // Worksheet types
-            model.WorksheetTypeOptions = _config.SupportedWorksheetTypes
+            model.WorksheetTypeOptions = [.. _config.SupportedWorksheetTypes
                 .Distinct()
                 .Select(t => new SelectListItem
                 {
                     Value = t,
                     Text = FormatWorksheetTypeName(t),
                     Selected = t == model.WorksheetType
-                }).ToList();
+                })];
 
             // Difficulty levels
-            model.DifficultyLevelOptions = _config.SupportedDifficultyLevels
+            model.DifficultyLevelOptions = [.. _config.SupportedDifficultyLevels
                 .Distinct()
                 .Select(d => new SelectListItem
                 {
                     Value = d,
                     Text = FormatDifficultyLevel(d),
                     Selected = d == model.DifficultyLevel
-                }).ToList();
+                })];
 
             // Common Core Standards (8th grade ELA)
-            model.CommonCoreStandardOptions = await _context.CommonCoreStandards
+            model.CommonCoreStandardOptions = await context.CommonCoreStandards
                 .Where(s => s.Grade == "8")
                 .OrderBy(s => s.Code)
                 .Select(s => new SelectListItem
@@ -319,7 +306,7 @@ namespace TeachSpark.Web.Controllers
             });
 
             // Bloom's Taxonomy Levels
-            model.BloomLevelOptions = await _context.BloomLevels
+            model.BloomLevelOptions = await context.BloomLevels
                 .OrderBy(b => b.Order)
                 .Select(b => new SelectListItem
                 {
@@ -339,7 +326,7 @@ namespace TeachSpark.Web.Controllers
             });
 
             // Available templates
-            model.TemplateOptions = await _context.WorksheetTemplates
+            model.TemplateOptions = await context.WorksheetTemplates
                 .Where(t => t.IsPublic)
                 .OrderBy(t => t.Name)
                 .Select(t => new SelectListItem
@@ -362,21 +349,21 @@ namespace TeachSpark.Web.Controllers
             // Available AI models for worksheet generation
             try
             {
-                var modelsResult = await _modelRegistry.GetEducationRecommendedModelsAsync();
+                var modelsResult = await modelRegistry.GetEducationRecommendedModelsAsync();
                 if (modelsResult.Success && modelsResult.Data != null)
                 {
-                    model.AvailableModelOptions = modelsResult.Data.Select(m => new SelectListItem
+                    model.AvailableModelOptions = [.. modelsResult.Data.Select(m => new SelectListItem
                     {
                         Value = m.Id,
                         Text = $"{m.Name} - ${m.CostPer1kInputTokens:F4}/1k tokens",
                         Selected = m.Id == model.PreferredLlmModel
-                    }).ToList();
+                    })];
                 }
                 else
                 {
                     model.AvailableModelOptions = new List<SelectListItem>
                     {
-                        new SelectListItem {
+                        new() {
                             Value = "gpt-4o-mini",
                             Text = "GPT-4o Mini (Default)",
                             Selected = model.PreferredLlmModel == "gpt-4o-mini" || string.IsNullOrEmpty(model.PreferredLlmModel)
@@ -386,7 +373,7 @@ namespace TeachSpark.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to load available models, using default");
+                logger.LogWarning(ex, "Failed to load available models, using default");
                 model.AvailableModelOptions = new List<SelectListItem>
                 {
                     new SelectListItem {
@@ -447,17 +434,17 @@ namespace TeachSpark.Web.Controllers
         {
             try
             {
-                _logger.LogInformation("Starting SaveGeneratedWorksheetAsync");
+                logger.LogInformation("Starting SaveGeneratedWorksheetAsync");
 
                 // Get the actual user ID (not email)
                 var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userIdClaim))
                 {
-                    _logger.LogWarning("Cannot save worksheet: User ID claim not found");
+                    logger.LogWarning("Cannot save worksheet: User ID claim not found");
                     return null;
                 }
 
-                _logger.LogInformation("User authenticated with ID: {UserId}, Email: {Email}",
+                logger.LogInformation("User authenticated with ID: {UserId}, Email: {Email}",
                     userIdClaim, User.Identity?.Name);
 
                 // Serialize warnings as JSON
@@ -467,10 +454,10 @@ namespace TeachSpark.Web.Controllers
                 // Serialize accessibility options and tags as JSON
                 var accessibilityOptionsJson = request.AccessibilityOptions.Any() ?
                     System.Text.Json.JsonSerializer.Serialize(request.AccessibilityOptions) : null;
-                var tagsJson = request.Tags.Any() ?
+                var tagsJson = request.Tags.Count != 0 ?
                     string.Join(",", request.Tags) : null;
 
-                _logger.LogInformation("Creating worksheet entity with Title: {Title}, Type: {Type}, Content Length: {ContentLength}",
+                logger.LogInformation("Creating worksheet entity with Title: {Title}, Type: {Type}, Content Length: {ContentLength}",
                     content.GeneratedTitle, request.WorksheetType, content.MarkdownContent?.Length ?? 0);
 
                 var worksheet = new Data.Entities.Worksheet
@@ -508,24 +495,24 @@ namespace TeachSpark.Web.Controllers
                     EstimatedDurationMinutes = content.EstimatedDurationMinutes
                 };
 
-                _logger.LogInformation("Adding worksheet to context");
-                _context.Worksheets.Add(worksheet);
+                logger.LogInformation("Adding worksheet to context");
+                context.Worksheets.Add(worksheet);
 
-                _logger.LogInformation("Calling SaveChangesAsync");
-                var changeCount = await _context.SaveChangesAsync();
+                logger.LogInformation("Calling SaveChangesAsync");
+                var changeCount = await context.SaveChangesAsync();
 
-                _logger.LogInformation("SaveChangesAsync completed, changes saved: {ChangeCount}, Worksheet ID: {WorksheetId}",
+                logger.LogInformation("SaveChangesAsync completed, changes saved: {ChangeCount}, Worksheet ID: {WorksheetId}",
                     changeCount, worksheet.Id);
 
-                _logger.LogInformation("Successfully saved generated worksheet {WorksheetId} for user {UserId}",
+                logger.LogInformation("Successfully saved generated worksheet {WorksheetId} for user {UserId}",
                     worksheet.Id, userIdClaim);
 
                 return worksheet;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to save generated worksheet to database. Error: {ErrorMessage}", ex.Message);
-                _logger.LogError("Stack trace: {StackTrace}", ex.StackTrace);
+                logger.LogError(ex, "Failed to save generated worksheet to database. Error: {ErrorMessage}", ex.Message);
+                logger.LogError("Stack trace: {StackTrace}", ex.StackTrace);
                 return null;
             }
         }
@@ -545,7 +532,7 @@ namespace TeachSpark.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning(ex, "Failed to deserialize warnings for worksheet {Id}", worksheet.Id);
+                    logger.LogWarning(ex, "Failed to deserialize warnings for worksheet {Id}", worksheet.Id);
                     warnings = new List<string> { "Warning data could not be loaded" };
                 }
             }

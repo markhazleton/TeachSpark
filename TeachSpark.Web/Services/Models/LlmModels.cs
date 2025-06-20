@@ -35,9 +35,12 @@ namespace TeachSpark.Web.Services.Models
         public List<SelectListItem> BloomLevelOptions { get; set; } = new();
         public List<SelectListItem> TemplateOptions { get; set; } = new();
         public List<SelectListItem> AvailableModelOptions { get; set; } = new();
-    }/// <summary>
-     /// Result of worksheet content generation
-     /// </summary>
+    }
+
+
+    /// <summary>
+    /// Result of worksheet content generation
+    /// </summary>
     public class WorksheetContentResult
     {
         public string MarkdownContent { get; set; } = string.Empty;
@@ -95,9 +98,11 @@ namespace TeachSpark.Web.Services.Models
         public string DifficultyLevel { get; set; } = string.Empty;
         public WorksheetContentResult Content { get; set; } = new();
         public string VariantDescription { get; set; } = string.Empty;
-    }    /// <summary>
-         /// Prompt template for different worksheet types
-         /// </summary>
+    }
+
+    /// <summary>
+    /// Prompt template for different worksheet types
+    /// </summary>
     public class PromptTemplate
     {
         public string WorksheetType { get; set; } = string.Empty;
@@ -135,9 +140,11 @@ namespace TeachSpark.Web.Services.Models
         public bool RequireStructuredOutput { get; set; }
         public bool PrioritizeSpeed { get; set; }
         public bool PrioritizeQuality { get; set; }
-    }    /// <summary>
-         /// Model recommendation result
-         /// </summary>
+    }
+
+    /// <summary>
+    /// Model recommendation result
+    /// </summary>
     public class ModelRecommendation
     {
         public OpenAIModel RecommendedModel { get; set; } = new();
