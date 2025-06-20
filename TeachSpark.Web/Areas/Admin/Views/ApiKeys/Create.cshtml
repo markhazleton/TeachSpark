@@ -1,0 +1,222 @@
+@model TeachSpark.Web.Data.Entities.ApiKey
+
+@{
+    ViewData["Title"] = "Create API Key";
+    ViewData["PageHeader"] = "Create API Key";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-plus-circle me-2"></i>Create New API Key
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Name <span class="text-danger">*</span></label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g., Mobile App API Key"
+                                required />
+                            <div class="form-text">Give this API key a descriptive name to identify its purpose.</div>
+                            <div class="invalid-feedback">Please provide a name for this API key.</div>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="DailyRequestLimit" class="form-label">Daily Request Limit</label>
+                                    <input asp-for="DailyRequestLimit" class="form-control" type="number" min="1"
+                                        max="100000" value="1000" />
+                                    <div class="form-text">Maximum requests allowed per day.</div>
+                                    <span asp-validation-for="DailyRequestLimit" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="MonthlyRequestLimit" class="form-label">Monthly Request
+                                        Limit</label>
+                                    <input asp-for="MonthlyRequestLimit" class="form-control" type="number" min="1"
+                                        max="1000000" value="10000" />
+                                    <div class="form-text">Maximum requests allowed per month.</div>
+                                    <span asp-validation-for="MonthlyRequestLimit" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ExpiresAt" class="form-label">Expiration Date</label>
+                            <input asp-for="ExpiresAt" class="form-control" type="datetime-local" />
+                            <div class="form-text">Leave empty for no expiration.</div>
+                            <span asp-validation-for="ExpiresAt" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AllowedIpAddresses" class="form-label">Allowed IP Addresses</label>
+                            <textarea asp-for="AllowedIpAddresses" class="form-control" rows="3"
+                                placeholder="192.168.1.100&#10;10.0.0.0/8&#10;203.0.113.0/24"></textarea>
+                            <div class="form-text">One IP address or CIDR block per line. Leave empty to allow all IPs.
+                            </div>
+                            <span asp-validation-for="AllowedIpAddresses" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Scopes" class="form-label">API Scopes</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="read"
+                                            name="selectedScopes" id="scope-read">
+                                        <label class="form-check-label" for="scope-read">Read Access</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="write"
+                                            name="selectedScopes" id="scope-write">
+                                        <label class="form-check-label" for="scope-write">Write Access</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="generate"
+                                            name="selectedScopes" id="scope-generate">
+                                        <label class="form-check-label" for="scope-generate">Generate Worksheets</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="export"
+                                            name="selectedScopes" id="scope-export">
+                                        <label class="form-check-label" for="scope-export">Export Content</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-text">Select the operations this API key can perform.</div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox" checked />
+                            <label asp-for="IsActive" class="form-check-label">
+                                Active
+                            </label>
+                            <div class="form-text">Inactive keys cannot be used for API requests.</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>Create API Key
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-shield-check me-2"></i>Security Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Name:</strong> Use descriptive names
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Limits:</strong> Set appropriate rate limits
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>IP Restrictions:</strong> Limit access where possible
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Scopes:</strong> Grant minimal necessary permissions
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Expiration:</strong> Set expiry dates for temporary access
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Important Notes
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Security:</strong> The API key will be displayed only once after creation. Make sure to
+                        copy and store it securely.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Bootstrap form validation
+        (function ()
+        {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form)
+            {
+                form.addEventListener('submit', function (event)
+                {
+                    if (!form.checkValidity())
+                    {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // Collect selected scopes before form submission
+        document.querySelector('form').addEventListener('submit', function ()
+        {
+            const selectedScopes = Array.from(document.querySelectorAll('input[name="selectedScopes"]:checked'))
+                .map(cb => cb.value);
+
+            // Create hidden input for scopes JSON
+            const scopesInput = document.createElement('input');
+            scopesInput.type = 'hidden';
+            scopesInput.name = 'Scopes';
+            scopesInput.value = JSON.stringify(selectedScopes);
+            this.appendChild(scopesInput);
+        });
+    </script>
+}
+
+                               
+                                       
+                                       
+                                       
+                               
+                            
+                                           
+                                           
+                                           
+                                           
+                        
+        
+            
+               
+                    
+       

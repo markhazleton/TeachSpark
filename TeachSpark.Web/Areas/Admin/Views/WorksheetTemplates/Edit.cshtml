@@ -1,0 +1,227 @@
+@model TeachSpark.Web.Data.Entities.WorksheetTemplate
+
+@{
+    ViewData["Title"] = "Edit Worksheet Template";
+    ViewData["PageHeader"] = "Edit Worksheet Template";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Worksheet Template
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="CreatedAt" />
+                        <input type="hidden" asp-for="UsageCount" />
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label asp-for="Name" class="form-label">Template Name <span
+                                            class="text-danger">*</span></label>
+                                    <input asp-for="Name" class="form-control" placeholder="Enter template name..."
+                                        required />
+                                    <div class="invalid-feedback">
+                                        Please provide a template name.
+                                    </div>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label asp-for="TemplateType" class="form-label">Template Type <span
+                                            class="text-danger">*</span></label>
+                                    <select asp-for="TemplateType" class="form-select" required>
+                                        <option value="">Select type...</option>
+                                        <option value="reading-comprehension">Reading Comprehension</option>
+                                        <option value="vocabulary">Vocabulary</option>
+                                        <option value="grammar">Grammar</option>
+                                        <option value="math-practice">Math Practice</option>
+                                        <option value="writing-prompt">Writing Prompt</option>
+                                        <option value="science-lab">Science Lab</option>
+                                        <option value="history-timeline">History Timeline</option>
+                                        <option value="assessment">Assessment</option>
+                                        <option value="worksheet">General Worksheet</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a template type.
+                                    </div>
+                                    <span asp-validation-for="TemplateType" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3"
+                                placeholder="Describe what this template is for..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LayoutJson" class="form-label">Layout JSON <span
+                                    class="text-danger">*</span></label>
+                            <textarea asp-for="LayoutJson" class="form-control font-monospace" rows="10"
+                                placeholder='{"sections": [{"type": "header", "content": "..."}, {"type": "body", "content": "..."}]}'
+                                required></textarea>
+                            <div class="form-text">Define the template structure in JSON format.</div>
+                            <div class="invalid-feedback">
+                                Please provide a valid JSON layout.
+                            </div>
+                            <span asp-validation-for="LayoutJson" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PreviewImageUrl" class="form-label">Preview Image URL</label>
+                            <input asp-for="PreviewImageUrl" class="form-control"
+                                placeholder="https://example.com/preview.jpg" />
+                            <div class="form-text">Optional URL to a preview image of this template.</div>
+                            <span asp-validation-for="PreviewImageUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input asp-for="IsPublic" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsPublic" class="form-check-label">
+                                        Make Public
+                                    </label>
+                                    <div class="form-text">Allow other users to see and use this template.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input asp-for="IsSystem" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsSystem" class="form-check-label">
+                                        System Template
+                                    </label>
+                                    <div class="form-text">Mark as a built-in system template.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Back to List
+                            </a>
+                            <div>
+                                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info me-2">
+                                    <i class="bi bi-eye me-1"></i>View Details
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-lg me-1"></i>Update Template
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Template Info
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <strong>Created:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy")
+                        </li>
+                        <li class="mb-2">
+                            <strong>Last Updated:</strong> @Model.UpdatedAt.ToString("MMM dd, yyyy")
+                        </li>
+                        <li class="mb-2">
+                            <strong>Usage Count:</strong> @Model.UsageCount
+                        </li>
+                        <li class="mb-2">
+                            <strong>Creator:</strong> @(Model.User?.Email ?? "System")
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            @if (Model.Worksheets.Any())
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-file-earmark-text me-2"></i>Usage
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            This template is used in <strong>@Model.Worksheets.Count</strong> worksheet(s).
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Bootstrap form validation
+        (function ()
+        {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form)
+            {
+                form.addEventListener('submit', function (event)
+                {
+                    if (!form.checkValidity())
+                    {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // JSON validation
+        document.getElementById('LayoutJson').addEventListener('blur', function ()
+        {
+            try
+            {
+                JSON.parse(this.value);
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } catch (e)
+            {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    </script>
+}
+
+                                           
+                                       
+                                           
+                               
+                                   
+                               
+                               
+                                
+        
+            
+               
+                    
+       
+           
+           

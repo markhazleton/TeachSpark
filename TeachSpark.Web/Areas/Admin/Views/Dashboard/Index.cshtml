@@ -1,0 +1,268 @@
+@model TeachSpark.Web.Areas.Admin.Controllers.DashboardStats
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-speedometer2 text-primary"></i>
+                Admin Dashboard
+            </h1>
+            <div class="text-muted">
+                <i class="bi bi-clock"></i> Last updated: @DateTime.Now.ToString("HH:mm:ss")
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-2 col-md-4 col-sm-6">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-people-fill fs-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fs-6 fw-bold">Total Users</div>
+                        <div class="fs-3 fw-bold">@Model.TotalUsers.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-sm-6">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-file-text-fill fs-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fs-6 fw-bold">Worksheets</div>
+                        <div class="fs-3 fw-bold">@Model.TotalWorksheets.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-sm-6">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-file-earmark-text-fill fs-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fs-6 fw-bold">Templates</div>
+                        <div class="fs-3 fw-bold">@Model.TotalTemplates.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-sm-6">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-key-fill fs-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fs-6 fw-bold">API Keys</div>
+                        <div class="fs-3 fw-bold">@Model.TotalApiKeys.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-sm-6">
+        <div class="card bg-secondary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-diagram-3-fill fs-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fs-6 fw-bold">Bloom Levels</div>
+                        <div class="fs-3 fw-bold">@Model.TotalBloomLevels.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-sm-6">
+        <div class="card bg-dark text-white h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-bookmarks-fill fs-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <div class="fs-6 fw-bold">Standards</div>
+                        <div class="fs-3 fw-bold">@Model.TotalCommonCoreStandards.ToString("N0")</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Worksheets -->
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history text-primary"></i>
+                    Recent Worksheets
+                </h5>
+                <a asp-controller="Worksheets" asp-action="Index" class="btn btn-sm btn-outline-primary">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                @if (Model.RecentWorksheets.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>User</th>
+                                    <th>Type</th>
+                                    <th>Created</th>
+                                    <th>Views</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var worksheet in Model.RecentWorksheets)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-controller="Worksheets" asp-action="Details" asp-route-id="@worksheet.Id" class="text-decoration-none">
+                                                @worksheet.Title
+                                            </a>
+                                        </td>
+                                        <td>@worksheet.User.Email</td>
+                                        <td>
+                                            <span class="badge bg-secondary">@worksheet.WorksheetType</span>
+                                        </td>
+                                        <td>@worksheet.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                        <td>@worksheet.ViewCount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-file-text display-4"></i>
+                        <p class="mt-2">No worksheets found</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Top API Keys -->
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-bar-chart text-success"></i>
+                    Top API Keys
+                </h5>
+                <a asp-controller="ApiKeys" asp-action="Index" class="btn btn-sm btn-outline-success">
+                    View All <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+            <div class="card-body">
+                @if (Model.TopApiKeys.Any())
+                {
+                    @foreach (var apiKey in Model.TopApiKeys)
+                    {
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <div class="fw-semibold">@apiKey.Name</div>
+                                <small class="text-muted">@apiKey.User.Email</small>
+                            </div>
+                            <span class="badge bg-primary">@apiKey.RequestCount.ToString("N0")</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-key display-4"></i>
+                        <p class="mt-2">No API keys found</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Monthly Worksheet Chart -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-graph-up text-info"></i>
+                    Monthly Worksheet Creation Trend
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyChart" width="400" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Monthly Chart
+        const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        const monthlyData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyWorksheetCount));
+        
+        new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(monthlyData),
+                datasets: [{
+                    label: 'Worksheets Created',
+                    data: Object.values(monthlyData),
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Auto-refresh every 5 minutes
+        setTimeout(function() {
+            location.reload();
+        }, 5 * 60 * 1000);
+    </script>
+}

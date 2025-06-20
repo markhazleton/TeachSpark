@@ -1,0 +1,148 @@
+@model IEnumerable<TeachSpark.Web.Data.Entities.CommonCoreStandard>
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-bookmarks text-primary"></i>
+                Common Core Standards Management
+            </h1>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add New Standard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-table"></i>
+            Common Core Standards Overview
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="standardsTable" class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Code</th>
+                        <th>Grade</th>
+                        <th>Subject</th>
+                        <th>Domain</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Worksheets</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded via AJAX -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Get CSRF token
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            
+            $('#standardsTable').DataTable({
+                ajax: {
+                    url: '@Url.Action("GetStandardsData")',
+                    type: 'POST',
+                    data: function(d) {
+                        d.__RequestVerificationToken = token;
+                        return d;
+                    },
+                    error: function(xhr, error, code) {
+                        console.error('DataTables error:', error);
+                        alert('Error loading data. Please refresh the page.');
+                    }
+                },
+                columns: [
+                    { 
+                        data: 'code',
+                        render: function(data, type, row) {
+                            return '<code class="text-primary">' + (data || '') + '</code>';
+                        }
+                    },
+                    { 
+                        data: 'grade',
+                        width: '60px',
+                        className: 'text-center'
+                    },
+                    { data: 'subject' },
+                    { data: 'domain' },
+                    { 
+                        data: 'category',
+                        render: function(data, type, row) {
+                            return data ? '<span class="badge bg-secondary">' + data + '</span>' : '';
+                        }
+                    },
+                    { 
+                        data: 'description',
+                        width: '30%'
+                    },
+                    { 
+                        data: 'isActive',
+                        width: '80px',
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return data ? 
+                                '<span class="badge bg-success">Active</span>' : 
+                                '<span class="badge bg-secondary">Inactive</span>';
+                        }
+                    },
+                    { 
+                        data: 'worksheetCount',
+                        width: '100px',
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return '<span class="badge bg-info">' + (data || 0) + '</span>';
+                        }
+                    },
+                    {
+                        data: 'id',
+                        width: '150px',
+                        className: 'text-center',
+                        orderable: false,
+                        render: function(data, type, row) {
+                            return '<div class="btn-group btn-group-sm" role="group">' +
+                                '<a href="@Url.Action("Details", "CommonCoreStandards")/' + data + '" class="btn btn-outline-info btn-sm" title="Details">' +
+                                '<i class="bi bi-eye"></i>' +
+                                '</a>' +
+                                '<a href="@Url.Action("Edit", "CommonCoreStandards")/' + data + '" class="btn btn-outline-warning btn-sm" title="Edit">' +
+                                '<i class="bi bi-pencil"></i>' +
+                                '</a>' +
+                                '<a href="@Url.Action("Delete", "CommonCoreStandards")/' + data + '" class="btn btn-outline-danger btn-sm" title="Delete">' +
+                                '<i class="bi bi-trash"></i>' +
+                                '</a>' +
+                                '</div>';
+                        }
+                    }
+                ],
+                order: [[3, 'asc'], [0, 'asc']], // Sort by domain, then code
+                pageLength: 25,
+                responsive: true,
+                processing: true,
+                language: {
+                    search: "Search Standards:",
+                    lengthMenu: "Show _MENU_ standards per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ standards",
+                    infoEmpty: "No standards found",
+                    zeroRecords: "No matching standards found",
+                    processing: "Loading standards..."
+                }
+            });
+        });
+    </script>
+}
+
+<form method="post" style="display: none;">
+    @Html.AntiForgeryToken()
+</form>

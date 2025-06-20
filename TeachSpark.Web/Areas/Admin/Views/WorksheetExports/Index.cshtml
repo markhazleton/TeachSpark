@@ -1,0 +1,327 @@
+@{
+    ViewData["Title"] = "Worksheet Exports";
+    ViewData["PageHeader"] = "Worksheet Exports";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-0">Worksheet Exports</h2>
+            <p class="text-muted">Manage worksheet export files and downloads</p>
+        </div>
+    </div>
+
+    <!-- Export Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0" id="totalExports">-</h4>
+                            <p class="mb-0">Total Exports</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-file-earmark-arrow-down fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0" id="totalDownloads">-</h4>
+                            <p class="mb-0">Total Downloads</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-download fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0" id="totalFileSize">-</h4>
+                            <p class="mb-0">Total File Size</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-hdd fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0" id="expiredFiles">-</h4>
+                            <p class="mb-0">Expired Files</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-clock-history fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">
+                <i class="bi bi-file-earmark-text me-2"></i>Export Files
+            </h5>
+            <div>
+                <button class="btn btn-warning btn-sm" onclick="cleanupExpired()">
+                    <i class="bi bi-trash me-1"></i>Cleanup Expired
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="exportsTable" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Worksheet</th>
+                            <th>File Name</th>
+                            <th>Format</th>
+                            <th>File Size</th>
+                            <th>Created</th>
+                            <th>Expires</th>
+                            <th>Downloads</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- DataTables will populate this -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function ()
+        {
+            // Load statistics
+            loadStatistics();
+
+            // Initialize DataTable            $('#exportsTable').DataTable({
+            ajax: {
+                url: '@Url.Action("GetExportsData")',
+                    type: 'POST',
+                        data: function(d)
+                        {
+                            d.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+                            return d;
+                        },
+                error: function(xhr, error, code)
+                {
+                    console.log('DataTables AJAX error:', error);
+                    alert('Error loading data. Please refresh the page and try again.');
+                }
+            },
+            processing: true,
+                columns: [
+                    {
+                        data: 'worksheetTitle',
+                        title: 'Worksheet',
+                        render: function (data, type, row)
+                        {
+                            return '<a href="/Admin/Worksheets/Details/' + row.worksheetId + '">' + data + '</a>';
+                        }
+                    },
+                    {
+                        data: 'fileName',
+                        title: 'File Name',
+                        render: function (data)
+                        {
+                            return data || '<span class="text-muted">Generated name</span>';
+                        }
+                    },
+                    {
+                        data: 'exportFormat',
+                        title: 'Format',
+                        render: function (data)
+                        {
+                            const colors = {
+                                'PDF': 'danger',
+                                'DOCX': 'primary',
+                                'HTML': 'success'
+                            };
+                            return '<span class="badge bg-' + (colors[data] || 'secondary') + '">' + data + '</span>';
+                        }
+                    },
+                    {
+                        data: 'fileSizeBytes',
+                        title: 'File Size',
+                        render: function (data)
+                        {
+                            return formatFileSize(data);
+                        }
+                    },
+                    {
+                        data: 'createdAt',
+                        title: 'Created',
+                        render: function (data)
+                        {
+                            return new Date(data).toLocaleDateString();
+                        }
+                    },
+                    {
+                        data: 'expiresAt',
+                        title: 'Expires',
+                        render: function (data)
+                        {
+                            if (!data) return '<span class="text-muted">Never</span>';
+                            const expiry = new Date(data);
+                            const now = new Date();
+                            const isExpired = expiry < now;
+                            return isExpired
+                                ? '<span class="text-danger">Expired</span>'
+                                : '<span class="text-warning">' + expiry.toLocaleDateString() + '</span>';
+                        }
+                    },
+                    {
+                        data: 'downloadCount',
+                        title: 'Downloads',
+                        render: function (data)
+                        {
+                            return '<span class="badge bg-info">' + data + '</span>';
+                        }
+                    },
+                    {
+                        data: 'id',
+                        title: 'Actions',
+                        orderable: false,
+                        render: function (data, type, row)
+                        {
+                            let actions = `
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="@Url.Action("Details")/${data}" class="btn btn-outline-info" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                `;
+
+                            // Only show download if not expired
+                            if (!row.expiresAt || new Date(row.expiresAt) > new Date())
+                            {
+                                actions += `
+                                        <a href="@Url.Action("Download")/${data}" class="btn btn-outline-success" title="Download">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                    `;
+                            }
+
+                            actions += `
+                                        <a href="@Url.Action("Delete")/${data}" class="btn btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                `;
+
+                            return actions;
+                        }
+                    }
+                ],
+                    order: [[4, 'desc']], // Sort by created date descending
+                        pageLength: 25,
+                            responsive: true,
+                                language: {
+                emptyTable: "No worksheet exports found",
+                    zeroRecords: "No matching exports found"
+            }
+        });
+            });
+
+        function loadStatistics()
+        {
+            fetch('@Url.Action("GetStatistics")')
+                .then(response => response.json())
+                .then(data =>
+                {
+                    document.getElementById('totalExports').textContent = data.totalExports || '0';
+                    document.getElementById('totalDownloads').textContent = data.totalDownloads || '0';
+                    document.getElementById('totalFileSize').textContent = formatFileSize(data.totalFileSize || 0);
+                    document.getElementById('expiredFiles').textContent = data.expiredFiles || '0';
+                })
+                .catch(error =>
+                {
+                    console.error('Error loading statistics:', error);
+                });
+        }
+
+        function formatFileSize(bytes)
+        {
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            if (bytes === 0) return '0 Bytes';
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+        }
+
+        function cleanupExpired()
+        {
+            if (confirm('Are you sure you want to delete all expired export files? This action cannot be undone.'))
+            {
+                fetch('@Url.Action("CleanupExpired")', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data =>
+                    {
+                        if (data.success)
+                        {
+                            $('#exportsTable').DataTable().ajax.reload();
+                            loadStatistics();
+                            alert('Cleanup completed. ' + data.deletedCount + ' files removed.');
+                        } else
+                        {
+                            alert('Cleanup failed: ' + data.message);
+                        }
+                    })
+                    .catch(error =>
+                    {
+                        console.error('Error during cleanup:', error);
+                        alert('An error occurred during cleanup.');
+                    });
+            }
+        }
+    </script>
+}
+ 
+           
+                                       {
+         
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                                           
+                                                                                                           
+       
+               
+               
+       
+       
+                   
+                       
+                                       
+                                       
+                               

@@ -1,0 +1,151 @@
+@model TeachSpark.Web.Data.Entities.CommonCoreStandard
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-plus-circle text-success"></i>
+                Create New Common Core Standard
+            </h1>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-bookmarks"></i>
+                    Standard Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Code" class="form-label">
+                                    <i class="bi bi-code"></i> Standard Code <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Code" class="form-control" placeholder="e.g., CCSS.ELA-LITERACY.RL.8.1" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                                <div class="form-text">Unique identifier for the standard</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="Grade" class="form-label">
+                                    <i class="bi bi-bookmark"></i> Grade Level <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Grade" class="form-control" placeholder="e.g., 8" />
+                                <span asp-validation-for="Grade" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="SortOrder" class="form-label">
+                                    <i class="bi bi-sort-numeric-up"></i> Sort Order
+                                </label>
+                                <input asp-for="SortOrder" class="form-control" type="number" min="0" />
+                                <span asp-validation-for="SortOrder" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Subject" class="form-label">
+                                    <i class="bi bi-book"></i> Subject <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Subject" class="form-control" placeholder="e.g., English Language Arts" />
+                                <span asp-validation-for="Subject" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Domain" class="form-label">
+                                    <i class="bi bi-collection"></i> Domain <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Domain" class="form-control" placeholder="e.g., Reading: Literature" />
+                                <span asp-validation-for="Domain" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Category" class="form-label">
+                            <i class="bi bi-tags"></i> Category
+                        </label>
+                        <input asp-for="Category" class="form-control" placeholder="e.g., Key Ideas and Details" />
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">
+                            <i class="bi bi-card-text"></i> Description <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="Description" class="form-control" rows="4" 
+                                  placeholder="Describe what students should be able to do..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ExampleActivities" class="form-label">
+                            <i class="bi bi-lightbulb"></i> Example Activities
+                        </label>
+                        <textarea asp-for="ExampleActivities" class="form-control" rows="3" 
+                                  placeholder="Provide examples of activities that align with this standard..."></textarea>
+                        <span asp-validation-for="ExampleActivities" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" asp-for="IsActive" checked />
+                                <label class="form-check-label" asp-for="IsActive">
+                                    <i class="bi bi-check-circle text-success"></i>
+                                    Standard is Active
+                                </label>
+                                <div class="form-text">Inactive standards won't appear in worksheet creation</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="bi bi-info-circle text-info"></i>
+                                Common Core Standard Format
+                            </h6>
+                            <p class="card-text small mb-0">
+                                <strong>Format:</strong> CCSS.[Subject].[Domain].[Grade].[Standard Number]<br>
+                                <strong>Example:</strong> CCSS.ELA-LITERACY.RL.8.1<br>
+                                Where: ELA-LITERACY = Subject, RL = Reading Literature, 8 = Grade 8, 1 = Standard 1
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Create Standard
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

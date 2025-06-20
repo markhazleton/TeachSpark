@@ -1,0 +1,278 @@
+@model TeachSpark.Web.Data.Entities.Worksheet
+
+@{
+    ViewData["Title"] = "Create Worksheet";
+    ViewData["PageHeader"] = "Create Worksheet";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-plus-circle me-2"></i>Create New Worksheet
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">Title <span class="text-danger">*</span></label>
+                            <input asp-for="Title" class="form-control" placeholder="Enter worksheet title..."
+                                required />
+                            <div class="invalid-feedback">
+                                Please provide a worksheet title.
+                            </div>
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3"
+                                placeholder="Describe the worksheet purpose and content..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="WorksheetType" class="form-label">Worksheet Type <span
+                                            class="text-danger">*</span></label>
+                                    <select asp-for="WorksheetType" class="form-select" required>
+                                        <option value="">Select type...</option>
+                                        <option value="reading-comprehension">Reading Comprehension</option>
+                                        <option value="vocabulary">Vocabulary</option>
+                                        <option value="grammar">Grammar</option>
+                                        <option value="math-practice">Math Practice</option>
+                                        <option value="writing-prompt">Writing Prompt</option>
+                                        <option value="science-lab">Science Lab</option>
+                                        <option value="history-timeline">History Timeline</option>
+                                        <option value="assessment">Assessment</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a worksheet type.
+                                    </div>
+                                    <span asp-validation-for="WorksheetType" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="DifficultyLevel" class="form-label">Difficulty Level</label>
+                                    <select asp-for="DifficultyLevel" class="form-select">
+                                        <option value="simplified">Simplified</option>
+                                        <option value="standard" selected>Standard</option>
+                                        <option value="advanced">Advanced</option>
+                                    </select>
+                                    <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="CommonCoreStandardId" class="form-label">Common Core
+                                        Standard</label>
+                                    <select asp-for="CommonCoreStandardId" class="form-select"
+                                        asp-items="ViewBag.CommonCoreStandards">
+                                        <option value="">Select standard...</option>
+                                    </select>
+                                    <span asp-validation-for="CommonCoreStandardId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="BloomLevelId" class="form-label">Bloom's Level</label>
+                                    <select asp-for="BloomLevelId" class="form-select" asp-items="ViewBag.BloomLevels">
+                                        <option value="">Select level...</option>
+                                    </select>
+                                    <span asp-validation-for="BloomLevelId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TemplateId" class="form-label">Template</label>
+                            <select asp-for="TemplateId" class="form-select" asp-items="ViewBag.Templates">
+                                <option value="">Select template...</option>
+                            </select>
+                            <div class="form-text">Optional: Use an existing template as a starting point.</div>
+                            <span asp-validation-for="TemplateId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SourceText" class="form-label">Source Text</label>
+                            <textarea asp-for="SourceText" class="form-control" rows="4"
+                                placeholder="Enter the source text to generate worksheet content from..."></textarea>
+                            <div class="form-text">Optional: Provide source material for content generation.</div>
+                            <span asp-validation-for="SourceText" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ContentJson" class="form-label">Content JSON <span
+                                    class="text-danger">*</span></label>
+                            <textarea asp-for="ContentJson" class="form-control font-monospace" rows="8"
+                                placeholder='{"questions": [{"text": "Question 1", "type": "multiple-choice"}]}'
+                                required></textarea>
+                            <div class="form-text">Define the worksheet content in JSON format.</div>
+                            <div class="invalid-feedback">
+                                Please provide valid JSON content.
+                            </div>
+                            <span asp-validation-for="ContentJson" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Tags" class="form-label">Tags</label>
+                            <input asp-for="Tags" class="form-control"
+                                placeholder="reading, comprehension, grade-8 (comma-separated)" />
+                            <div class="form-text">Comma-separated tags for organization and search.</div>
+                            <span asp-validation-for="Tags" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input asp-for="IsPublic" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsPublic" class="form-check-label">
+                                        Make Public
+                                    </label>
+                                    <div class="form-text">Allow other teachers to see and use this worksheet.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input asp-for="IsFavorite" class="form-check-input" type="checkbox" />
+                                    <label asp-for="IsFavorite" class="form-check-label">
+                                        Add to Favorites
+                                    </label>
+                                    <div class="form-text">Mark this worksheet as a favorite.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Back to List
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>Create Worksheet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Creation Guidelines
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Title:</strong> Use descriptive, clear titles
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Standards:</strong> Align with educational goals
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Content:</strong> Use valid JSON structure
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Tags:</strong> Help with organization
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-code-slash me-2"></i>Content JSON Example
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <pre class="bg-light p-2 rounded small"><code>{
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "What is the main idea?",
+      "options": ["A", "B", "C", "D"],
+      "correct": "A"
+    },
+    {
+      "type": "short-answer",
+      "text": "Explain the concept."
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Bootstrap form validation
+        (function ()
+        {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form)
+            {
+                form.addEventListener('submit', function (event)
+                {
+                    if (!form.checkValidity())
+                    {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // JSON validation
+        document.getElementById('ContentJson').addEventListener('blur', function ()
+        {
+            try
+            {
+                JSON.parse(this.value);
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            } catch (e)
+            {
+                this.classList.remove('is-valid');
+                this.classList.add('is-invalid');
+            }
+        });
+    </script>
+}
+
+                               
+                               
+                                           
+                                       
+                                       
+                               
+                                   
+                               
+                               
+                                
+        
+            
+               
+                    
+       
+           
+           

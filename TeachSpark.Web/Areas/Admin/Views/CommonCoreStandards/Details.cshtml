@@ -1,0 +1,177 @@
+@model TeachSpark.Web.Data.Entities.CommonCoreStandard
+
+@{
+    ViewData["Title"] = "Common Core Standard Details";
+    ViewData["PageHeader"] = "Common Core Standard Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle me-2"></i>@Model.Code
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Code:</td>
+                                        <td>
+                                            <span class="badge bg-primary">@Model.Code</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Grade:</td>
+                                        <td>
+                                            <span class="badge bg-info">Grade @Model.Grade</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Subject:</td>
+                                        <td>@Model.Subject</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Domain:</td>
+                                        <td>@Model.Domain</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Category:</td>
+                                        <td>@(Model.Category ?? "Not specified")</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Sort Order:</td>
+                                        <td>@Model.SortOrder</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Status:</td>
+                                        <td>
+                                            @if (Model.IsActive)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle me-1"></i>Active
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-x-circle me-1"></i>Inactive
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mt-4">
+                            <h6 class="fw-bold text-muted">Description:</h6>
+                            <div class="border-start border-4 border-primary ps-3">
+                                <p class="mb-0">@Model.Description</p>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.ExampleActivities))
+                    {
+                        <div class="mt-4">
+                            <h6 class="fw-bold text-muted">Example Activities:</h6>
+                            <div class="border-start border-4 border-success ps-3">
+                                <p class="mb-0">@Model.ExampleActivities</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-gear me-2"></i>Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Standard
+                        </a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="bi bi-trash me-2"></i>Delete Standard
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Worksheets.Any())
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-file-earmark-text me-2"></i>Associated Worksheets
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            This standard is used in <strong>@Model.Worksheets.Count</strong> worksheet(s).
+                        </div>
+                        <small class="text-muted">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Deleting this standard may affect existing worksheets.
+                        </small>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle text-warning me-2"></i>Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the Common Core Standard:</p>
+                <div class="alert alert-warning">
+                    <strong>@Model.Code</strong><br>
+                    @Model.Description
+                </div>
+                @if (Model.Worksheets.Any())
+                {
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This standard is associated with @Model.Worksheets.Count worksheet(s). 
+                        Deleting it may affect those worksheets.
+                    </div>
+                }
+                <p class="mb-0"><strong>This action cannot be undone.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i>Cancel
+                </button>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i>Delete Standard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

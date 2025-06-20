@@ -1,0 +1,238 @@
+@model TeachSpark.Web.Data.Entities.WorksheetTemplate
+
+@{
+    ViewData["Title"] = "Worksheet Template Details";
+    ViewData["PageHeader"] = "Worksheet Template Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-file-earmark-text me-2"></i>@Model.Name
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Name:</td>
+                                        <td>@Model.Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Type:</td>
+                                        <td>
+                                            <span class="badge bg-info">@Model.TemplateType</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Created:</td>
+                                        <td>@Model.CreatedAt.ToString("MMM dd, yyyy 'at' h:mm tt")</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Last Updated:</td>
+                                        <td>@Model.UpdatedAt.ToString("MMM dd, yyyy 'at' h:mm tt")</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Usage Count:</td>
+                                        <td>
+                                            <span class="badge bg-success">@Model.UsageCount</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Creator:</td>
+                                        <td>@(Model.User?.Email ?? "System")</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Visibility:</td>
+                                        <td>
+                                            @if (Model.IsPublic)
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-globe me-1"></i>Public
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-lock me-1"></i>Private
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Type:</td>
+                                        <td>
+                                            @if (Model.IsSystem)
+                                            {
+                                                <span class="badge bg-primary">
+                                                    <i class="bi bi-gear me-1"></i>System
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-info">
+                                                    <i class="bi bi-person me-1"></i>User Created
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold text-muted">Worksheets:</td>
+                                        <td>
+                                            <span class="badge bg-warning text-dark">@Model.Worksheets.Count</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="mt-4">
+                            <h6 class="fw-bold text-muted">Description:</h6>
+                            <div class="border-start border-4 border-primary ps-3">
+                                <p class="mb-0">@Model.Description</p>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.PreviewImageUrl))
+                    {
+                        <div class="mt-4">
+                            <h6 class="fw-bold text-muted">Preview Image:</h6>
+                            <img src="@Model.PreviewImageUrl" alt="Template Preview" class="img-fluid border rounded"
+                                style="max-height: 200px;" />
+                        </div>
+                    }
+
+                    <div class="mt-4">
+                        <h6 class="fw-bold text-muted">Layout Structure:</h6>
+                        <div class="border rounded p-3 bg-light">
+                            <pre class="mb-0 small"><code>@Model.LayoutJson</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-gear me-2"></i>Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Template
+                        </a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal">
+                            <i class="bi bi-trash me-2"></i>Delete Template
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Worksheets.Any())
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">
+                            <i class="bi bi-file-earmark-text me-2"></i>Associated Worksheets
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            This template is used in <strong>@Model.Worksheets.Count</strong> worksheet(s).
+                        </div>
+                        <small class="text-muted">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Deleting this template may affect existing worksheets.
+                        </small>
+                    </div>
+                </div>
+            }
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">
+                        <i class="bi bi-graph-up me-2"></i>Usage Statistics
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="border-end">
+                                <div class="h4 text-primary mb-0">@Model.UsageCount</div>
+                                <small class="text-muted">Total Uses</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-success mb-0">@Model.Worksheets.Count</div>
+                            <small class="text-muted">Worksheets</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="bi bi-exclamation-triangle text-warning me-2"></i>Confirm Deletion
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the worksheet template:</p>
+                <div class="alert alert-warning">
+                    <strong>@Model.Name</strong><br>
+                    Type: @Model.TemplateType
+                </div>
+                @if (Model.Worksheets.Any())
+                {
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This template is used in @Model.Worksheets.Count worksheet(s).
+                        Deleting it may affect those worksheets.
+                    </div>
+                }
+                <p class="mb-0"><strong>This action cannot be undone.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i>Cancel
+                </button>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i>Delete Template
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+                               
+                           

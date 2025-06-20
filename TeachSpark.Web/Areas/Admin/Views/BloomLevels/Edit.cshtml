@@ -1,0 +1,110 @@
+@model TeachSpark.Web.Data.Entities.BloomLevel
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-pencil text-warning"></i>
+                Edit Bloom Level - @Model.Name
+            </h1>
+            <div>
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-info">
+                    <i class="bi bi-eye"></i> Details
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-diagram-3"></i>
+                    Edit Bloom Level Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Edit" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    <input type="hidden" asp-for="Id" />
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label">
+                                    <i class="bi bi-tag"></i> Name <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="Order" class="form-label">
+                                    <i class="bi bi-sort-numeric-up"></i> Order <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Order" class="form-control" type="number" min="1" max="10" />
+                                <span asp-validation-for="Order" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="ColorCode" class="form-label">
+                                    <i class="bi bi-palette"></i> Color Code
+                                </label>
+                                <input asp-for="ColorCode" class="form-control" type="color" />
+                                <span asp-validation-for="ColorCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">
+                            <i class="bi bi-card-text"></i> Description <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ActionVerbs" class="form-label">
+                            <i class="bi bi-list-ul"></i> Action Verbs <span class="text-danger">*</span>
+                        </label>
+                        <textarea asp-for="ActionVerbs" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="ActionVerbs" class="text-danger"></span>
+                        <div class="form-text">Enter action verbs separated by commas</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Examples" class="form-label">
+                            <i class="bi bi-lightbulb"></i> Examples
+                        </label>
+                        <textarea asp-for="Examples" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Examples" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-check-circle"></i> Update Bloom Level
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                            <i class="bi bi-eye"></i> View Details
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,149 @@
+@model IEnumerable<TeachSpark.Web.Data.Entities.WorksheetTemplate>
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-file-earmark-text text-primary"></i>
+                Worksheet Templates Management
+            </h1>
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Add New Template
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">
+            <i class="bi bi-table"></i>
+            Worksheet Templates Overview
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="templatesTable" class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Created By</th>
+                        <th>Status</th>
+                        <th>Usage</th>
+                        <th>Worksheets</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded via AJAX -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#templatesTable').DataTable({                ajax: {
+                    url: '@Url.Action("GetTemplatesData")',
+                    type: 'POST',
+                    data: function(d) {
+                        d.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+                        return d;
+                    },
+                    error: function(xhr, error, code) {
+                        console.log('DataTables AJAX error:', error);
+                        alert('Error loading data. Please refresh the page and try again.');
+                    }
+                },
+                processing: true,
+                columns: [
+                    { 
+                        data: 'name',
+                        render: function(data, type, row) {
+                            return '<strong>' + data + '</strong>';
+                        }
+                    },
+                    { 
+                        data: 'description',
+                        width: '25%'
+                    },
+                    { 
+                        data: 'templateType',
+                        render: function(data, type, row) {
+                            return '<span class="badge bg-secondary">' + data + '</span>';
+                        }
+                    },
+                    { data: 'createdBy' },
+                    { 
+                        data: 'isPublic',
+                        width: '80px',
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            var badges = '';
+                            if (data) badges += '<span class="badge bg-success me-1">Public</span>';
+                            if (row.isSystem) badges += '<span class="badge bg-info">System</span>';
+                            return badges || '<span class="badge bg-warning">Private</span>';
+                        }
+                    },
+                    { 
+                        data: 'usageCount',
+                        width: '80px',
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return '<span class="badge bg-primary">' + data + '</span>';
+                        }
+                    },
+                    { 
+                        data: 'worksheetCount',
+                        width: '100px',
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            return '<span class="badge bg-info">' + data + '</span>';
+                        }
+                    },
+                    { 
+                        data: 'createdAt',
+                        width: '100px'
+                    },
+                    {
+                        data: 'id',
+                        width: '150px',
+                        className: 'text-center',
+                        orderable: false,
+                        render: function(data, type, row) {
+                            return '<div class="btn-group btn-group-sm" role="group">' +
+                                '<a href="@Url.Action("Details", "WorksheetTemplates")/' + data + '" class="btn btn-outline-info btn-sm" title="Details">' +
+                                '<i class="bi bi-eye"></i>' +
+                                '</a>' +
+                                '<a href="@Url.Action("Edit", "WorksheetTemplates")/' + data + '" class="btn btn-outline-warning btn-sm" title="Edit">' +
+                                '<i class="bi bi-pencil"></i>' +
+                                '</a>' +
+                                '<a href="@Url.Action("Delete", "WorksheetTemplates")/' + data + '" class="btn btn-outline-danger btn-sm" title="Delete">' +
+                                '<i class="bi bi-trash"></i>' +
+                                '</a>' +
+                                '</div>';
+                        }
+                    }
+                ],
+                order: [[7, 'desc']], // Sort by created date, newest first
+                pageLength: 25,
+                responsive: true,                language: {
+                    search: "Search Templates:",
+                    lengthMenu: "Show _MENU_ templates per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ templates",
+                    infoEmpty: "No templates found",
+                    zeroRecords: "No matching templates found"
+                }
+            });
+        });
+    </script>
+}
+
+<form method="post" style="display: none;">
+    @Html.AntiForgeryToken()
+</form>

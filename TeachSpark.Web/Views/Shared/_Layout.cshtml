@@ -19,8 +19,7 @@
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <div class="collapse navbar-collapse" id="navbarNav">                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -32,6 +31,35 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Account"
                                     asp-action="Dashboard">Dashboard</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarAdminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Admin
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarAdminDropdown">
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                        <i class="bi bi-speedometer2"></i> Dashboard
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header">Content Management</h6></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="BloomLevels" asp-action="Index">
+                                        <i class="bi bi-diagram-3"></i> Bloom Levels
+                                    </a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="CommonCoreStandards" asp-action="Index">
+                                        <i class="bi bi-bookmarks"></i> Standards
+                                    </a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="WorksheetTemplates" asp-action="Index">
+                                        <i class="bi bi-file-earmark-text"></i> Templates
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header">Data Management</h6></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Worksheets" asp-action="Index">
+                                        <i class="bi bi-files"></i> Worksheets
+                                    </a></li>
+                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="ApiKeys" asp-action="Index">
+                                        <i class="bi bi-key"></i> API Keys
+                                    </a></li>
+                                </ul>
                             </li>
                         }
                         <li class="nav-item">
