@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TeachSpark.Web.Models;
+using TeachSpark.Web.Data.Entities;
 
 namespace TeachSpark.Web.Data;
 

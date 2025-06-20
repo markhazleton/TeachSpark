@@ -27,7 +27,7 @@ namespace TeachSpark.Web.Services
         {
             var assetPath = _assetsService.GetAssetPath(logicalPath);
 
-            var attributes = "";
+            var attributes = string.Empty;
             if (htmlAttributes != null)
             {
                 var props = htmlAttributes.GetType().GetProperties();
@@ -46,7 +46,7 @@ namespace TeachSpark.Web.Services
         {
             var assetPath = _assetsService.GetAssetPath(logicalPath);
 
-            var attributes = "";
+            var attributes = string.Empty;
             if (htmlAttributes != null)
             {
                 var props = htmlAttributes.GetType().GetProperties();

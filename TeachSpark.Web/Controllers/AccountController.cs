@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using TeachSpark.Web.Models;
+using TeachSpark.Web.Data.Entities;
 
 namespace TeachSpark.Web.Controllers;
 

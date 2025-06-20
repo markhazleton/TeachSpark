@@ -1,8 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web;
 using TeachSpark.Web.Data;
-using TeachSpark.Web.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using TeachSpark.Web.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

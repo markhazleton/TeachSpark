@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace TeachSpark.Web.Models;
+namespace TeachSpark.Web.Data.Entities;
 
 /// <summary>
 /// Custom application user extending IdentityUser

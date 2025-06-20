@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using TeachSpark.Web.Models;
 
 namespace TeachSpark.Web.Controllers;
