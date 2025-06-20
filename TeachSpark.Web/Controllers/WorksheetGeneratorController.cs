@@ -34,17 +34,15 @@ namespace TeachSpark.Web.Controllers
             _modelRegistry = modelRegistry;
             _llmService = llmService;
             _logger = logger;
-        }
-
-        /// <summary>
-        /// Main worksheet generator landing page
-        /// </summary>
-        public async Task<IActionResult> Index()
+        }        /// <summary>
+                 /// Main worksheet generator landing page
+                 /// </summary>
+        public IActionResult Index()
         {
             ViewData["Title"] = "Worksheet Generator";
 
-            // Prepare data for dropdowns
-            await PrepareViewData();
+            // The Index view doesn't need dropdown data
+            // It just shows overview and links to Create
 
             return View();
         }
@@ -56,8 +54,6 @@ namespace TeachSpark.Web.Controllers
         {
             ViewData["Title"] = "Create New Worksheet";
 
-            await PrepareViewData();
-
             var model = new WorksheetGenerationRequest
             {
                 WorksheetType = "reading-comprehension",
@@ -66,21 +62,21 @@ namespace TeachSpark.Web.Controllers
                 IncludeAnswerKey = true
             };
 
+            await PopulateDropdownLists(model);
+
             return View(model);
-        }        /// <summary>
-                 /// Process worksheet generation request
-                 /// </summary>
+        }/// <summary>
+         /// Process worksheet generation request
+         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(WorksheetGenerationRequest request)
         {
-            ViewData["Title"] = "Create New Worksheet";
-
-            if (!ModelState.IsValid)
+            ViewData["Title"] = "Create New Worksheet"; if (!ModelState.IsValid)
             {
                 _logger.LogWarning("ModelState is invalid. Errors: {Errors}",
                     string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
-                await PrepareViewData();
+                await PopulateDropdownLists(request);
                 return View(request);
             }
 
@@ -139,7 +135,7 @@ namespace TeachSpark.Web.Controllers
                 ModelState.AddModelError(string.Empty, "An unexpected error occurred while generating the worksheet. Please try again.");
             }
 
-            await PrepareViewData();
+            await PopulateDropdownLists(request);
             return View(request);
         }/// <summary>
          /// Display generated worksheet
@@ -272,59 +268,92 @@ namespace TeachSpark.Web.Controllers
                 .ToListAsync();
 
             return Json(standards);
-        }
-
-        /// <summary>
-        /// Prepare view data for dropdowns and form elements
-        /// </summary>
-        private async Task PrepareViewData()
+        }        /// <summary>
+                 /// Populate dropdown lists in the view model
+                 /// </summary>
+        private async Task PopulateDropdownLists(WorksheetGenerationRequest model)
         {
             // Worksheet types
-            ViewBag.WorksheetTypes = _config.SupportedWorksheetTypes.Select(t => new SelectListItem
-            {
-                Value = t,
-                Text = FormatWorksheetTypeName(t)
-            }).ToList();
+            model.WorksheetTypeOptions = _config.SupportedWorksheetTypes
+                .Distinct()
+                .Select(t => new SelectListItem
+                {
+                    Value = t,
+                    Text = FormatWorksheetTypeName(t),
+                    Selected = t == model.WorksheetType
+                }).ToList();
 
             // Difficulty levels
-            ViewBag.DifficultyLevels = _config.SupportedDifficultyLevels.Select(d => new SelectListItem
-            {
-                Value = d,
-                Text = FormatDifficultyLevel(d)
-            }).ToList();
+            model.DifficultyLevelOptions = _config.SupportedDifficultyLevels
+                .Distinct()
+                .Select(d => new SelectListItem
+                {
+                    Value = d,
+                    Text = FormatDifficultyLevel(d),
+                    Selected = d == model.DifficultyLevel
+                }).ToList();
 
             // Common Core Standards (8th grade ELA)
-            ViewBag.CommonCoreStandards = await _context.CommonCoreStandards
+            model.CommonCoreStandardOptions = await _context.CommonCoreStandards
                 .Where(s => s.Grade == "8")
+                .OrderBy(s => s.Code)
                 .Select(s => new SelectListItem
                 {
                     Value = s.Id.ToString(),
-                    Text = $"{s.Code} - {s.Description}"
+                    Text = $"{s.Code} - {s.Description}",
+                    Selected = s.Id == model.CommonCoreStandardId
                 })
+                .Distinct()
                 .ToListAsync();
 
+            // Add empty option at the beginning
+            model.CommonCoreStandardOptions.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = "No specific standard (optional)",
+                Selected = !model.CommonCoreStandardId.HasValue
+            });
+
             // Bloom's Taxonomy Levels
-            ViewBag.BloomLevels = await _context.BloomLevels
+            model.BloomLevelOptions = await _context.BloomLevels
+                .OrderBy(b => b.Order)
                 .Select(b => new SelectListItem
                 {
                     Value = b.Id.ToString(),
-                    Text = $"{b.Name} - {b.Description}"
+                    Text = $"{b.Name} - {b.Description}",
+                    Selected = b.Id == model.BloomLevelId
                 })
+                .Distinct()
                 .ToListAsync();
 
+            // Add empty option at the beginning
+            model.BloomLevelOptions.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = "Mixed levels (recommended)",
+                Selected = !model.BloomLevelId.HasValue
+            });
+
             // Available templates
-            ViewBag.Templates = await _context.WorksheetTemplates
+            model.TemplateOptions = await _context.WorksheetTemplates
                 .Where(t => t.IsPublic)
+                .OrderBy(t => t.Name)
                 .Select(t => new SelectListItem
                 {
                     Value = t.Id.ToString(),
-                    Text = t.Name
+                    Text = t.Name,
+                    Selected = t.Id == model.TemplateId
                 })
+                .Distinct()
                 .ToListAsync();
 
-            // Configuration values
-            ViewBag.MaxQuestions = _config.MaxQuestionCount;
-            ViewBag.DefaultQuestions = _config.DefaultQuestionCount;
+            // Add empty option at the beginning
+            model.TemplateOptions.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = "Use default template",
+                Selected = !model.TemplateId.HasValue
+            });
 
             // Available AI models for worksheet generation
             try
@@ -332,28 +361,49 @@ namespace TeachSpark.Web.Controllers
                 var modelsResult = await _modelRegistry.GetEducationRecommendedModelsAsync();
                 if (modelsResult.Success && modelsResult.Data != null)
                 {
-                    ViewBag.AvailableModels = modelsResult.Data.Select(m => new SelectListItem
+                    model.AvailableModelOptions = modelsResult.Data.Select(m => new SelectListItem
                     {
                         Value = m.Id,
-                        Text = $"{m.Name} - ${m.CostPer1kInputTokens:F4}/1k tokens"
+                        Text = $"{m.Name} - ${m.CostPer1kInputTokens:F4}/1k tokens",
+                        Selected = m.Id == model.PreferredLlmModel
                     }).ToList();
                 }
                 else
                 {
-                    ViewBag.AvailableModels = new List<SelectListItem>
+                    model.AvailableModelOptions = new List<SelectListItem>
                     {
-                        new SelectListItem { Value = "gpt-4o-mini", Text = "GPT-4o Mini (Default)" }
+                        new SelectListItem {
+                            Value = "gpt-4o-mini",
+                            Text = "GPT-4o Mini (Default)",
+                            Selected = model.PreferredLlmModel == "gpt-4o-mini" || string.IsNullOrEmpty(model.PreferredLlmModel)
+                        }
                     };
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Failed to load available models, using default");
-                ViewBag.AvailableModels = new List<SelectListItem>
+                model.AvailableModelOptions = new List<SelectListItem>
                 {
-                    new SelectListItem { Value = "gpt-4o-mini", Text = "GPT-4o Mini (Default)" }
+                    new SelectListItem {
+                        Value = "gpt-4o-mini",
+                        Text = "GPT-4o Mini (Default)",
+                        Selected = model.PreferredLlmModel == "gpt-4o-mini" || string.IsNullOrEmpty(model.PreferredLlmModel)
+                    }
                 };
             }
+
+            // Add empty option at the beginning for models
+            model.AvailableModelOptions.Insert(0, new SelectListItem
+            {
+                Value = "",
+                Text = "Auto-select best model",
+                Selected = string.IsNullOrEmpty(model.PreferredLlmModel)
+            });
+
+            // Set configuration values in ViewBag (these are not dropdowns)
+            ViewBag.MaxQuestions = _config.MaxQuestionCount;
+            ViewBag.DefaultQuestions = _config.DefaultQuestionCount;
         }
 
         /// <summary>

@@ -3,17 +3,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web.Data;
 using TeachSpark.Web.Data.Entities;
+using TeachSpark.Web.Configuration;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
 {
     public class WorksheetsController : BaseAdminController
     {
         private readonly ApplicationDbContext _context;
+        private readonly WorksheetGenerationConfiguration _config;
 
-        public WorksheetsController(ApplicationDbContext context)
+        public WorksheetsController(ApplicationDbContext context, WorksheetGenerationConfiguration config)
         {
             _context = context;
-        }        // GET: Admin/Worksheets
+            _config = config;
+        }// GET: Admin/Worksheets
         public IActionResult Index()
         {
             ViewData["Title"] = "Worksheets Management";
@@ -40,10 +43,11 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
             ViewData["Title"] = $"Worksheet Details - {worksheet.Title}";
             return View(worksheet);
-        }        // GET: Admin/Worksheets/Create
+        }
+
+        // GET: Admin/Worksheets/Create
         public IActionResult Create()
         {
             ViewData["Title"] = "Create New Worksheet";
@@ -52,8 +56,28 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             ViewData["CommonCoreStandards"] = new SelectList(_context.CommonCoreStandards.OrderBy(s => s.Code), "Id", "Code");
             ViewData["AcademicStandards"] = new SelectList(_context.AcademicStandards.OrderBy(s => s.GleCode), "Id", "GleCode");
             ViewData["Templates"] = new SelectList(_context.WorksheetTemplates.OrderBy(t => t.Name), "Id", "Name");
+
+            // Add worksheet types and difficulty levels from configuration
+            ViewData["WorksheetTypes"] = _config.SupportedWorksheetTypes
+                .Distinct()
+                .Select(t => new SelectListItem
+                {
+                    Value = t,
+                    Text = FormatWorksheetTypeName(t)
+                }).ToList();
+
+            ViewData["DifficultyLevels"] = _config.SupportedDifficultyLevels
+                .Distinct()
+                .Select(d => new SelectListItem
+                {
+                    Value = d,
+                    Text = FormatDifficultyLevel(d)
+                }).ToList();
+
             return View();
-        }// POST: Admin/Worksheets/Create
+        }
+
+        // POST: Admin/Worksheets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title,Description,UserId,CommonCoreStandardId,AcademicStandardId,BloomLevelId,TemplateId,ContentMarkdown,RenderedHtml,SourceText,WorksheetType,DifficultyLevel,AccessibilityOptions,Tags,IsPublic,IsFavorite,LlmModel,GenerationPrompt,GenerationCost,GenerationTime,TokensUsed,ConfidenceScore,Warnings,QuestionCount,HasAnswerKey,EstimatedDurationMinutes")] Worksheet worksheet)
@@ -211,6 +235,25 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             ViewData["CommonCoreStandards"] = new SelectList(_context.CommonCoreStandards.OrderBy(s => s.Code), "Id", "Code", worksheet.CommonCoreStandardId);
             ViewData["AcademicStandards"] = new SelectList(_context.AcademicStandards.OrderBy(s => s.GleCode), "Id", "GleCode", worksheet.AcademicStandardId);
             ViewData["Templates"] = new SelectList(_context.WorksheetTemplates.OrderBy(t => t.Name), "Id", "Name", worksheet.TemplateId);
+
+            // Add worksheet types and difficulty levels from configuration
+            ViewData["WorksheetTypes"] = _config.SupportedWorksheetTypes
+                .Distinct()
+                .Select(t => new SelectListItem
+                {
+                    Value = t,
+                    Text = FormatWorksheetTypeName(t),
+                    Selected = t == worksheet.WorksheetType
+                }).ToList();
+
+            ViewData["DifficultyLevels"] = _config.SupportedDifficultyLevels
+                .Distinct()
+                .Select(d => new SelectListItem
+                {
+                    Value = d,
+                    Text = FormatDifficultyLevel(d),
+                    Selected = d == worksheet.DifficultyLevel
+                }).ToList();
         }
         private bool WorksheetExists(int id)
         {
@@ -252,6 +295,41 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 .ToListAsync();
 
             return Json(new { data = worksheets });
+        }
+
+        /// <summary>
+        /// Format worksheet type name for display
+        /// </summary>
+        private static string FormatWorksheetTypeName(string type)
+        {
+            return type switch
+            {
+                "reading-comprehension" => "Reading Comprehension",
+                "vocabulary" => "Vocabulary",
+                "grammar" => "Grammar",
+                "creative-writing" => "Creative Writing",
+                "literary-analysis" => "Literary Analysis",
+                "math-practice" => "Math Practice",
+                "writing-prompt" => "Writing Prompt",
+                "science-lab" => "Science Lab",
+                "history-timeline" => "History Timeline",
+                "assessment" => "Assessment",
+                _ => type.Replace("-", " ").Replace("_", " ")
+            };
+        }
+
+        /// <summary>
+        /// Format difficulty level for display
+        /// </summary>
+        private static string FormatDifficultyLevel(string level)
+        {
+            return level switch
+            {
+                "simplified" => "Simplified (Below Grade Level)",
+                "standard" => "Standard (Grade Level)",
+                "advanced" => "Advanced (Above Grade Level)",
+                _ => level
+            };
         }
     }
 }

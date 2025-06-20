@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TeachSpark.Web.Services.Models
 {
@@ -21,16 +22,22 @@ namespace TeachSpark.Web.Services.Models
         public string DifficultyLevel { get; set; } = "standard"; // "simplified", "standard", "advanced"
 
         public List<string> AccessibilityOptions { get; set; } = new();
-        public List<string> Tags { get; set; } = new();
-
-        // Generation parameters
+        public List<string> Tags { get; set; } = new();        // Generation parameters
         public string? CustomInstructions { get; set; }
         public int MaxQuestions { get; set; } = 10;
         public bool IncludeAnswerKey { get; set; } = true;
         public string PreferredLlmModel { get; set; } = string.Empty;
-    }    /// <summary>
-         /// Result of worksheet content generation
-         /// </summary>
+
+        // Dropdown lists for the form
+        public List<SelectListItem> WorksheetTypeOptions { get; set; } = new();
+        public List<SelectListItem> DifficultyLevelOptions { get; set; } = new();
+        public List<SelectListItem> CommonCoreStandardOptions { get; set; } = new();
+        public List<SelectListItem> BloomLevelOptions { get; set; } = new();
+        public List<SelectListItem> TemplateOptions { get; set; } = new();
+        public List<SelectListItem> AvailableModelOptions { get; set; } = new();
+    }/// <summary>
+     /// Result of worksheet content generation
+     /// </summary>
     public class WorksheetContentResult
     {
         public string MarkdownContent { get; set; } = string.Empty;

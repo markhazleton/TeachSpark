@@ -36,11 +36,11 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <!-- Worksheet Type -->
+                        <div class="row"> <!-- Worksheet Type -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="WorksheetType" class="form-label fw-bold">Worksheet Type</label>
-                                <select asp-for="WorksheetType" asp-items="ViewBag.WorksheetTypes" class="form-select">
+                                <select asp-for="WorksheetType" asp-items="Model.WorksheetTypeOptions"
+                                    class="form-select">
                                     <option value="">Select worksheet type...</option>
                                 </select>
                                 <span asp-validation-for="WorksheetType" class="text-danger"></span>
@@ -49,7 +49,7 @@
                             <!-- Difficulty Level -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="DifficultyLevel" class="form-label fw-bold">Difficulty Level</label>
-                                <select asp-for="DifficultyLevel" asp-items="ViewBag.DifficultyLevels"
+                                <select asp-for="DifficultyLevel" asp-items="Model.DifficultyLevelOptions"
                                     class="form-select">
                                 </select>
                                 <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
@@ -63,14 +63,15 @@
                                 <div class="col-md-6 mb-3">
                                     <label asp-for="CommonCoreStandardId" class="form-label">Common Core
                                         Standard</label>
-                                    <select asp-for="CommonCoreStandardId" asp-items="ViewBag.CommonCoreStandards"
+                                    <select asp-for="CommonCoreStandardId" asp-items="Model.CommonCoreStandardOptions"
                                         class="form-select">
                                         <option value="">No specific standard (optional)</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label asp-for="BloomLevelId" class="form-label">Bloom's Taxonomy Focus</label>
-                                    <select asp-for="BloomLevelId" asp-items="ViewBag.BloomLevels" class="form-select">
+                                    <select asp-for="BloomLevelId" asp-items="Model.BloomLevelOptions"
+                                        class="form-select">
                                         <option value="">Mixed levels (recommended)</option>
                                     </select>
                                 </div>
@@ -84,7 +85,7 @@
                                         AI Model
                                         <small class="text-muted">(Choose based on quality vs. cost)</small>
                                     </label>
-                                    <select asp-for="PreferredLlmModel" asp-items="ViewBag.AvailableModels"
+                                    <select asp-for="PreferredLlmModel" asp-items="Model.AvailableModelOptions"
                                         class="form-select" id="modelSelect">
                                         <option value="">Auto-select best model</option>
                                     </select>
@@ -133,7 +134,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label asp-for="TemplateId" class="form-label">Template (Optional)</label>
-                                    <select asp-for="TemplateId" asp-items="ViewBag.Templates" class="form-select">
+                                    <select asp-for="TemplateId" asp-items="Model.TemplateOptions" class="form-select">
                                         <option value="">Use default template</option>
                                     </select>
                                 </div>
