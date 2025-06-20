@@ -1,0 +1,129 @@
+@{
+    ViewData["Title"] = "Import Common Core Standards from CSV";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-upload text-success"></i>
+                Import Common Core Standards from CSV
+            </h1>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Standards
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-file-earmark-spreadsheet"></i>
+                    Upload CSV File
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="ImportCsv" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>Important:</strong> This operation will delete all existing Common Core Standards and replace them with the data from the uploaded CSV file.
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="csvFile" class="form-label">Select CSV File</label>
+                        <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
+                        <div class="form-text">Select a CSV file with Common Core Standards data.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="defaultSubject" class="form-label">Default Subject</label>
+                        <input type="text" class="form-control" id="defaultSubject" name="defaultSubject" value="English Language Arts" required>
+                        <div class="form-text">This subject will be assigned to all imported standards (since the CSV doesn't include a subject column).</div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="Index" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-upload"></i> Import CSV
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle"></i>
+                    CSV Format Requirements
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">The CSV file should have the following columns in order:</p>
+                
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">ID</div>
+                            <small>Standard code (e.g., K.RL.1, 11-12.WHST.10)</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">Required</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Category</div>
+                            <small>Domain (e.g., Reading Literature)</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">Required</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Sub Category</div>
+                            <small>Category (e.g., Key Ideas and Details)</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">Required</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">State Standard</div>
+                            <small>Description of the standard</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">Required</span>
+                    </li>
+                </ol>
+
+                <div class="mt-3">
+                    <h6>Auto-Generated Fields:</h6>
+                    <ul class="small text-muted">
+                        <li><strong>Grade:</strong> Extracted from the ID field</li>
+                        <li><strong>Subject:</strong> Set to the default subject above</li>
+                        <li><strong>Sort Order:</strong> Auto-numbered</li>
+                        <li><strong>Is Active:</strong> Set to true</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-download"></i>
+                    Example Format
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="small mb-2">Sample CSV format:</p>
+                <pre class="bg-light p-2 rounded small"><code>ID,Category,Sub Category,State Standard
+K.RL.1,Reading Literature,Key Ideas and Details,"With prompting and support, ask and answer questions about key details in a text."
+1.RL.1,Reading Literature,Key Ideas and Details,Ask and answer questions about key details in a text.</code></pre>
+            </div>
+        </div>
+    </div>
+</div>

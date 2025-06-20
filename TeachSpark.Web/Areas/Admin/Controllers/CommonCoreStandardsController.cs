@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeachSpark.Web.Data;
 using TeachSpark.Web.Data.Entities;
+using System.Text;
 
 namespace TeachSpark.Web.Areas.Admin.Controllers
 {
@@ -12,10 +13,8 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         public CommonCoreStandardsController(ApplicationDbContext context)
         {
             _context = context;
-        }
-
-        // GET: Admin/CommonCoreStandards
-        public async Task<IActionResult> Index()
+        }        // GET: Admin/CommonCoreStandards
+        public IActionResult Index()
         {
             ViewData["Title"] = "Common Core Standards Management";
             return View();
@@ -212,6 +211,234 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
                 .ToListAsync();
 
             return Json(new { data = standards });
+        }
+
+        // GET: Admin/CommonCoreStandards/ImportCsv
+        public IActionResult ImportCsv()
+        {
+            ViewData["Title"] = "Import Common Core Standards from CSV";
+            return View();
+        }
+
+        // POST: Admin/CommonCoreStandards/ImportCsv
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportCsv(IFormFile? csvFile, string defaultSubject = "English Language Arts")
+        {
+            if (csvFile == null || csvFile.Length == 0)
+            {
+                SetErrorMessage("Please select a CSV file to import.");
+                ViewData["Title"] = "Import Common Core Standards from CSV";
+                return View();
+            }
+
+            if (!csvFile.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                SetErrorMessage("Please select a valid CSV file.");
+                ViewData["Title"] = "Import Common Core Standards from CSV";
+                return View();
+            }
+
+            try
+            {
+                var standards = new List<CommonCoreStandard>();
+                var sortOrder = 1;
+
+                using (var reader = new StreamReader(csvFile.OpenReadStream(), Encoding.UTF8))
+                {
+                    // Skip header line
+                    await reader.ReadLineAsync();
+
+                    string? line;
+                    while ((line = await reader.ReadLineAsync()) != null)
+                    {
+                        var columns = ParseCsvLine(line);
+                        if (columns.Length >= 4)
+                        {
+                            var code = columns[0].Trim();
+                            var domain = columns[1].Trim();
+                            var category = columns[2].Trim();
+                            var description = columns[3].Trim();
+
+                            // Extract grade from code (e.g., "K.RL.1" -> "K", "11-12.WHST.10" -> "11-12")
+                            var grade = ExtractGradeFromCode(code);
+
+                            var standard = new CommonCoreStandard
+                            {
+                                Code = code,
+                                Grade = grade,
+                                Subject = defaultSubject,
+                                Domain = domain,
+                                Category = category,
+                                Description = description,
+                                ExampleActivities = null,
+                                IsActive = true,
+                                SortOrder = sortOrder++
+                            };
+
+                            standards.Add(standard);
+                        }
+                    }
+                }
+
+                if (standards.Any())
+                {
+                    // Remove all existing standards
+                    var existingStandards = await _context.CommonCoreStandards.ToListAsync();
+                    _context.CommonCoreStandards.RemoveRange(existingStandards);
+
+                    // Add new standards
+                    await _context.CommonCoreStandards.AddRangeAsync(standards);
+                    await _context.SaveChangesAsync();
+
+                    SetSuccessMessage($"Successfully imported {standards.Count} Common Core Standards. All existing standards were replaced.");
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    SetErrorMessage("No valid standards found in the CSV file.");
+                }
+            }
+            catch (Exception ex)
+            {
+                SetErrorMessage($"Error importing CSV file: {ex.Message}");
+            }
+
+            ViewData["Title"] = "Import Common Core Standards from CSV";
+            return View();
+        }
+
+        // POST: Admin/CommonCoreStandards/ImportFromDefaultCsv
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportFromDefaultCsv(string defaultSubject = "English Language Arts")
+        {
+            try
+            {
+                var csvPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "CCSS Common Core Standards - English Standards.csv");
+
+                if (!System.IO.File.Exists(csvPath))
+                {
+                    SetErrorMessage("Default CSV file not found. Please upload a CSV file instead.");
+                    return RedirectToAction(nameof(ImportCsv));
+                }
+
+                var standards = new List<CommonCoreStandard>();
+                var sortOrder = 1;
+
+                var lines = await System.IO.File.ReadAllLinesAsync(csvPath, Encoding.UTF8);
+
+                // Skip header line
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    var columns = ParseCsvLine(lines[i]);
+                    if (columns.Length >= 4)
+                    {
+                        var code = columns[0].Trim();
+                        var domain = columns[1].Trim();
+                        var category = columns[2].Trim();
+                        var description = columns[3].Trim();
+
+                        // Extract grade from code
+                        var grade = ExtractGradeFromCode(code);
+
+                        var standard = new CommonCoreStandard
+                        {
+                            Code = code,
+                            Grade = grade,
+                            Subject = defaultSubject,
+                            Domain = domain,
+                            Category = category,
+                            Description = description,
+                            ExampleActivities = null,
+                            IsActive = true,
+                            SortOrder = sortOrder++
+                        };
+
+                        standards.Add(standard);
+                    }
+                }
+
+                if (standards.Any())
+                {
+                    // Remove all existing standards
+                    var existingStandards = await _context.CommonCoreStandards.ToListAsync();
+                    _context.CommonCoreStandards.RemoveRange(existingStandards);
+
+                    // Add new standards
+                    await _context.CommonCoreStandards.AddRangeAsync(standards);
+                    await _context.SaveChangesAsync();
+
+                    SetSuccessMessage($"Successfully imported {standards.Count} Common Core Standards from the default CSV file. All existing standards were replaced.");
+                }
+                else
+                {
+                    SetErrorMessage("No valid standards found in the default CSV file.");
+                }
+            }
+            catch (Exception ex)
+            {
+                SetErrorMessage($"Error importing from default CSV file: {ex.Message}");
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private static string ExtractGradeFromCode(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+                return "";
+
+            // Handle patterns like "K.RL.1", "1.RL.2", "11-12.WHST.10"
+            var dotIndex = code.IndexOf('.');
+            if (dotIndex > 0)
+            {
+                return code.Substring(0, dotIndex);
+            }
+
+            return "";
+        }
+
+        private static string[] ParseCsvLine(string line)
+        {
+            var result = new List<string>();
+            var currentField = new StringBuilder();
+            var inQuotes = false;
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+
+                if (c == '"')
+                {
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        // Double quote inside quoted field
+                        currentField.Append('"');
+                        i++; // Skip next quote
+                    }
+                    else
+                    {
+                        // Toggle quote state
+                        inQuotes = !inQuotes;
+                    }
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    // Field separator
+                    result.Add(currentField.ToString());
+                    currentField.Clear();
+                }
+                else
+                {
+                    currentField.Append(c);
+                }
+            }
+
+            // Add the last field
+            result.Add(currentField.ToString());
+
+            return result.ToArray();
         }
     }
 }
