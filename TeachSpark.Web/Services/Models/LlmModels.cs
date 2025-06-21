@@ -2,21 +2,19 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TeachSpark.Web.Services.Models
-{
-    /// <summary>
-    /// Request model for generating worksheet content
-    /// </summary>
+{    /// <summary>
+     /// Request model for generating worksheet content
+     /// </summary>
     public class WorksheetGenerationRequest
     {
         [Required]
         public string SourceText { get; set; } = string.Empty;
 
-        [Required]
-        public string WorksheetType { get; set; } = string.Empty; // "reading-comprehension", "vocabulary", etc.
-
         public int? CommonCoreStandardId { get; set; }
         public int? BloomLevelId { get; set; }
-        public int? TemplateId { get; set; }
+
+        [Required]
+        public int TemplateId { get; set; }
 
         [Required]
         public string DifficultyLevel { get; set; } = "standard"; // "simplified", "standard", "advanced"
@@ -26,10 +24,7 @@ namespace TeachSpark.Web.Services.Models
         public string? CustomInstructions { get; set; }
         public int MaxQuestions { get; set; } = 10;
         public bool IncludeAnswerKey { get; set; } = true;
-        public string PreferredLlmModel { get; set; } = string.Empty;
-
-        // Dropdown lists for the form
-        public List<SelectListItem> WorksheetTypeOptions { get; set; } = new();
+        public string PreferredLlmModel { get; set; } = string.Empty;        // Dropdown lists for the form
         public List<SelectListItem> DifficultyLevelOptions { get; set; } = new();
         public List<SelectListItem> CommonCoreStandardOptions { get; set; } = new();
         public List<SelectListItem> BloomLevelOptions { get; set; } = new();

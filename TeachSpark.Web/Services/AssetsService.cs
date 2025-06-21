@@ -57,20 +57,29 @@ namespace TeachSpark.Web
                 return _manifest;
             }
         }
-
         public string GetAssetPath(string logicalPath)
         {
             var manifest = GetManifest();
 
+            // Normalize the logical path to have a leading slash for manifest lookup
+            var normalizedLogicalPath = logicalPath.StartsWith('/') ? logicalPath : $"/{logicalPath}";
+
             // Try to get the asset from the manifest
-            if (manifest.TryGetValue(logicalPath, out var actualPath))
+            if (manifest.TryGetValue(normalizedLogicalPath, out var actualPath))
             {
                 return actualPath.StartsWith('/') ? actualPath : $"/{actualPath}";
             }
 
+            // Try without leading slash as fallback
+            var logicalPathWithoutSlash = logicalPath.TrimStart('/');
+            if (manifest.TryGetValue(logicalPathWithoutSlash, out var actualPathFallback))
+            {
+                return actualPathFallback.StartsWith('/') ? actualPathFallback : $"/{actualPathFallback}";
+            }
+
             // Fallback to the logical path (useful in development)
             _logger.LogDebug("Asset {LogicalPath} not found in manifest, using fallback", logicalPath);
-            return logicalPath.StartsWith('/') ? logicalPath : $"/{logicalPath}";
+            return normalizedLogicalPath;
         }
     }
 }

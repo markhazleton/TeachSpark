@@ -38,20 +38,30 @@ public class OpenAILlmService(
         var stopwatch = Stopwatch.StartNew();
         var requestId = Guid.NewGuid().ToString();
 
+        // Get the template to determine worksheet type
+        var template = await dbContext.WorksheetTemplates
+            .FirstOrDefaultAsync(t => t.Id == request.TemplateId, cancellationToken);
+
+        if (template == null)
+        {
+            return ServiceResult<WorksheetContentResult>.ErrorResult($"Template with ID {request.TemplateId} not found");
+        }
+
+        var worksheetType = template.TemplateType;
+
         try
         {
             logger.LogInformation("Starting worksheet generation for type: {WorksheetType}, RequestId: {RequestId}",
-                request.WorksheetType, requestId);
+                worksheetType, requestId);
 
             // Validate input
             if (string.IsNullOrWhiteSpace(request.SourceText))
             {
                 return ServiceResult<WorksheetContentResult>.ErrorResult("Source text is required");
-            }                
-            
+            }
             // Generate prompts
             var systemPrompt = GetSystemPrompt();
-            var userPrompt = await GeneratePromptAsync(request);
+            var userPrompt = await GeneratePromptAsync(request, worksheetType);
 
             logger.LogDebug("Generated prompts for RequestId: {RequestId}", requestId);
 
@@ -67,8 +77,8 @@ public class OpenAILlmService(
             {
                 Temperature = (float)_config.Temperature,
                 MaxOutputTokenCount = _config.MaxTokens
-            };               
-            
+            };
+
             // Prepare metadata for logging
             var metadata = new LlmCallMetadata
             {
@@ -126,7 +136,7 @@ public class OpenAILlmService(
             await llmLoggingService.LogLlmInteractionAsync(request, systemPrompt, userPrompt, markdownContent, metadata);
 
             // Process and validate the response
-            var result = await ProcessAIResponse(markdownContent, request, response.Value.Usage, stopwatch.Elapsed);
+            var result = await ProcessAIResponse(markdownContent, request, worksheetType, response.Value.Usage, stopwatch.Elapsed);
 
             UpdateMetrics(true, result.GenerationCost, result.TokensUsed, stopwatch.Elapsed);
 
@@ -153,7 +163,7 @@ public class OpenAILlmService(
             try
             {
                 var systemPrompt = GetSystemPrompt();
-                var userPrompt = await GeneratePromptAsync(request);
+                var userPrompt = await GeneratePromptAsync(request, worksheetType);
                 await llmLoggingService.LogLlmErrorAsync(request, systemPrompt, userPrompt, ex, errorMetadata);
             }
             catch (Exception loggingEx)
@@ -238,12 +248,10 @@ public class OpenAILlmService(
     }        /// <summary>
              /// Generate the appropriate prompt based on worksheet type and request parameters
              /// </summary>
-    private async Task<string> GeneratePromptAsync(WorksheetGenerationRequest request)
+    private async Task<string> GeneratePromptAsync(WorksheetGenerationRequest request, string worksheetType)
     {
-        var promptBuilder = new System.Text.StringBuilder();
-
-        // Base prompt based on worksheet type
-        var basePrompt = request.WorksheetType switch
+        var promptBuilder = new System.Text.StringBuilder();        // Base prompt based on worksheet type
+        var basePrompt = worksheetType switch
         {
             "reading-comprehension" => GenerateReadingComprehensionPrompt(request),
             "vocabulary" => GenerateVocabularyPrompt(request),
@@ -461,14 +469,13 @@ Always format your output as clean, well-organized Markdown with:
 - Separate sections for different types of content
 
 Maintain a professional, educational tone while keeping content engaging for students.";
-    }
-
-    /// <summary>
-    /// Process the AI response and create the final worksheet content result
-    /// </summary>
+    }    /// <summary>
+         /// Process the AI response and create the final worksheet content result
+         /// </summary>
     private async Task<WorksheetContentResult> ProcessAIResponse(
         string markdownContent,
         WorksheetGenerationRequest request,
+        string worksheetType,
         OpenAI.Chat.ChatTokenUsage? usage,
         TimeSpan generationTime)
     {
@@ -502,12 +509,11 @@ Maintain a professional, educational tone while keeping content engaging for stu
 
         // Extract metadata from the generated content
         var extractedQuestions = ExtractQuestions(markdownContent);
-        var hasAnswerKey = markdownContent.ToLower().Contains("answer") && markdownContent.ToLower().Contains("key");
-        var estimatedDuration = CalculateEstimatedDuration(extractedQuestions.Count, request.WorksheetType);
+        var hasAnswerKey = markdownContent.ToLower().Contains("answer") && markdownContent.ToLower().Contains("key"); var estimatedDuration = CalculateEstimatedDuration(extractedQuestions.Count, worksheetType);
 
         // Generate title and description if not explicitly provided
-        var generatedTitle = ExtractTitle(markdownContent) ?? $"{FormatWorksheetTypeName(request.WorksheetType)} Worksheet";
-        var generatedDescription = $"AI-generated {request.WorksheetType} worksheet with {extractedQuestions.Count} questions";
+        var generatedTitle = ExtractTitle(markdownContent) ?? $"{FormatWorksheetTypeName(worksheetType)} Worksheet";
+        var generatedDescription = $"AI-generated {worksheetType} worksheet with {extractedQuestions.Count} questions";
 
         // Analyze content quality
         var confidenceScore = CalculateConfidenceScore(markdownContent, request);

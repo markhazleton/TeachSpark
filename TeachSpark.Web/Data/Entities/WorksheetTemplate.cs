@@ -14,12 +14,14 @@ namespace TeachSpark.Web.Data.Entities
 
         [Required]
         [StringLength(50)]
-        public string TemplateType { get; set; } = string.Empty; // reading-comprehension, vocabulary, grammar, etc.
-
-        [Required]
+        public string TemplateType { get; set; } = string.Empty; // reading-comprehension, vocabulary, grammar, etc.        [Required]
         public string LayoutJson { get; set; } = string.Empty; // JSON template structure
 
         public string? PreviewImageUrl { get; set; }
+
+        public string? SystemPromptTemplate { get; set; } // System prompt template with substitution tokens
+
+        public string? UserPromptTemplate { get; set; } // User prompt template with substitution tokens
 
         public bool IsPublic { get; set; } = false; // Can other users see this template?
 

@@ -65,7 +65,6 @@
                                 placeholder="Describe what this template is for..."></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
-
                         <div class="mb-3">
                             <label asp-for="LayoutJson" class="form-label">Layout JSON <span
                                     class="text-danger">*</span></label>
@@ -77,6 +76,60 @@
                                 Please provide a valid JSON layout.
                             </div>
                             <span asp-validation-for="LayoutJson" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SystemPromptTemplate" class="form-label">System Prompt Template</label>
+                            <textarea asp-for="SystemPromptTemplate" class="form-control" rows="6"
+                                placeholder="You are an educational worksheet generator. Create a {{TEMPLATE_TYPE}} worksheet for {{GRADE_LEVEL}} students..."></textarea>
+                            <div class="form-text">
+                                System prompt template with substitution tokens. See <a href="#prompt-tokens"
+                                    data-bs-toggle="collapse">available tokens</a>.
+                            </div>
+                            <span asp-validation-for="SystemPromptTemplate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="UserPromptTemplate" class="form-label">User Prompt Template</label>
+                            <textarea asp-for="UserPromptTemplate" class="form-control" rows="6"
+                                placeholder="Create a worksheet with the following requirements: {{WORKSHEET_INSTRUCTIONS}}. Use Bloom's level: {{BLOOM_LEVEL}}. Common Core Standard: {{COMMON_CORE_STANDARD}}. Input text: {{INPUT_TEXT}}"></textarea>
+                            <div class="form-text">
+                                User prompt template with substitution tokens. See <a href="#prompt-tokens"
+                                    data-bs-toggle="collapse">available tokens</a>.
+                            </div>
+                            <span asp-validation-for="UserPromptTemplate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="button" id="loadDefaultPrompts" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-magic me-1"></i>Load Default Prompts for Selected Type
+                            </button>
+                            <small class="text-muted ms-2">This will populate empty prompt fields with defaults for the
+                                selected template type.</small>
+                        </div>
+
+                        <div class="collapse" id="prompt-tokens">
+                            <div class="card card-body bg-light mb-3">
+                                <h6 class="fw-bold">Available Substitution Tokens:</h6>
+                                <ul class="list-unstyled small">
+                                    <li><strong>{{BLOOM_LEVEL}}</strong> - Selected Bloom's taxonomy level (e.g.,
+                                        "Remember", "Understand", "Apply")</li>
+                                    <li><strong>{{COMMON_CORE_STANDARD}}</strong> - Selected Common Core standard code
+                                        and description</li>
+                                    <li><strong>{{INPUT_TEXT}}</strong> - User-provided input text or reading passage
+                                    </li>
+                                    <li><strong>{{WORKSHEET_INSTRUCTIONS}}</strong> - Specific instructions for the
+                                        worksheet generation</li>
+                                    <li><strong>{{TEMPLATE_TYPE}}</strong> - The type of this template (e.g.,
+                                        "reading-comprehension", "vocabulary")</li>
+                                    <li><strong>{{GRADE_LEVEL}}</strong> - Target grade level for the worksheet</li>
+                                    <li><strong>{{STUDENT_NAME}}</strong> - Placeholder for student name</li>
+                                    <li><strong>{{DATE}}</strong> - Current date</li>
+                                </ul>
+                                <p class="text-muted small mb-0">
+                                    <strong>Usage:</strong> Include these tokens in your prompt templates and they will
+                                    be replaced with actual values during worksheet generation.
+                                </p>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -191,9 +244,7 @@
                     form.classList.add('was-validated');
                 }, false);
             });
-        })();
-
-        // JSON validation
+        })();        // JSON validation
         document.getElementById('LayoutJson').addEventListener('blur', function ()
         {
             try
@@ -206,22 +257,86 @@
                 this.classList.remove('is-valid');
                 this.classList.add('is-invalid');
             }
+        });        // Auto-populate prompts when template type changes (only if fields are empty)
+        document.getElementById('TemplateType').addEventListener('change', function ()
+        {
+            const templateType = this.value;
+            const systemPromptField = document.getElementById('SystemPromptTemplate');
+            const userPromptField = document.getElementById('UserPromptTemplate');
+
+            if (templateType && (!systemPromptField.value.trim() || !userPromptField.value.trim()))
+            {
+                if (confirm('Do you want to load default prompts for this template type? This will only fill empty prompt fields.'))
+                {
+                    fetch('@Url.Action("GetDefaultPrompts")?templateType=' + encodeURIComponent(templateType))
+                        .then(response => response.json())
+                        .then(data =>
+                        {
+                            if (!systemPromptField.value.trim())
+                            {
+                                systemPromptField.value = data.systemPrompt;
+                            }
+                            if (!userPromptField.value.trim())
+                            {
+                                userPromptField.value = data.userPrompt;
+                            }
+                        })
+                        .catch(error => console.error('Error fetching default prompts:', error));
+                }
+            }
+        });
+
+        // Manual load default prompts button
+        document.getElementById('loadDefaultPrompts').addEventListener('click', function ()
+        {
+            const templateTypeField = document.getElementById('TemplateType');
+            const templateType = templateTypeField.value;
+            const systemPromptField = document.getElementById('SystemPromptTemplate');
+            const userPromptField = document.getElementById('UserPromptTemplate');
+
+            if (!templateType)
+            {
+                alert('Please select a template type first.');
+                templateTypeField.focus();
+                return;
+            }
+
+            if (systemPromptField.value.trim() || userPromptField.value.trim())
+            {
+                if (!confirm('This will overwrite existing prompt content. Are you sure you want to continue?'))
+                {
+                    return;
+                }
+            }
+
+            fetch('@Url.Action("GetDefaultPrompts")?templateType=' + encodeURIComponent(templateType))
+                .then(response => response.json())
+                .then(data =>
+                {
+                    systemPromptField.value = data.systemPrompt;
+                    userPromptField.value = data.userPrompt;
+                    alert('Default prompts loaded successfully!');
+                })
+                .catch(error =>
+                {
+                    console.error('Error fetching default prompts:', error);
+                    alert('Error loading default prompts. Please try again.');
+                });
         });
     </script>
 }
 
-                                           
-                                       
-                                           
-                               
-                                   
-                               
-                               
-                                
-        
-            
-               
-                    
-       
-           
-           
+
+
+
+
+
+
+
+
+
+
+
+
+
+

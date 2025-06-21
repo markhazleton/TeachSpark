@@ -115,14 +115,46 @@
                             <img src="@Model.PreviewImageUrl" alt="Template Preview" class="img-fluid border rounded"
                                 style="max-height: 200px;" />
                         </div>
-                    }
-
-                    <div class="mt-4">
+                    }                    <div class="mt-4">
                         <h6 class="fw-bold text-muted">Layout Structure:</h6>
                         <div class="border rounded p-3 bg-light">
                             <pre class="mb-0 small"><code>@Model.LayoutJson</code></pre>
                         </div>
                     </div>
+
+                    @if (!string.IsNullOrEmpty(Model.SystemPromptTemplate))
+                    {
+                        <div class="mt-4">
+                            <h6 class="fw-bold text-muted">System Prompt Template:</h6>
+                            <div class="border rounded p-3 bg-light">
+                                <pre class="mb-0 small">@Model.SystemPromptTemplate</pre>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.UserPromptTemplate))
+                    {
+                        <div class="mt-4">
+                            <h6 class="fw-bold text-muted">User Prompt Template:</h6>
+                            <div class="border rounded p-3 bg-light">
+                                <pre class="mb-0 small">@Model.UserPromptTemplate</pre>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.SystemPromptTemplate) || !string.IsNullOrEmpty(Model.UserPromptTemplate))
+                    {
+                        <div class="mt-3">
+                            <div class="alert alert-info">
+                                <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Substitution Tokens</h6>
+                                <small>
+                                    The prompt templates support the following tokens: <strong>{{BLOOM_LEVEL}}</strong>, <strong>{{COMMON_CORE_STANDARD}}</strong>, 
+                                    <strong>{{INPUT_TEXT}}</strong>, <strong>{{WORKSHEET_INSTRUCTIONS}}</strong>, <strong>{{TEMPLATE_TYPE}}</strong>, 
+                                    <strong>{{GRADE_LEVEL}}</strong>, <strong>{{STUDENT_NAME}}</strong>, <strong>{{DATE}}</strong>
+                                </small>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

@@ -25,12 +25,12 @@
         <div class="table-responsive">
             <table id="templatesTable" class="table table-striped table-hover">
                 <thead class="table-dark">
-                    <tr>
-                        <th>Name</th>
+                    <tr>                        <th>Name</th>
                         <th>Description</th>
                         <th>Type</th>
                         <th>Created By</th>
                         <th>Status</th>
+                        <th>Prompts</th>
                         <th>Usage</th>
                         <th>Worksheets</th>
                         <th>Created</th>
@@ -78,8 +78,7 @@
                             return '<span class="badge bg-secondary">' + data + '</span>';
                         }
                     },
-                    { data: 'createdBy' },
-                    { 
+                    { data: 'createdBy' },                    { 
                         data: 'isPublic',
                         width: '80px',
                         className: 'text-center',
@@ -88,6 +87,17 @@
                             if (data) badges += '<span class="badge bg-success me-1">Public</span>';
                             if (row.isSystem) badges += '<span class="badge bg-info">System</span>';
                             return badges || '<span class="badge bg-warning">Private</span>';
+                        }
+                    },
+                    { 
+                        data: 'hasSystemPrompt',
+                        width: '80px',
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            var badges = '';
+                            if (data) badges += '<span class="badge bg-success me-1" title="Has System Prompt">S</span>';
+                            if (row.hasUserPrompt) badges += '<span class="badge bg-primary" title="Has User Prompt">U</span>';
+                            return badges || '<span class="badge bg-secondary" title="No Prompts">-</span>';
                         }
                     },
                     { 
@@ -130,7 +140,7 @@
                         }
                     }
                 ],
-                order: [[7, 'desc']], // Sort by created date, newest first
+                order: [[8, 'desc']], // Sort by created date, newest first
                 pageLength: 25,
                 responsive: true,                language: {
                     search: "Search Templates:",

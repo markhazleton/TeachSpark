@@ -7,13 +7,13 @@ namespace TeachSpark.Web.Services;
 /// </summary>
 public class AssetsManifest
 {
-    [JsonPropertyName("js/site.js")]
+    [JsonPropertyName("site.js")]
     public string? SiteJs { get; set; }
 
-    [JsonPropertyName("js/validation.js")]
+    [JsonPropertyName("validation.js")]
     public string? ValidationJs { get; set; }
 
-    [JsonPropertyName("css/site.css")]
+    [JsonPropertyName("site.css")]
     public string? SiteCss { get; set; }
 
     [JsonPropertyName("js/runtime.js")]

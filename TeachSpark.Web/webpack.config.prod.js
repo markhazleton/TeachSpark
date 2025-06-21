@@ -158,29 +158,64 @@ module.exports = {
             fileName: 'assets-manifest.json',
             publicPath: '',
             filter: (file) => {
-                // Only include JS and CSS files
-                return file.name.endsWith('.js') || file.name.endsWith('.css');
+                // Include JS, CSS, and font files that .NET might reference
+                return file.name.endsWith('.js') || 
+                       file.name.endsWith('.css') || 
+                       file.name.endsWith('.woff') || 
+                       file.name.endsWith('.woff2');
             },
             map: (file) => {
                 // Map actual filenames to logical names for easier lookup
                 const name = file.name;
                 let logicalName = name;
                 
-                // Map actual chunk names to logical asset paths
+                // Map actual chunk names to logical asset paths with leading slash for .NET compatibility
                 if (name.startsWith('site.') && name.endsWith('.js')) {
-                    logicalName = 'site.js';
+                    logicalName = '/js/site.js';
                 } else if (name.startsWith('validation.') && name.endsWith('.js')) {
-                    logicalName = 'validation.js';
+                    logicalName = '/js/validation.js';
                 } else if (name.startsWith('site.') && name.endsWith('.css')) {
-                    logicalName = 'site.css';
+                    logicalName = '/css/site.css';
                 } else if (name.startsWith('vendors.') && name.endsWith('.css')) {
-                    logicalName = 'vendors.css';
+                    logicalName = '/css/vendors.css';
+                } else if (name.includes('bootstrap-icons') && name.endsWith('.woff2')) {
+                    logicalName = '/fonts/bootstrap-icons.woff2';
+                } else if (name.includes('bootstrap-icons') && name.endsWith('.woff')) {
+                    logicalName = '/fonts/bootstrap-icons.woff';
                 }
                 
                 return {
                     ...file,
-                    name: logicalName
+                    name: logicalName,
+                    path: file.path.startsWith('/') ? file.path : '/' + file.path
                 };
+            },
+            // Hook to add additional font files that might not be captured
+            generate(seed, files, entrypoints) {
+                const manifest = files.reduce((manifest, file) => {
+                    const name = file.name;
+                    let logicalName = name;
+                    
+                    // Map actual chunk names to logical asset paths with leading slash for .NET compatibility
+                    if (name.startsWith('site.') && name.endsWith('.js')) {
+                        logicalName = '/js/site.js';
+                    } else if (name.startsWith('validation.') && name.endsWith('.js')) {
+                        logicalName = '/js/validation.js';
+                    } else if (name.startsWith('site.') && name.endsWith('.css')) {
+                        logicalName = '/css/site.css';
+                    } else if (name.startsWith('vendors.') && name.endsWith('.css')) {
+                        logicalName = '/css/vendors.css';
+                    } else if (name.includes('bootstrap-icons') && name.endsWith('.woff2')) {
+                        logicalName = '/fonts/bootstrap-icons.woff2';
+                    } else if (name.includes('bootstrap-icons') && name.endsWith('.woff')) {
+                        logicalName = '/fonts/bootstrap-icons.woff';
+                    }
+                    
+                    manifest[logicalName] = file.path.startsWith('/') ? file.path : '/' + file.path;
+                    return manifest;
+                }, seed);
+                
+                return manifest;
             }
         }),
         // Uncomment for bundle analysis

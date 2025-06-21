@@ -144,13 +144,37 @@ module.exports = {
                     from: 'src/favicon.ico',
                     to: 'favicon.ico'
                 }
-            ]        }),
-        new WebpackManifestPlugin({
+            ]        }),        new WebpackManifestPlugin({
             fileName: 'assets-manifest.json',
             publicPath: '',
             filter: (file) => {
-                // Only include JS and CSS files
-                return file.name.endsWith('.js') || file.name.endsWith('.css');
+                // Include JS, CSS, and font files that .NET might reference
+                return file.name.endsWith('.js') || 
+                       file.name.endsWith('.css') || 
+                       file.name.endsWith('.woff') || 
+                       file.name.endsWith('.woff2');
+            },
+            map: (file) => {
+                // Map actual filenames to logical names for easier lookup
+                const name = file.name;
+                let logicalName = name;
+                
+                // In development, map actual file names to logical names the .NET app expects
+                if (name === 'site.css') {
+                    logicalName = 'site.css';
+                } else if (name === 'site.js') {
+                    logicalName = 'site.js';
+                } else if (name === 'validation.js') {
+                    logicalName = 'validation.js';
+                } else if (name === 'vendors.css') {
+                    logicalName = 'vendors.css';
+                }
+                
+                return {
+                    ...file,
+                    name: logicalName,
+                    path: file.path.startsWith('/') ? file.path : '/' + file.path
+                };
             }
         })
     ],

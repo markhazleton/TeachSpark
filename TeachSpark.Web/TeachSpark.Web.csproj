@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -8,11 +7,17 @@
     <DisableScopedCss>true</DisableScopedCss>
     <UserSecretsId>536dc134-6f87-42c3-9371-2ad1bde16a90</UserSecretsId>
   </PropertyGroup>
-
   <!-- NPM Build Integration -->
   <ItemGroup>
     <UpToDateCheckInput Include="src/**/*.scss;src/**/*.js;package.json;webpack.config.js" />
-    <UpToDateCheckOutput Include="wwwroot/css/site.css;wwwroot/js/site.js;wwwroot/js/validation.js" />
+    <UpToDateCheckOutput Include="wwwroot/assets-manifest.json" />
+  </ItemGroup>
+
+  <!-- Exclude webpack-managed assets from static web assets build-time manifest -->
+  <ItemGroup>
+    <StaticWebAsset Remove="wwwroot/js/site.js" />
+    <StaticWebAsset Remove="wwwroot/css/site.css" />
+    <StaticWebAsset Remove="wwwroot/fonts/bootstrap-icons.woff2" />
   </ItemGroup>
 
   <!-- Ensure npm packages are installed before build -->

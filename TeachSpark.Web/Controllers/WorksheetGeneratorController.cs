@@ -30,18 +30,22 @@ namespace TeachSpark.Web.Controllers
         {
             ViewData["Title"] = "Worksheet Generator";
             return View();
-        }
-
-        /// <summary>
-        /// Worksheet creation form
-        /// </summary>
+        }        /// <summary>
+                 /// Worksheet creation form
+                 /// </summary>
         public async Task<IActionResult> Create()
         {
             ViewData["Title"] = "Create New Worksheet";
 
+            // Get the first available template to set as default
+            var firstTemplate = await context.WorksheetTemplates
+                .Where(t => t.IsPublic)
+                .OrderBy(t => t.Name)
+                .FirstOrDefaultAsync();
+
             var model = new WorksheetGenerationRequest
             {
-                WorksheetType = "reading-comprehension",
+                TemplateId = firstTemplate?.Id ?? 1, // Default to first template or ID 1
                 DifficultyLevel = "standard",
                 MaxQuestions = _config.DefaultQuestionCount,
                 IncludeAnswerKey = true
@@ -64,11 +68,16 @@ namespace TeachSpark.Web.Controllers
                 await PopulateDropdownLists(request);
                 return View(request);
             }
-
             try
             {
+                // Get the template to determine worksheet type
+                var template = await context.WorksheetTemplates
+                    .FirstOrDefaultAsync(t => t.Id == request.TemplateId);
+
+                var worksheetType = template?.TemplateType ?? "unknown";
+
                 logger.LogInformation("Starting worksheet generation for user {User}: {WorksheetType}, MaxQuestions: {MaxQuestions}",
-                    User.Identity?.Name, request.WorksheetType, request.MaxQuestions);
+                    User.Identity?.Name, worksheetType, request.MaxQuestions);
 
                 // Get user information for logging
                 var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -257,23 +266,11 @@ namespace TeachSpark.Web.Controllers
                 .ToListAsync();
 
             return Json(standards);
-        }
-
-        /// <summary>
-        /// Populate dropdown lists in the view model
-        /// </summary>
+        }        /// <summary>
+                 /// Populate dropdown lists in the view model
+                 /// </summary>
         private async Task PopulateDropdownLists(WorksheetGenerationRequest model)
         {
-            // Worksheet types
-            model.WorksheetTypeOptions = [.. _config.SupportedWorksheetTypes
-                .Distinct()
-                .Select(t => new SelectListItem
-                {
-                    Value = t,
-                    Text = FormatWorksheetTypeName(t),
-                    Selected = t == model.WorksheetType
-                })];
-
             // Difficulty levels
             model.DifficultyLevelOptions = [.. _config.SupportedDifficultyLevels
                 .Distinct()
@@ -323,9 +320,7 @@ namespace TeachSpark.Web.Controllers
                 Value = "",
                 Text = "Mixed levels (recommended)",
                 Selected = !model.BloomLevelId.HasValue
-            });
-
-            // Available templates
+            });            // Available templates
             model.TemplateOptions = await context.WorksheetTemplates
                 .Where(t => t.IsPublic)
                 .OrderBy(t => t.Name)
@@ -337,14 +332,6 @@ namespace TeachSpark.Web.Controllers
                 })
                 .Distinct()
                 .ToListAsync();
-
-            // Add empty option at the beginning
-            model.TemplateOptions.Insert(0, new SelectListItem
-            {
-                Value = "",
-                Text = "Use default template",
-                Selected = !model.TemplateId.HasValue
-            });
 
             // Available AI models for worksheet generation
             try
@@ -425,7 +412,7 @@ namespace TeachSpark.Web.Controllers
                 "advanced" => "Advanced (Above Grade Level)",
                 _ => level
             };
-        }        /// <summary>
+        }        /// <summary>        /// <summary>
                  /// Save generated worksheet to the database
                  /// </summary>
         private async Task<Data.Entities.Worksheet?> SaveGeneratedWorksheetAsync(
@@ -435,6 +422,12 @@ namespace TeachSpark.Web.Controllers
             try
             {
                 logger.LogInformation("Starting SaveGeneratedWorksheetAsync");
+
+                // Get the template to determine worksheet type
+                var template = await context.WorksheetTemplates
+                    .FirstOrDefaultAsync(t => t.Id == request.TemplateId);
+
+                var worksheetType = template?.TemplateType ?? "unknown";
 
                 // Get the actual user ID (not email)
                 var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -455,10 +448,8 @@ namespace TeachSpark.Web.Controllers
                 var accessibilityOptionsJson = request.AccessibilityOptions.Any() ?
                     System.Text.Json.JsonSerializer.Serialize(request.AccessibilityOptions) : null;
                 var tagsJson = request.Tags.Count != 0 ?
-                    string.Join(",", request.Tags) : null;
-
-                logger.LogInformation("Creating worksheet entity with Title: {Title}, Type: {Type}, Content Length: {ContentLength}",
-                    content.GeneratedTitle, request.WorksheetType, content.MarkdownContent?.Length ?? 0);
+                    string.Join(",", request.Tags) : null; logger.LogInformation("Creating worksheet entity with Title: {Title}, Type: {Type}, Content Length: {ContentLength}",
+                    content.GeneratedTitle, worksheetType, content.MarkdownContent?.Length ?? 0);
 
                 var worksheet = new Data.Entities.Worksheet
                 {
@@ -471,7 +462,7 @@ namespace TeachSpark.Web.Controllers
                     ContentMarkdown = content.MarkdownContent ?? string.Empty,
                     RenderedHtml = content.RenderedHtml,
                     SourceText = request.SourceText,
-                    WorksheetType = request.WorksheetType,
+                    WorksheetType = worksheetType,
                     DifficultyLevel = request.DifficultyLevel,
                     AccessibilityOptions = accessibilityOptionsJson,
                     Tags = tagsJson,
@@ -578,6 +569,33 @@ namespace TeachSpark.Web.Controllers
             }
 
             return questions;
+        }
+
+        /// <summary>
+        /// Get template information by ID for AJAX calls
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GetTemplate(int id)
+        {
+            var template = await context.WorksheetTemplates
+                .FirstOrDefaultAsync(t => t.Id == id && t.IsPublic);
+
+            if (template == null)
+            {
+                return Json(new { success = false, message = "Template not found" });
+            }
+
+            return Json(new
+            {
+                success = true,
+                data = new
+                {
+                    id = template.Id,
+                    name = template.Name,
+                    description = template.Description,
+                    templateType = template.TemplateType
+                }
+            });
         }
     }
 }
