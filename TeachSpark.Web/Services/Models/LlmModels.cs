@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TeachSpark.Web.Data.Entities;
 
 namespace TeachSpark.Web.Services.Models
 {    /// <summary>
@@ -14,22 +15,23 @@ namespace TeachSpark.Web.Services.Models
         public int? BloomLevelId { get; set; }
 
         [Required]
-        public int TemplateId { get; set; }
+        public int TemplateId { get; set; } = 1; 
 
         [Required]
         public string DifficultyLevel { get; set; } = "standard"; // "simplified", "standard", "advanced"
 
-        public List<string> AccessibilityOptions { get; set; } = new();
-        public List<string> Tags { get; set; } = new();        // Generation parameters
+        public List<string> AccessibilityOptions { get; set; } = [];
+        public List<string> Tags { get; set; } = [];        // Generation parameters
         public string? CustomInstructions { get; set; }
         public int MaxQuestions { get; set; } = 10;
         public bool IncludeAnswerKey { get; set; } = true;
         public string PreferredLlmModel { get; set; } = string.Empty;        // Dropdown lists for the form
-        public List<SelectListItem> DifficultyLevelOptions { get; set; } = new();
-        public List<SelectListItem> CommonCoreStandardOptions { get; set; } = new();
-        public List<SelectListItem> BloomLevelOptions { get; set; } = new();
-        public List<SelectListItem> TemplateOptions { get; set; } = new();
-        public List<SelectListItem> AvailableModelOptions { get; set; } = new();
+        public List<SelectListItem> DifficultyLevelOptions { get; set; } = [];
+        public List<SelectListItem> CommonCoreStandardOptions { get; set; } = [];
+        public List<SelectListItem> BloomLevelOptions { get; set; } = [];
+        public List<SelectListItem> TemplateOptions { get; set; } = [];
+        public List<SelectListItem> AvailableModelOptions { get; set; } = [];
+        public WorksheetTemplate Template { get; set; } = new();
     }
 
 
@@ -52,10 +54,10 @@ namespace TeachSpark.Web.Services.Models
 
         // Quality metrics
         public double ConfidenceScore { get; set; }
-        public List<string> Warnings { get; set; } = new();
+        public List<string> Warnings { get; set; } = [];
 
         // Markdown parsing results
-        public List<string> ExtractedQuestions { get; set; } = new();
+        public List<string> ExtractedQuestions { get; set; } = [];
         public bool HasAnswerKey { get; set; }
         public int EstimatedDurationMinutes { get; set; }
     }
@@ -66,10 +68,10 @@ namespace TeachSpark.Web.Services.Models
     public class ValidationResult
     {
         public bool IsValid { get; set; }
-        public List<string> Errors { get; set; } = new();
-        public List<string> Warnings { get; set; } = new();
+        public List<string> Errors { get; set; } = [];
+        public List<string> Warnings { get; set; } = [];
         public double QualityScore { get; set; }
-        public Dictionary<string, object> Metrics { get; set; } = new();
+        public Dictionary<string, object> Metrics { get; set; } = [];
     }
 
     /// <summary>
@@ -81,8 +83,8 @@ namespace TeachSpark.Web.Services.Models
         public int QuestionCount { get; set; }
         public double ReadabilityScore { get; set; }
         public string EstimatedGradeLevel { get; set; } = string.Empty;
-        public List<string> KeyTopics { get; set; } = new();
-        public Dictionary<string, int> BloomLevelDistribution { get; set; } = new();
+        public List<string> KeyTopics { get; set; } = [];
+        public Dictionary<string, int> BloomLevelDistribution { get; set; } = [];
     }
 
     /// <summary>
@@ -102,8 +104,8 @@ namespace TeachSpark.Web.Services.Models
     {
         public string WorksheetType { get; set; } = string.Empty;
         public string Template { get; set; } = string.Empty;
-        public Dictionary<string, string> Variables { get; set; } = new();
-        public List<string> RequiredFields { get; set; } = new();
+        public Dictionary<string, string> Variables { get; set; } = [];
+        public List<string> RequiredFields { get; set; } = [];
     }
 
     /// <summary>
@@ -120,7 +122,7 @@ namespace TeachSpark.Web.Services.Models
         public bool SupportsStructuredOutput { get; set; }
         public bool IsRecommendedForEducation { get; set; }
         public DateTime? DeprecationDate { get; set; }
-        public List<string> Strengths { get; set; } = new();
+        public List<string> Strengths { get; set; } = [];
     }
 
     /// <summary>
@@ -145,7 +147,7 @@ namespace TeachSpark.Web.Services.Models
         public OpenAIModel RecommendedModel { get; set; } = new();
         public string Reason { get; set; } = string.Empty;
         public decimal EstimatedCost { get; set; }
-        public List<OpenAIModel> AlternativeModels { get; set; } = new();
+        public List<OpenAIModel> AlternativeModels { get; set; } = [];
     }
 
     /// <summary>

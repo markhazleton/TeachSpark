@@ -71,13 +71,8 @@ namespace TeachSpark.Web.Controllers
             try
             {
                 // Get the template to determine worksheet type
-                var template = await context.WorksheetTemplates
-                    .FirstOrDefaultAsync(t => t.Id == request.TemplateId);
-
-                var worksheetType = template?.TemplateType ?? "unknown";
-
-                logger.LogInformation("Starting worksheet generation for user {User}: {WorksheetType}, MaxQuestions: {MaxQuestions}",
-                    User.Identity?.Name, worksheetType, request.MaxQuestions);
+                request.Template = await context.WorksheetTemplates
+                    .FirstOrDefaultAsync(t => t.Id == request.TemplateId) ?? new();
 
                 // Get user information for logging
                 var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

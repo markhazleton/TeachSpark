@@ -8,13 +8,13 @@ namespace TeachSpark.Web.Data.Entities
 
         [Required]
         [StringLength(100)]
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = "Default";
 
-        public string? Description { get; set; }
+        public string? Description { get; set; } = "Default template description";
 
         [Required]
         [StringLength(50)]
-        public string TemplateType { get; set; } = string.Empty; // reading-comprehension, vocabulary, grammar, etc.        [Required]
+        public string TemplateType { get; set; } = "default";
         public string LayoutJson { get; set; } = string.Empty; // JSON template structure
 
         public string? PreviewImageUrl { get; set; }
