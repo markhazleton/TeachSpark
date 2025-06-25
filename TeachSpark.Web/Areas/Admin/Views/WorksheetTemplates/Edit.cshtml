@@ -65,18 +65,6 @@
                                 placeholder="Describe what this template is for..."></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="LayoutJson" class="form-label">Layout JSON <span
-                                    class="text-danger">*</span></label>
-                            <textarea asp-for="LayoutJson" class="form-control font-monospace" rows="10"
-                                placeholder='{"sections": [{"type": "header", "content": "..."}, {"type": "body", "content": "..."}]}'
-                                required></textarea>
-                            <div class="form-text">Define the template structure in JSON format.</div>
-                            <div class="invalid-feedback">
-                                Please provide a valid JSON layout.
-                            </div>
-                            <span asp-validation-for="LayoutJson" class="text-danger"></span>
-                        </div>
 
                         <div class="mb-3">
                             <label asp-for="SystemPromptTemplate" class="form-label">System Prompt Template</label>

@@ -39,8 +39,6 @@ namespace TeachSpark.Web.Services.Implementations
         /// </summary>
         public async Task LogLlmInteractionAsync(
             WorksheetGenerationRequest request,
-            string systemPrompt,
-            string userPrompt,
             string response,
             LlmCallMetadata metadata)
         {
@@ -57,19 +55,19 @@ namespace TeachSpark.Web.Services.Implementations
                     RequestId = metadata.RequestId,
                     Metadata = metadata,
                     Request = request,
-                    SystemPrompt = systemPrompt,
-                    UserPrompt = userPrompt,
+                    SystemPrompt = request.Template.SystemPromptTemplate,
+                    UserPrompt = request.Template.UserPromptTemplate,
                     Response = response,
                     ErrorDetails = null
                 };
 
                 await WriteLogEntryAsync(filePath, logEntry);
 
-                _logger.LogInformation("LLM interaction logged to file: {FileName}", fileName);
+                _logger.LogInformation("LLM error logged to file: {FileName}", fileName);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to log LLM interaction to file");
+                _logger.LogError(ex, "Failed to log LLM error to file");
             }
         }
 
@@ -78,8 +76,6 @@ namespace TeachSpark.Web.Services.Implementations
         /// </summary>
         public async Task LogLlmErrorAsync(
             WorksheetGenerationRequest request,
-            string systemPrompt,
-            string userPrompt,
             Exception error,
             LlmCallMetadata metadata)
         {
@@ -96,8 +92,8 @@ namespace TeachSpark.Web.Services.Implementations
                     RequestId = metadata.RequestId,
                     Metadata = metadata,
                     Request = request,
-                    SystemPrompt = systemPrompt,
-                    UserPrompt = userPrompt,
+                    SystemPrompt = request.Template.SystemPromptTemplate,
+                    UserPrompt = request.Template.UserPromptTemplate,
                     Response = null,
                     ErrorDetails = new ErrorDetails
                     {

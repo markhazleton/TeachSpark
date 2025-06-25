@@ -55,15 +55,6 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Validate JSON format
-                if (!string.IsNullOrEmpty(template.LayoutJson) && !IsValidJson(template.LayoutJson))
-                {
-                    ModelState.AddModelError("LayoutJson", "Invalid JSON format.");
-                    ViewData["Title"] = "Create New Worksheet Template";
-                    ViewData["Users"] = new SelectList(context.Users, "Id", "Email", template.UserId);
-                    return View(template);
-                }
-
                 template.CreatedAt = DateTime.UtcNow;
                 template.UpdatedAt = DateTime.UtcNow;
                 context.Add(template);
@@ -111,15 +102,6 @@ namespace TeachSpark.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    // Validate JSON format
-                    if (!string.IsNullOrEmpty(template.LayoutJson) && !IsValidJson(template.LayoutJson))
-                    {
-                        ModelState.AddModelError("LayoutJson", "Invalid JSON format.");
-                        ViewData["Title"] = $"Edit Template - {template.Name}";
-                        ViewData["Users"] = new SelectList(context.Users, "Id", "Email", template.UserId);
-                        return View(template);
-                    }
-
                     template.UpdatedAt = DateTime.UtcNow;
                     context.Update(template);
                     await context.SaveChangesAsync();

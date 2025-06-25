@@ -49,7 +49,6 @@ public class OpenAILlmService(
                 return ServiceResult<WorksheetContentResult>.ErrorResult("Source text is required");
             }
             // Generate prompts
-            var systemPrompt = GetSystemPrompt(request);
             var userPrompt = await GeneratePromptAsync(request);
 
             logger.LogDebug("Generated prompts for RequestId: {RequestId}", requestId);
@@ -57,7 +56,7 @@ public class OpenAILlmService(
             // Create chat messages
             var messages = new List<ChatMessage>
             {
-                ChatMessage.CreateSystemMessage(systemPrompt),
+                ChatMessage.CreateSystemMessage(request.Template.SystemPromptTemplate),
                 ChatMessage.CreateUserMessage(userPrompt)
             };
 
@@ -88,7 +87,7 @@ public class OpenAILlmService(
                 var error = new InvalidOperationException("Received empty response from AI service");
 
                 // Log the error to the special LLM log file
-                await llmLoggingService.LogLlmErrorAsync(request, systemPrompt, userPrompt, error, metadata);
+                await llmLoggingService.LogLlmErrorAsync(request, error, metadata);
 
                 return ServiceResult<WorksheetContentResult>.ErrorResult("Received empty response from AI service");
             }
@@ -122,7 +121,7 @@ public class OpenAILlmService(
             }
 
             // Log successful LLM interaction to special file
-            await llmLoggingService.LogLlmInteractionAsync(request, systemPrompt, userPrompt, markdownContent, metadata);
+            await llmLoggingService.LogLlmInteractionAsync(request, markdownContent, metadata);
 
             // Process and validate the response
             var result = await ProcessAIResponse(markdownContent, request, response.Value.Usage, stopwatch.Elapsed);
@@ -151,9 +150,9 @@ public class OpenAILlmService(
             // Log the error to the special LLM log file
             try
             {
-                var systemPrompt = GetSystemPrompt(request);
+                var systemPrompt = request.Template.SystemPromptTemplate??"MISSING";
                 var userPrompt = await GeneratePromptAsync(request);
-                await llmLoggingService.LogLlmErrorAsync(request, systemPrompt, userPrompt, ex, errorMetadata);
+                await llmLoggingService.LogLlmErrorAsync(request, ex, errorMetadata);
             }
             catch (Exception loggingEx)
             {
@@ -240,23 +239,7 @@ public class OpenAILlmService(
     private async Task<string> GeneratePromptAsync(WorksheetGenerationRequest request)
     {
         var promptBuilder = new System.Text.StringBuilder();
-        // Base prompt based on worksheet type
-
         var basePrompt = request.Template.UserPromptTemplate;
-        if (string.IsNullOrWhiteSpace(basePrompt))
-        {
-            basePrompt = request.Template.TemplateType switch
-            {
-                "reading-comprehension" => GenerateReadingComprehensionPrompt(request),
-                "vocabulary" => GenerateVocabularyPrompt(request),
-                "grammar" => GenerateGrammarPrompt(request),
-                "creative-writing" => GenerateCreativeWritingPrompt(request),
-                "literary-analysis" => GenerateLiteraryAnalysisPrompt(request),
-                _ => GenerateDefaultPrompt(request)
-            };
-        }
-
-
         promptBuilder.AppendLine(basePrompt);
 
         // Add Common Core Standard information if specified

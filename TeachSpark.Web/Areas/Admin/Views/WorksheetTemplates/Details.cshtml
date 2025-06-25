@@ -115,12 +115,7 @@
                             <img src="@Model.PreviewImageUrl" alt="Template Preview" class="img-fluid border rounded"
                                 style="max-height: 200px;" />
                         </div>
-                    }                    <div class="mt-4">
-                        <h6 class="fw-bold text-muted">Layout Structure:</h6>
-                        <div class="border rounded p-3 bg-light">
-                            <pre class="mb-0 small"><code>@Model.LayoutJson</code></pre>
-                        </div>
-                    </div>
+                    }
 
                     @if (!string.IsNullOrEmpty(Model.SystemPromptTemplate))
                     {

@@ -15,7 +15,6 @@ namespace TeachSpark.Web.Data.Entities
         [Required]
         [StringLength(50)]
         public string TemplateType { get; set; } = "default";
-        public string LayoutJson { get; set; } = string.Empty; // JSON template structure
 
         public string? PreviewImageUrl { get; set; }
 

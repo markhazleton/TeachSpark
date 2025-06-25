@@ -13,7 +13,6 @@ namespace TeachSpark.Web.Services.Mapping
                 Name = entity.Name,
                 Description = entity.Description,
                 TemplateType = entity.TemplateType,
-                LayoutJson = entity.LayoutJson,
                 PreviewImageUrl = entity.PreviewImageUrl,
                 IsPublic = entity.IsPublic,
                 IsSystem = entity.IsSystem,
@@ -31,7 +30,6 @@ namespace TeachSpark.Web.Services.Mapping
                 Name = viewModel.Name,
                 Description = viewModel.Description,
                 TemplateType = viewModel.TemplateType,
-                LayoutJson = viewModel.LayoutJson,
                 PreviewImageUrl = viewModel.PreviewImageUrl,
                 IsPublic = viewModel.IsPublic,
                 IsSystem = viewModel.IsSystem,
@@ -46,7 +44,6 @@ namespace TeachSpark.Web.Services.Mapping
             entity.Name = viewModel.Name;
             entity.Description = viewModel.Description;
             entity.TemplateType = viewModel.TemplateType;
-            entity.LayoutJson = viewModel.LayoutJson;
             entity.PreviewImageUrl = viewModel.PreviewImageUrl;
             entity.IsPublic = viewModel.IsPublic;
             entity.IsSystem = viewModel.IsSystem;
