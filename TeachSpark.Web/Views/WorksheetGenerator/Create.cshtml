@@ -4,6 +4,27 @@
 }
 
 <div class="container">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+        style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="card shadow-lg" style="min-width: 300px;">
+                <div class="card-body text-center p-4">
+                    <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5 class="mb-2">Generating Your Worksheet</h5>
+                    <p class="text-muted mb-3">AI is creating your personalized content...</p>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                            style="width: 0%" id="progressBar"></div>
+                    </div>
+                    <small class="text-muted" id="loadingStatus">Analyzing your content...</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <!-- Header -->
@@ -85,27 +106,18 @@
                         <div class="mb-4">
                             <h6 class="fw-bold">AI Model Selection</h6>
                             <div class="row">
-                                <div class="col-md-8 mb-3">
+                                <div class="col-md-12 mb-3">
                                     <label asp-for="PreferredLlmModel" class="form-label">
-                                        AI Model
-                                        <small class="text-muted">(Choose based on quality vs. cost)</small>
+                                        AI Model <span class="text-danger">*</span>
                                     </label>
                                     <select asp-for="PreferredLlmModel" asp-items="Model.AvailableModelOptions"
-                                        class="form-select" id="modelSelect">
-                                        <option value="">Auto-select best model</option>
+                                        class="form-select" id="modelSelect" required>
+                                        <option value="">Select an AI model...</option>
                                     </select>
                                     <span asp-validation-for="PreferredLlmModel" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Estimated Cost</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control" id="estimatedCost" readonly
-                                            placeholder="0.00">
-                                    </div>
                                     <div class="form-text">
-                                        <small id="costDetails" class="text-muted">Select a model to see cost
-                                            estimate</small>
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Choose the AI model to generate your worksheet content.
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +133,6 @@
                                     <div class="col-md-4 text-end">
                                         <div class="badge bg-primary mb-1" id="qualityBadge"></div>
                                         <div class="badge bg-success mb-1" id="speedBadge"></div>
-                                        <div class="badge bg-warning mb-1" id="costBadge"></div>
                                     </div>
                                 </div>
                             </div>
@@ -173,8 +184,15 @@
                             <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
                                 <i class="bi bi-arrow-left me-2"></i>Back
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-magic me-2"></i>Generate Worksheet
+                            <button type="submit" class="btn btn-primary" id="generateBtn">
+                                <span id="normalContent">
+                                    <i class="bi bi-magic me-2"></i>Generate Worksheet
+                                </span>
+                                <span id="loadingContent" class="d-none">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true"></span>
+                                    Generating...
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -194,6 +212,7 @@
         document.addEventListener('DOMContentLoaded', function ()
         {
             loadAvailableModels();
+            selectFirstModel();
         });        // Dynamic form updates based on template selection
         document.getElementById('templateSelect').addEventListener('change', function ()
         {
@@ -211,13 +230,6 @@
         {
             const selectedModel = this.value;
             updateModelInfo(selectedModel);
-            updateCostEstimate();
-        });
-
-        // Update cost estimate when questions change
-        document.getElementById('maxQuestions').addEventListener('input', function ()
-        {
-            updateCostEstimate();
         }); function loadAvailableModels()
         {
             fetch('/api/worksheet-generator/models')
@@ -228,45 +240,43 @@
                     {
                         availableModels = data.data;
                         console.log('Loaded models:', availableModels);
+                        selectFirstModel();
                     }
                 })
                 .catch(error =>
                 {
                     console.error('Error loading models:', error);
                 });
+        }
+
+        function selectFirstModel()
+        {
+            const modelSelect = document.getElementById('modelSelect');
+            if (modelSelect.options.length > 1)
+            {
+                // Select the first actual model (skip the placeholder option)
+                modelSelect.selectedIndex = 1;
+                const selectedModel = modelSelect.value;
+                updateModelInfo(selectedModel);
+            }
         } function updateModelRecommendations()
         {
             const templateId = document.getElementById('templateSelect').value;
-            if (!templateId) return;            // First get the template to find its worksheet type
+            if (!templateId) return;
+
+            // Get template information for context but don't change auto-select behavior
             fetch(`/WorksheetGenerator/GetTemplate?id=${encodeURIComponent(templateId)}`)
                 .then(response => response.json())
                 .then(templateData =>
                 {
                     if (templateData.success && templateData.data)
                     {
-                        const worksheetType = templateData.data.templateType;
-                        return fetch(`/api/worksheet-generator/models/recommend?worksheetType=${encodeURIComponent(worksheetType)}`);
-                    }
-                })
-                .then(response => response?.json())
-                .then(data =>
-                {
-                    if (data && data.success && data.data.length > 0)
-                    {
-                        const recommendedModel = data.data[0];
-                        const modelSelect = document.getElementById('modelSelect');
-
-                        // Update the placeholder text to show recommendation
-                        const autoOption = modelSelect.querySelector('option[value=""]');
-                        if (autoOption)
-                        {
-                            autoOption.textContent = `Auto-select best model (${recommendedModel.name} recommended)`;
-                        }
+                        console.log('Template selected:', templateData.data.templateType);
                     }
                 })
                 .catch(error =>
                 {
-                    console.error('Error getting model recommendations:', error);
+                    console.error('Error getting template information:', error);
                 });
         } function updateModelInfo(modelId)
         {
@@ -295,85 +305,19 @@
                 `Features: ${capabilities.length > 0 ? capabilities.join(', ') : 'General purpose'}`;
 
             // Update badges with calculated values
-            const costTier = model.costPer1kInputTokens < 0.001 ? 'Low' :
-                model.costPer1kInputTokens < 0.01 ? 'Medium' : 'High';
             const qualityScore = model.isRecommendedForEducation ? '9' : '7'; // Simplified scoring
             const speedScore = model.maxTokens > 100000 ? '8' : '6'; // Simplified scoring
 
             document.getElementById('qualityBadge').textContent = `Quality: ${qualityScore}/10`;
             document.getElementById('speedBadge').textContent = `Speed: ${speedScore}/10`;
-            document.getElementById('costBadge').textContent = `Cost: ${costTier}`;
 
             modelInfoPanel.classList.remove('d-none');
-        } function updateCostEstimate()
-        {
-            const modelId = document.getElementById('modelSelect').value;
-            const maxQuestions = document.getElementById('maxQuestions').value || 10;
-            const sourceText = document.getElementById('SourceText').value || '';
-            const templateId = document.getElementById('templateSelect').value;
-
-            if (!modelId || !templateId)
-            {
-                document.getElementById('estimatedCost').value = '';
-                document.getElementById('costDetails').textContent = 'Select a model and template to see cost estimate';
-                return;
-            }
-
-            // First get the template to determine worksheet type
-            fetch(`/WorksheetGenerator/GetTemplate?id=${encodeURIComponent(templateId)}`)
-                .then(response => response.json())
-                .then(templateData =>
-                {
-                    if (templateData.success && templateData.data)
-                    {
-                        const requestData = {
-                            modelId: modelId,
-                            inputTokens: Math.max(100, Math.floor(sourceText.length / 4)), // Rough token estimate
-                            outputTokens: maxQuestions * 50, // Estimate ~50 tokens per question
-                            worksheetType: templateData.data.templateType
-                        };
-
-                        return fetch('/api/worksheet-generator/models/estimate-cost', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(requestData)
-                        });
-                    } else
-                    {
-                        throw new Error('Template not found');
-                    }
-                })
-                .then(response => response.json())
-                .then(data =>
-                {
-                    if (data.success)
-                    {
-                        const cost = data.data.estimatedCost;
-                        document.getElementById('estimatedCost').value = cost.toFixed(4);
-                        document.getElementById('costDetails').innerHTML =
-                            `<i class="bi bi-info-circle me-1"></i>Based on ~${data.data.inputTokens} input + ${data.data.outputTokens} output tokens`;
-                    } else
-                    {
-                        document.getElementById('estimatedCost').value = 'Error';
-                        document.getElementById('costDetails').textContent = 'Unable to estimate cost';
-                    }
-                })
-                .catch(error =>
-                {
-                    console.error('Error estimating cost:', error);
-                    document.getElementById('estimatedCost').value = 'Error';
-                    document.getElementById('costDetails').textContent = 'Unable to estimate cost';
-                });
-        }
-        document.getElementById('costDetails').textContent = 'Unable to estimate cost';
-                        });
-                }        function updateFormSuggestionsForTemplate(templateId)
+        } function updateFormSuggestionsForTemplate(templateId)
         {
             if (!templateId) return;
 
-            const customInstructions = document.getElementById('CustomInstructions');            // Get template information to determine worksheet type
+            const customInstructions = document.getElementById('CustomInstructions');
+            // Get template information to determine worksheet type
             fetch(`/WorksheetGenerator/GetTemplate?id=${encodeURIComponent(templateId)}`)
                 .then(response => response.json())
                 .then(data =>
@@ -406,6 +350,61 @@
             {
                 customInstructions.placeholder = suggestions[worksheetType];
             }
+        }
+
+        // Handle form submission with loading overlay
+        document.getElementById('worksheetForm').addEventListener('submit', function (e)
+        {
+            showLoadingOverlay();
+
+            // Disable the submit button to prevent double submission
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
+
+            // Switch button content to loading state
+            document.getElementById('normalContent').classList.add('d-none');
+            document.getElementById('loadingContent').classList.remove('d-none');
+        });
+
+        function showLoadingOverlay()
+        {
+            const overlay = document.getElementById('loadingOverlay');
+            const progressBar = document.getElementById('progressBar');
+            const statusText = document.getElementById('loadingStatus');
+
+            overlay.classList.remove('d-none');
+
+            // Simulate progress for better UX
+            let progress = 0;
+            const messages = [
+                'Analyzing your content...',
+                'Processing with AI...',
+                'Generating questions...',
+                'Formatting worksheet...',
+                'Almost ready...'
+            ];
+
+            const interval = setInterval(() =>
+            {
+                progress += Math.random() * 15 + 5; // Random progress between 5-20%
+
+                if (progress >= 95)
+                {
+                    progress = 95; // Don't reach 100% until actual completion
+                }
+
+                progressBar.style.width = progress + '%';
+
+                // Update status message based on progress
+                const messageIndex = Math.min(Math.floor(progress / 20), messages.length - 1);
+                statusText.textContent = messages[messageIndex];
+
+                if (progress >= 95)
+                {
+                    clearInterval(interval);
+                    statusText.textContent = 'Finalizing your worksheet...';
+                }
+            }, 800);
         }
     </script>
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <location path="." inheritInChildApplications="false">
+    <system.webServer>
+      <handlers>
+        <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+      </handlers>
+      
+      <!-- DIAGNOSTIC: Enable detailed errors and logging -->
+      <aspNetCore processPath="dotnet" 
+                  arguments=".\TeachSpark.Web.dll" 
+                  stdoutLogEnabled="true" 
+                  stdoutLogFile=".\logs\stdout" 
+                  hostingModel="inprocess">
+        <environmentVariables>
+          <environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Development" />
+          <environmentVariable name="ASPNETCORE_DETAILEDERRORS" value="true" />
+        </environmentVariables>
+      </aspNetCore>
+      
+      <!-- Show detailed HTTP errors for troubleshooting -->
+      <httpErrors errorMode="Detailed" />
+      
+      <!-- Static File Configuration -->
+      <staticContent>
+        <!-- Remove existing MIME types to avoid conflicts -->
+        <remove fileExtension=".js" />
+        <remove fileExtension=".css" />
+        <remove fileExtension=".woff" />
+        <remove fileExtension=".woff2" />
+        <remove fileExtension=".json" />
+        
+        <!-- JavaScript files -->
+        <mimeMap fileExtension=".js" mimeType="application/javascript" />
+        <!-- CSS files -->
+        <mimeMap fileExtension=".css" mimeType="text/css" />
+        <!-- Font files -->
+        <mimeMap fileExtension=".woff" mimeType="font/woff" />
+        <mimeMap fileExtension=".woff2" mimeType="font/woff2" />
+        <!-- JSON files -->
+        <mimeMap fileExtension=".json" mimeType="application/json" />
+        
+        <!-- Cache control for static assets -->
+        <clientCache cacheControlMode="UseMaxAge" cacheControlMaxAge="30.00:00:00" />
+      </staticContent>
+      
+      <!-- Enable compression for better performance -->
+      <urlCompression doStaticCompression="true" doDynamicCompression="true" />
+      
+      <!-- Ensure static files are served correctly -->
+      <defaultDocument>
+        <files>
+          <clear />
+          <add value="index.html" />
+        </files>
+      </defaultDocument>
+      
+      <!-- Security headers -->
+      <httpProtocol>
+        <customHeaders>
+          <add name="X-Content-Type-Options" value="nosniff" />
+          <add name="X-Frame-Options" value="DENY" />
+          <add name="X-XSS-Protection" value="1; mode=block" />
+        </customHeaders>
+      </httpProtocol>
+    </system.webServer>
+  </location>
+</configuration>

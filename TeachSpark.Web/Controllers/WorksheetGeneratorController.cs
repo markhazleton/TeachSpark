@@ -102,6 +102,9 @@ namespace TeachSpark.Web.Controllers
                         TempData["WorksheetId"] = worksheet.Id;
                         TempData["Success"] = "Worksheet generated and saved successfully!";
 
+                        // Small delay to help with CloudFlare edge caching after long generation
+                        await Task.Delay(500);
+
                         // Redirect to a display page
                         return RedirectToAction("Display", new { id = worksheet.Id });
                     }
@@ -130,19 +133,52 @@ namespace TeachSpark.Web.Controllers
 
             await PopulateDropdownLists(request);
             return View(request);
-        }/// <summary>
-         /// Display generated worksheet
-         /// </summary>
+        }        /// <summary>
+                 /// Display generated worksheet
+                 /// </summary>
         public async Task<IActionResult> Display(int? id)
         {
             ViewData["Title"] = "Generated Worksheet";
+            logger.LogInformation("Display action called with ID: {Id}", id);
+
+            // Add cache control headers to help with CloudFlare edge caching
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
 
             // First try to load from database if ID is provided
             if (id.HasValue)
             {
                 try
-                {                    // Get the actual user ID (not email)
+                {
+                    // Get the actual user ID (not email)
                     var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                    var userEmailClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+
+                    logger.LogInformation("Attempting to load worksheet {Id} for user {UserId} (Email: {Email})",
+                        id.Value, userIdClaim, userEmailClaim);
+
+                    // First check if worksheet exists at all
+                    var worksheetExists = await context.Worksheets
+                        .AnyAsync(w => w.Id == id.Value);
+
+                    if (!worksheetExists)
+                    {
+                        logger.LogWarning("Worksheet {Id} does not exist in database", id.Value);
+                        TempData["Error"] = $"Worksheet {id.Value} not found.";
+                        return RedirectToAction("Index");
+                    }
+
+                    // Get worksheet with user info for debugging
+                    var worksheetInfo = await context.Worksheets
+                        .Select(w => new { w.Id, w.UserId, w.Title })
+                        .FirstOrDefaultAsync(w => w.Id == id.Value);
+
+                    if (worksheetInfo != null)
+                    {
+                        logger.LogInformation("Found worksheet {Id} with UserId: {WorksheetUserId}, Current User: {CurrentUserId}",
+                            worksheetInfo.Id, worksheetInfo.UserId, userIdClaim);
+                    }
 
                     var worksheet = await context.Worksheets
                         .Include(w => w.CommonCoreStandard)
@@ -152,6 +188,8 @@ namespace TeachSpark.Web.Controllers
 
                     if (worksheet != null)
                     {
+                        logger.LogInformation("Successfully loaded worksheet {Id} for user {UserId}", worksheet.Id, userIdClaim);
+
                         // Increment view count
                         worksheet.ViewCount++;
                         worksheet.LastAccessedAt = DateTime.UtcNow;
@@ -162,6 +200,12 @@ namespace TeachSpark.Web.Controllers
                         ViewData["Title"] = worksheet.Title;
                         ViewData["WorksheetId"] = worksheet.Id;
                         return View(content);
+                    }
+                    else
+                    {
+                        logger.LogWarning("Worksheet {Id} not found for user {UserId} - access denied or not found",
+                            id.Value, userIdClaim);
+                        TempData["Error"] = "Worksheet not found or you don't have permission to view it.";
                     }
                 }
                 catch (Exception ex)
@@ -365,14 +409,6 @@ namespace TeachSpark.Web.Controllers
                     }
                 };
             }
-
-            // Add empty option at the beginning for models
-            model.AvailableModelOptions.Insert(0, new SelectListItem
-            {
-                Value = "",
-                Text = "Auto-select best model",
-                Selected = string.IsNullOrEmpty(model.PreferredLlmModel)
-            });
 
             // Set configuration values in ViewBag (these are not dropdowns)
             ViewBag.MaxQuestions = _config.MaxQuestionCount;

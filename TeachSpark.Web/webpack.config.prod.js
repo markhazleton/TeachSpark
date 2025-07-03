@@ -164,39 +164,12 @@ module.exports = {
                        file.name.endsWith('.woff') || 
                        file.name.endsWith('.woff2');
             },
-            map: (file) => {
-                // Map actual filenames to logical names for easier lookup
-                const name = file.name;
-                let logicalName = name;
-                
-                // Map actual chunk names to logical asset paths with leading slash for .NET compatibility
-                if (name.startsWith('site.') && name.endsWith('.js')) {
-                    logicalName = '/js/site.js';
-                } else if (name.startsWith('validation.') && name.endsWith('.js')) {
-                    logicalName = '/js/validation.js';
-                } else if (name.startsWith('site.') && name.endsWith('.css')) {
-                    logicalName = '/css/site.css';
-                } else if (name.startsWith('vendors.') && name.endsWith('.css')) {
-                    logicalName = '/css/vendors.css';
-                } else if (name.includes('bootstrap-icons') && name.endsWith('.woff2')) {
-                    logicalName = '/fonts/bootstrap-icons.woff2';
-                } else if (name.includes('bootstrap-icons') && name.endsWith('.woff')) {
-                    logicalName = '/fonts/bootstrap-icons.woff';
-                }
-                
-                return {
-                    ...file,
-                    name: logicalName,
-                    path: file.path.startsWith('/') ? file.path : '/' + file.path
-                };
-            },
-            // Hook to add additional font files that might not be captured
             generate(seed, files, entrypoints) {
                 const manifest = files.reduce((manifest, file) => {
                     const name = file.name;
                     let logicalName = name;
                     
-                    // Map actual chunk names to logical asset paths with leading slash for .NET compatibility
+                    // Create consistent logical names with leading slashes
                     if (name.startsWith('site.') && name.endsWith('.js')) {
                         logicalName = '/js/site.js';
                     } else if (name.startsWith('validation.') && name.endsWith('.js')) {
@@ -205,13 +178,49 @@ module.exports = {
                         logicalName = '/css/site.css';
                     } else if (name.startsWith('vendors.') && name.endsWith('.css')) {
                         logicalName = '/css/vendors.css';
+                    } else if (name.startsWith('vendor.') && name.endsWith('.js')) {
+                        logicalName = '/js/vendor.js';
+                    } else if (name.startsWith('runtime.') && name.endsWith('.js')) {
+                        logicalName = '/js/runtime.js';
+                    } else if (name.startsWith('bootstrap.') && name.endsWith('.js')) {
+                        logicalName = '/js/bootstrap.js';
+                    } else if (name.startsWith('jquery.') && name.endsWith('.js')) {
+                        logicalName = '/js/jquery.js';
                     } else if (name.includes('bootstrap-icons') && name.endsWith('.woff2')) {
                         logicalName = '/fonts/bootstrap-icons.woff2';
                     } else if (name.includes('bootstrap-icons') && name.endsWith('.woff')) {
                         logicalName = '/fonts/bootstrap-icons.woff';
+                    } else {
+                        // For any other files, create logical names based on their location
+                        const filePath = file.path;
+                        if (filePath.includes('/js/')) {
+                            logicalName = `/js/${path.basename(name, path.extname(name))}.js`;
+                        } else if (filePath.includes('/css/')) {
+                            logicalName = `/css/${path.basename(name, path.extname(name))}.css`;
+                        } else if (filePath.includes('/fonts/')) {
+                            logicalName = `/fonts/${name}`;
+                        } else {
+                            logicalName = `/${name}`;
+                        }
                     }
                     
-                    manifest[logicalName] = file.path.startsWith('/') ? file.path : '/' + file.path;
+                    // Ensure the file path starts with a forward slash
+                    const filePath = file.path.startsWith('/') ? file.path : '/' + file.path;
+                    
+                    // Add both the logical name and the actual filename for flexibility
+                    manifest[logicalName] = filePath;
+                    
+                    // Also add without leading slash for backward compatibility
+                    const logicalNameNoSlash = logicalName.substring(1);
+                    if (logicalNameNoSlash !== logicalName) {
+                        manifest[logicalNameNoSlash] = filePath;
+                    }
+                    
+                    // Add the actual filename as well for direct lookups
+                    if (name !== logicalName && name !== logicalNameNoSlash) {
+                        manifest[name] = filePath;
+                    }
+                    
                     return manifest;
                 }, seed);
                 

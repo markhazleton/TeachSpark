@@ -63,23 +63,60 @@ namespace TeachSpark.Web
 
             // Normalize the logical path to have a leading slash for manifest lookup
             var normalizedLogicalPath = logicalPath.StartsWith('/') ? logicalPath : $"/{logicalPath}";
-
-            // Try to get the asset from the manifest
-            if (manifest.TryGetValue(normalizedLogicalPath, out var actualPath))
-            {
-                return actualPath.StartsWith('/') ? actualPath : $"/{actualPath}";
-            }
-
-            // Try without leading slash as fallback
             var logicalPathWithoutSlash = logicalPath.TrimStart('/');
-            if (manifest.TryGetValue(logicalPathWithoutSlash, out var actualPathFallback))
+
+            // Try multiple variations to find the asset in the manifest
+            string? actualPath = null;
+
+            // Try with leading slash first
+            if (manifest.TryGetValue(normalizedLogicalPath, out actualPath))
             {
-                return actualPathFallback.StartsWith('/') ? actualPathFallback : $"/{actualPathFallback}";
+                return EnsureCorrectPath(actualPath);
             }
+
+            // Try without leading slash
+            if (manifest.TryGetValue(logicalPathWithoutSlash, out actualPath))
+            {
+                return EnsureCorrectPath(actualPath);
+            }
+
+            // Try common variations for backward compatibility
+            var variations = new[]
+            {
+                $"js/{Path.GetFileName(logicalPath)}", // e.g., "site.js" -> "js/site.js"
+                $"css/{Path.GetFileName(logicalPath)}", // e.g., "site.css" -> "css/site.css"
+                Path.GetFileName(logicalPath), // Just the filename
+                logicalPath.Replace("/js/", "").Replace("/css/", ""), // Remove directory prefixes
+            };
+
+            foreach (var variation in variations)
+            {
+                if (manifest.TryGetValue(variation, out actualPath))
+                {
+                    return EnsureCorrectPath(actualPath);
+                }
+                if (manifest.TryGetValue($"/{variation}", out actualPath))
+                {
+                    return EnsureCorrectPath(actualPath);
+                }
+            }
+
+            // Log all manifest keys for debugging when asset is not found
+            _logger.LogWarning("Asset {LogicalPath} not found in manifest. Available keys: {ManifestKeys}",
+                logicalPath, string.Join(", ", manifest.Keys));
 
             // Fallback to the logical path (useful in development)
-            _logger.LogDebug("Asset {LogicalPath} not found in manifest, using fallback", logicalPath);
             return normalizedLogicalPath;
+        }
+
+        private string EnsureCorrectPath(string path)
+        {
+            // Ensure the path starts with a forward slash for web compatibility
+            if (!path.StartsWith('/'))
+            {
+                return $"/{path}";
+            }
+            return path;
         }
     }
 }
