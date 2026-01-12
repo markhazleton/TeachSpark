@@ -1,6 +1,6 @@
 # TeachSpark Copilot Instructions
 
-This is a .NET 9.0 MVC Web Application with npm build process for client-side assets.
+This is a .NET 10.0 MVC Web Application with npm build process for client-side assets.
 
 ## Core Styling Rule - CRITICAL
 
@@ -8,7 +8,7 @@ This is a .NET 9.0 MVC Web Application with npm build process for client-side as
 
 ## Technology Guidelines
 
-- Use .NET 9.0 MVC patterns with dependency injection
+- Use .NET 10.0 MVC patterns with dependency injection
 - Frontend assets managed via webpack and npm
 - JavaScript can be vanilla JS, jQuery is used for DataTables and Bootstrap 5 components
 - SCSS imports Bootstrap 5 only, no custom styles

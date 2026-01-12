@@ -4,11 +4,11 @@
 
 ## Project Overview
 
-TeachSpark is a .NET 9.0 MVC Web Application with an integrated npm build process for managing client-side assets. This project follows a modern web development workflow with strict styling guidelines and best practices.
+TeachSpark is a .NET 10.0 MVC Web Application with an integrated npm build process for managing client-side assets. This project follows a modern web development workflow with strict styling guidelines and best practices.
 
 ## Technology Stack
 
-- **Backend**: .NET 9.0 MVC (C#)
+- **Backend**: .NET 10.0 MVC (C#)
 - **Frontend Build**: Webpack + npm
 - **Styling**: Bootstrap 5 (native styles only)
 - **JavaScript**: Vanilla JavaScript with validation support

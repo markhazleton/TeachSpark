@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using OpenAI.Chat;
 using System.Diagnostics;
@@ -16,7 +15,6 @@ namespace TeachSpark.Web.Services.Implementations;
 public class OpenAILlmService(
     ChatClient chatClient,
     IModelRegistryService modelRegistry,
-    IMemoryCache cache,
     IOptions<LlmConfiguration> config,
     LlmUsageMetrics metrics,
     MarkdownRenderingService markdownService,

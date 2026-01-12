@@ -55,8 +55,8 @@ namespace TeachSpark.Web.Services.Implementations
                     RequestId = metadata.RequestId,
                     Metadata = metadata,
                     Request = request,
-                    SystemPrompt = request.Template.SystemPromptTemplate,
-                    UserPrompt = request.Template.UserPromptTemplate,
+                    SystemPrompt = request.Template.SystemPromptTemplate ?? string.Empty,
+                    UserPrompt = request.Template.UserPromptTemplate ?? string.Empty,
                     Response = response,
                     ErrorDetails = null
                 };
@@ -92,8 +92,8 @@ namespace TeachSpark.Web.Services.Implementations
                     RequestId = metadata.RequestId,
                     Metadata = metadata,
                     Request = request,
-                    SystemPrompt = request.Template.SystemPromptTemplate,
-                    UserPrompt = request.Template.UserPromptTemplate,
+                    SystemPrompt = request.Template.SystemPromptTemplate ?? string.Empty,
+                    UserPrompt = request.Template.UserPromptTemplate ?? string.Empty,
                     Response = null,
                     ErrorDetails = new ErrorDetails
                     {

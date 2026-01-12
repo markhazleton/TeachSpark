@@ -8,7 +8,7 @@ Thank you for your interest in contributing to TeachSpark! We welcome contributi
 
 Before contributing, ensure you have:
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later
 - [Node.js](https://nodejs.org/) 18.x or later
 - [Git](https://git-scm.com/) for version control
 - A GitHub account

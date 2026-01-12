@@ -2,7 +2,7 @@
 
 ## 🎯 Project Overview
 
-Successfully modernized the npm/webpack build process for the .NET 9 MVC application to achieve a world-class frontend build system. All CSS/JS is now built via npm/webpack with robust cleaning, static asset management, and comprehensive code quality tools.
+Successfully modernized the npm/webpack build process for the .NET 10 MVC application to achieve a world-class frontend build system. All CSS/JS is now built via npm/webpack with robust cleaning, static asset management, and comprehensive code quality tools.
 
 ## ✅ Completed Features
 
@@ -145,7 +145,7 @@ All code follows strict quality standards:
 
 ## ⚠️ Known Warnings
 
-- **Bootstrap Sass deprecation warnings**: These are from Bootstrap's internal SCSS files and will be resolved when Bootstrap updates to use modern Sass syntax. They don't affect functionality.
+- **Bootstrap Sass deprecations**: These originate from Bootstrap's internal SCSS. They are currently suppressed via `sass-loader`'s `quietDeps` to keep builds clean; remove that setting when Bootstrap ships fully modern Sass syntax.
 - **Bundle size warnings**: The vendor bundle exceeds webpack's recommended size due to Bootstrap and jQuery. This is expected for UI frameworks and can be addressed with lazy loading if needed.
 
 ## 🔄 Development Workflow

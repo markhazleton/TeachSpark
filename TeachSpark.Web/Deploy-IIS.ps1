@@ -148,7 +148,7 @@ Write-Host "`n=== IIS Deployment Instructions ===" -ForegroundColor Yellow
 Write-Host "1. Application files are ready at: $OutputPath"
 Write-Host "2. Point your IIS application to: $OutputPath"
 Write-Host "3. Ensure Application Pool is set to 'No Managed Code'"
-Write-Host "4. Verify .NET 9.0 Hosting Bundle is installed on server"
+Write-Host "4. Verify .NET 10.0 Hosting Bundle is installed on server"
 Write-Host "5. Grant IIS_IUSRS read/execute permissions to: $OutputPath"
 Write-Host "5. Grant write permissions to: $OutputPath\logs" 
 Write-Host "6. Ensure database file exists and has proper permissions at hosting server:"

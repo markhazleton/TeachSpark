@@ -1,7 +1,7 @@
 # 🎓 TeachSpark
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![.NET](https://img.shields.io/badge/.NET-9.0-blue.svg)](https://dotnet.microsoft.com/download)
+[![.NET](https://img.shields.io/badge/.NET-10.0-blue.svg)](https://dotnet.microsoft.com/download)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -10,7 +10,7 @@
 
 ## 🌟 Overview
 
-TeachSpark is a cutting-edge educational platform built with .NET 9 MVC and powered by advanced Large Language Models. It provides an intelligent, adaptive learning environment that personalizes content delivery based on individual learning patterns and preferences.
+TeachSpark is a cutting-edge educational platform built with .NET 10 MVC and powered by advanced Large Language Models. It provides an intelligent, adaptive learning environment that personalizes content delivery based on individual learning patterns and preferences.
 
 ### ✨ Key Features
 
@@ -25,7 +25,7 @@ TeachSpark is a cutting-edge educational platform built with .NET 9 MVC and powe
 
 ### Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) or later (the repo pins SDK 10.0.101 via `global.json`)
 - [Node.js](https://nodejs.org/) 18.x or later
 - [Git](https://git-scm.com/) for version control
 
@@ -56,7 +56,7 @@ TeachSpark is a cutting-edge educational platform built with .NET 9 MVC and powe
    npm run build
    
    # Or build the .NET solution (automatically runs npm build)
-   dotnet build
+   dotnet build TeachSpark.sln
    ```
 
 4. **Run the application**
@@ -78,7 +78,7 @@ TeachSpark is built with a modern, scalable architecture:
 
 ### Backend
 
-- **Framework**: .NET 9 MVC
+- **Framework**: .NET 10 MVC
 - **Language**: C#
 - **Architecture**: Clean Architecture principles
 - **Database**: Entity Framework Core (configurable provider)

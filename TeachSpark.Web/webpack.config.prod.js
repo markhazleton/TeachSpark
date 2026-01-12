@@ -85,6 +85,7 @@ module.exports = {
                         options: {
                             sourceMap: false,
                             sassOptions: {
+                                quietDeps: true,
                                 outputStyle: 'compressed'
                             }
                         }
