@@ -1,5 +1,5 @@
 ---
-description: Archive outdated documentation to .archive/, update Guide.md and CHANGELOG.md so .documentation stays current and clean
+description: Archive outdated documentation to .archive/, update guide.md and CHANGELOG.md so .documentation stays current and clean
 handoffs:
   - label: Run a site audit after archiving
     agent: speckit.site-audit
@@ -19,7 +19,7 @@ You **MUST** consider the user input before proceeding (if not empty). If the us
 
 ## Purpose
 
-Keep `.documentation/` current and authoritative. Move outdated, completed, or contradicting material to `.archive/` with a date-stamped folder. Before moving anything, extract important information into `CHANGELOG.md` and `.documentation/Guide.md` so no knowledge is lost.
+Keep `.documentation/` current and authoritative. Move outdated, completed, or contradicting material to `.archive/` with a date-stamped folder. Before moving anything, extract important information into `CHANGELOG.md` and `.documentation/guide.md` so no knowledge is lost.
 
 **CRITICAL: Never read from `.archive/` during this command or any other command.** The archive folder is write-only from an operational perspective. Past decisions are preserved for audit; they do not drive current work.
 
@@ -89,7 +89,7 @@ If candidate counts exceed the one-pass limit, process the highest-signal subset
 For every file you decide to archive, scan it for:
 
 - **Decisions made** → add to `CHANGELOG.md` as historical record
-- **How-to guidance still valid** → merge into `.documentation/Guide.md`
+- **How-to guidance still valid** → merge into `.documentation/guide.md`
 - **Architectural rationale** → add to `CHANGELOG.md` with context
 
 Do not copy content verbatim — summarise concisely. The goal is to preserve the signal, discard the noise.
@@ -118,9 +118,9 @@ Format:
 
 Prepend the new archive-run section above any existing entries. Do not remove existing changelog content.
 
-### 5. Update .documentation/Guide.md
+### 5. Update .documentation/guide.md
 
-The guide lives at `.documentation/Guide.md`. It is the **living orientation document** for `.documentation/`. If it does not exist, create it.
+The guide lives at `.documentation/guide.md`. It is the **living orientation document** for `.documentation/`. If it does not exist, create it.
 
 The guide must always reflect the **current** state. Update it to:
 
@@ -130,7 +130,7 @@ The guide must always reflect the **current** state. Update it to:
 4. **Constitution location** — `/.documentation/memory/constitution.md`
 5. **What is in `.archive/`** — one-line summary: "Completed and historical docs. Do not read from here during normal operations."
 
-Do not add historical content to Guide.md — it describes the present, not the past.
+Do not add historical content to guide.md — it describes the present, not the past.
 
 ### 6. Create the Archive Folder and Move Files
 
@@ -171,7 +171,7 @@ Output a summary to the user:
 
 **Archived**: N files → `.archive/YYYY-MM-DD/`
 **CHANGELOG.md**: updated with N entries
-**Guide.md**: updated
+**guide.md**: updated
 
 ### Files Archived
 - `path/file.md` — reason

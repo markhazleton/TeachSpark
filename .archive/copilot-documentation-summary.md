@@ -1,5 +1,7 @@
 # GitHub Copilot Documentation Best Practices - Implementation Summary
 
+> Historical note: this file is preserved as an archive snapshot from before repository documentation was consolidated under `.documentation/`. Current active guidance lives in `.github/copilot-instructions.md`, `.documentation/guides/copilot-guidelines.md`, and `.documentation/guide.md`.
+
 ## Recommended File Structure
 
 Based on research of GitHub's official documentation and industry best practices, here's the recommended approach for your TeachSpark project:
@@ -15,9 +17,9 @@ Based on research of GitHub's official documentation and industry best practices
   - Avoid style preferences; focus on technical requirements
   - Include technology stack details
 
-### 2. **Secondary Documentation: `COPILOT_GUIDELINES.md`** ✅ EXISTS
+### 2. **Secondary Documentation: `copilot-guidelines.md`** ✅ EXISTS
 
-- **Location**: Root directory (current location is fine)
+- **Original Location At Time Of Writing**: Root directory
 - **Purpose**: Comprehensive team guidelines and training material
 - **Content**: Detailed explanations, examples, prompt templates
 - **Best Practices**:
@@ -32,8 +34,8 @@ Based on research of GitHub's official documentation and industry best practices
 
 1. **`.github/copilot-instructions.md`** - GitHub's official standard (highest priority)
 2. **`copilot-instructions.md`** - Alternative if not using .github folder
-3. **`COPILOT_GUIDELINES.md`** - Good for comprehensive documentation
-4. **`docs/copilot-guidelines.md`** - If using dedicated docs folder
+3. **`copilot-guidelines.md`** - Good for comprehensive documentation
+4. **`.documentation/guides/copilot-guidelines.md`** - Current dedicated-docs equivalent in this repository
 
 ### Content Structure Best Practices
 
@@ -56,7 +58,7 @@ GitHub Copilot uses this priority order for custom instructions:
 ### ✅ Completed
 
 - [x] Created `.github/copilot-instructions.md` with concise, technical guidelines
-- [x] Updated `COPILOT_GUIDELINES.md` to reference the official instructions file
+- [x] Updated `copilot-guidelines.md` to reference the official instructions file
 - [x] Included critical Bootstrap 5 styling rules in both files
 
 ### 📋 Recommendations
@@ -67,7 +69,7 @@ GitHub Copilot uses this priority order for custom instructions:
 - Update it as the project evolves
 - Ensure it doesn't conflict with any organization-level instructions
 
-#### For `COPILOT_GUIDELINES.md`
+#### For `copilot-guidelines.md`
 
 - Consider fixing markdown linting issues for better maintainability
 - Add more specific prompt examples for your technology stack
@@ -92,7 +94,7 @@ To verify that GitHub Copilot is using your instructions:
 ## Best Practices Summary
 
 1. **Keep `.github/copilot-instructions.md` short and focused**
-2. **Use `COPILOT_GUIDELINES.md` for comprehensive team documentation**
+2. **Use `copilot-guidelines.md` for comprehensive team documentation**
 3. **Include project-specific technical requirements**
 4. **Avoid style preferences in favor of technical constraints**
 5. **Update instructions as the project evolves**

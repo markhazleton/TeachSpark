@@ -81,13 +81,13 @@ The LLM service can generate various types of educational worksheets:
 
 ### Bootstrap 5 Styling
 
-All UI components use only Bootstrap 5 classes for consistent styling:
+The worksheet generator UI is built around Bootstrap 5 components and utility classes, with existing stylesheet customizations still present in the application:
 
 - Cards and containers for layout
 - Form controls with proper validation
 - Responsive design for all screen sizes
 - Accessible color schemes and contrast
-- No custom CSS or inline styles
+- New UI work should continue to prefer Bootstrap 5 classes over additional custom styling
 
 ## Usage
 

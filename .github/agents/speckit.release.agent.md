@@ -260,7 +260,7 @@ Create `/.documentation/releases/v{NEXT_VERSION}/release-notes.md`:
 
 {Description from spec summary}
 
-**Spec**: [View archived spec](specs/{spec-name}/spec.md)
+**Spec**: Archived spec path `specs/{spec-name}/spec.md`
 
 ## Bug Fixes
 
@@ -284,7 +284,7 @@ Create `/.documentation/releases/v{NEXT_VERSION}/release-notes.md`:
 
 {For each ADR:}
 
-- **ADR-{NNN}**: {Title} - [View](../../decisions/ADR-{NNN}.md)
+- **ADR-{NNN}**: {Title} - View at `../../decisions/ADR-{NNN}.md`
 
 ## Deferred Features
 

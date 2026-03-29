@@ -1,6 +1,6 @@
 # GitHub Copilot Guidelines for TeachSpark
 
-> **Note**: This document serves as comprehensive team guidelines. For repository-specific instructions that Copilot automatically uses, see [`.github/copilot-instructions.md`](.github/copilot-instructions.md).
+> **Note**: This document serves as comprehensive team guidelines. For repository-specific instructions that Copilot automatically uses, see [`.github/copilot-instructions.md`](../../.github/copilot-instructions.md).
 
 ## Project Overview
 

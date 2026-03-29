@@ -40,4 +40,5 @@ When generating HTML/Razor views:
 
 ## Documentation
 - Use XML comments for public methods and classes
- - Any markdown documentation should be in the Docs folder
+- Any markdown documentation should be in the .documentation folder
+- TeachSpark.Web implementation and operations guides belong in .documentation/teachspark-web/

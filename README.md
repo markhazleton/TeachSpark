@@ -173,7 +173,9 @@ TeachSpark uses a modern webpack-based build system that provides:
 - 🔗 **Content Hashing** for cache invalidation
 - 📊 **Bundle Analysis** for performance monitoring
 
-For detailed build system documentation, see [BUILD_SYSTEM_DOCUMENTATION.md](TeachSpark.Web/BUILD_SYSTEM_DOCUMENTATION.md).
+For detailed build system documentation, see [.documentation/teachspark-web/build-system-documentation.md](.documentation/teachspark-web/build-system-documentation.md).
+
+Project documentation that should not live beside code is organized under [.documentation/guide.md](.documentation/guide.md).
 
 ## 🤝 Contributing
 

@@ -42,7 +42,7 @@ Successfully modernized the npm/webpack build process for the .NET 10 MVC applic
 
 ### Browser Compatibility
 
-- **✅ Browserslist configuration** - Target modern browsers with IE11 fallback
+- **✅ Browserslist configuration** - Target modern browsers and explicitly exclude IE11
 - **✅ CSS autoprefixer** - Automatic vendor prefixes
 - **✅ JavaScript polyfills** - Core-js for modern JS features
 

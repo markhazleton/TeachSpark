@@ -13,7 +13,9 @@ src/
 ├── scss/
 │   └── site.scss          # Main SCSS file (imports Bootstrap + custom styles)
 └── js/
-    └── site.js            # Main JavaScript file (imports Bootstrap JS + custom code)
+    ├── admin.js           # Admin-area behaviors
+    ├── site.js            # Main application JavaScript
+    └── validation.js      # jQuery validation bootstrap
 ```
 
 ## Output Structure
@@ -24,8 +26,8 @@ wwwroot/
 │   ├── site.css           # Compiled CSS (includes Bootstrap + custom styles)
 │   └── site.css.map       # Source map (development builds only)
 ├── js/
-│   ├── site.js            # Compiled JavaScript (includes Bootstrap + custom code)
-│   └── site.js.LICENSE.txt # License information
+│   ├── site.js            # Main compiled application JavaScript
+│   └── validation.js      # Compiled validation JavaScript
 └── fonts/
     ├── bootstrap-icons.woff
     └── bootstrap-icons.woff2
@@ -35,10 +37,10 @@ wwwroot/
 
 - `npm run build` - Production build (minified, no source maps)
 - `npm run build:dev` - Development build (source maps included)
+- `npm run build:analyze` - Production build with bundle analysis
 - `npm run watch` - Development build with file watching
 - `npm run dev` - Start webpack dev server with hot reload
 - `npm run clean` - Remove all generated files
-- `npm run analyze` - Build with bundle analysis
 
 ## Integration with .NET Build
 
@@ -134,7 +136,7 @@ npm run clean
 ### Adding JavaScript
 
 - Add new `.js` files to `src/js/`
-- Import them in `src/js/site.js`
+- Register them in the webpack entry configuration when they need their own output bundle
 
 ### Adding NPM Packages
 

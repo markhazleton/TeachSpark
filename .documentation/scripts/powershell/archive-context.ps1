@@ -20,7 +20,7 @@ $archiveBase = Join-Path $repoRoot '.archive'
 $today       = (Get-Date).ToString('yyyy-MM-dd')
 $archiveDir  = ".archive/$today"
 $timestamp   = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
-$guidePath   = '.documentation/Guide.md'
+$guidePath   = '.documentation/guide.md'
 $changelogPath = 'CHANGELOG.md'
 
 # Helper: list .md files under a dir, relative to repo root, never crossing .archive
@@ -147,7 +147,7 @@ else {
     Write-Output "==============="
     Write-Output "Repository:    $repoRoot"
     Write-Output "Archive dir:   $archiveDir (exists: $archiveExists)"
-    Write-Output "Guide.md:      $guidePath (exists: $guideExists)"
+    Write-Output "guide.md:      $guidePath (exists: $guideExists)"
     Write-Output "CHANGELOG.md:  $changelogPath (exists: $changelogExists)"
     Write-Output ""
     Write-Output "Candidates:"
