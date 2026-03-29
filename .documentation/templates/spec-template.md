@@ -95,6 +95,13 @@
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
+## Constitution Alignment *(mandatory)*
+
+- **Testing Impact**: Describe how new or changed behavior will be verified with automated tests.
+- **Frontend Impact**: If the feature changes UI, describe the Razor, Bootstrap 5, and webpack implications.
+- **Data Impact**: If the feature changes persistence, identify the EF Core entities, DbContext, and migrations affected.
+- **Authorization Impact**: If the feature affects admin, account, or API surfaces, state the required authorization boundary explicitly.
+
 ### Key Entities *(include if feature involves data)*
 
 - **[Entity 1]**: [What it represents, key attributes without implementation]

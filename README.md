@@ -86,14 +86,14 @@ TeachSpark is built with a modern, scalable architecture:
 ### Frontend
 
 - **Build System**: Webpack 5 with modern optimization
-- **Styling**: Bootstrap 5 + Custom SCSS
+- **Styling**: Bootstrap 5 through the repository's webpack-managed SCSS pipeline
 - **JavaScript**: ES6+ with Babel compilation
 - **Quality Tools**: ESLint, Prettier, Stylelint
 - **Asset Management**: Automated bundling and optimization
 
 ### Development Tools
 
-- **Git Hooks**: Husky for pre-commit quality checks
+- **Git Hooks**: Husky for pre-commit automation
 - **Code Quality**: Automated linting and formatting
 - **Bundle Analysis**: Webpack Bundle Analyzer
 - **Hot Reloading**: Development server with live updates
@@ -160,7 +160,7 @@ This project maintains high code quality standards with automated tooling:
 - **ESLint**: JavaScript linting with modern ES6+ rules
 - **Prettier**: Consistent code formatting
 - **Stylelint**: SCSS/CSS linting and best practices
-- **Pre-commit hooks**: Automatic quality checks before commits
+- **Pre-commit hooks**: Repository-defined pre-commit automation
 - **Husky + lint-staged**: Only lint changed files for faster commits
 
 ### Build System
@@ -195,7 +195,7 @@ We welcome contributions from the community! Please see our [Contributing Guidel
 - Write clear, descriptive commit messages
 - Add tests for new functionality
 - Update documentation for significant changes
-- All commits must pass quality checks (enforced by pre-commit hooks)
+- All commits should run the repository's defined quality checks before review
 
 ## 📋 Issues and Support
 

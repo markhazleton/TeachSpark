@@ -31,7 +31,10 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Tests are defined for all new or changed behavior, with unit, integration, or contract coverage chosen to match the change.
+- UI changes remain within TeachSpark's Razor, Bootstrap 5, and webpack asset pipeline.
+- Data persistence changes use EF Core, ApplicationDbContext, entities, and migrations by default; any raw SQL deviation is justified explicitly.
+- Admin, account, and API changes declare explicit authorization boundaries where protection is required.
 
 ## Project Structure
 
