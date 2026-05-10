@@ -6,7 +6,18 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+**Live Site**: [teach.makeboldspark.com](https://teach.makeboldspark.com)
+
 > **LLM-Powered Educational Website** - A modern, interactive learning platform that harnesses the power of Large Language Models to create personalized educational experiences.
+
+## About
+
+TeachSpark is a live demonstration of an AI-powered educational platform built with .NET 10 MVC. It showcases how Large Language Models can be integrated into a modern web application to deliver personalized, adaptive learning experiences.
+
+**Live Site**: [teach.makeboldspark.com](https://teach.makeboldspark.com)
+
+> Built by [Mark Hazleton](https://markhazleton.com) — Technical Solutions Architect
+> Part of the [MakeBoldSpark](https://makeboldspark.com) portfolio of technical demonstrations.
 
 ## 🌟 Overview
 
@@ -223,6 +234,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **[⭐ Star this repository](https://github.com/MarkHazleton/TeachSpark/stargazers)** if you find it helpful!
 
-Made with ❤️ by [Mark Hazleton](https://github.com/MarkHazleton)
+[TeachSpark](https://teach.makeboldspark.com) — built by [Mark Hazleton](https://markhazleton.com) · [MakeBoldSpark](https://makeboldspark.com)
 
 </div>
