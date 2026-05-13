@@ -3,341 +3,254 @@
     ViewData["Title"] = "Create New Worksheet";
 }
 
-<div class="container">
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
-        style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
-        <div class="d-flex justify-content-center align-items-center h-100">
-            <div class="card shadow-lg" style="min-width: 300px;">
-                <div class="card-body text-center p-4">
-                    <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <h5 class="mb-2">Generating Your Worksheet</h5>
-                    <p class="text-muted mb-3">AI is creating your personalized content...</p>
-                    <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                            style="width: 0%" id="progressBar"></div>
-                    </div>
-                    <small class="text-muted" id="loadingStatus">Analyzing your content...</small>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none"
+    style="background-color:rgba(15,23,42,0.6);z-index:9999;backdrop-filter:blur(4px);">
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="card border-0 shadow-lg text-center" style="min-width:320px;border-radius:1rem;">
+            <div class="card-body p-5">
+                <div class="spinner-border text-primary mb-3" style="width:3rem;height:3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
+                <h5 class="fw-bold mb-1">Generating Your Worksheet</h5>
+                <p class="text-muted small mb-3">AI is crafting your personalized content...</p>
+                <div class="progress mb-2" style="height:6px;border-radius:3px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                        role="progressbar" style="width:0%" id="progressBar"></div>
+                </div>
+                <small class="text-muted" id="loadingStatus">Analyzing your content...</small>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <!-- Header -->
-            <div class="mb-4">
-                <h1 class="h2">Create New Worksheet</h1>
-                <p class="text-muted">Use AI to generate engaging, standards-aligned educational content.</p>
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+
+        <!-- Page Header -->
+        <div class="ts-page-header">
+            <div>
+                <h1 class="page-title"><i class="bi bi-magic me-2 text-primary"></i>Create Worksheet</h1>
+                <p class="page-subtitle">Configure your worksheet below and let AI do the heavy lifting.</p>
+            </div>
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+        </div>
+
+        <form asp-action="Create" method="post" id="worksheetForm">
+            <!-- Source Text -->
+            <div class="card border-0 mb-4">
+                <div class="card-header">
+                    <i class="bi bi-file-text me-2 text-primary"></i>Source Text
+                </div>
+                <div class="card-body p-4">
+                    <label asp-for="SourceText" class="form-label">
+                        Paste your reading passage <span class="text-danger">*</span>
+                    </label>
+                    <textarea asp-for="SourceText" class="form-control" rows="7"
+                        placeholder="Paste your reading passage, story excerpt, or educational text here..."></textarea>
+                    <span asp-validation-for="SourceText" class="text-danger small"></span>
+                    <div class="form-text mt-2">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Longer passages work best for reading comprehension; shorter texts are ideal for vocabulary exercises.
+                    </div>
+                </div>
             </div>
 
-            <!-- Form -->
-            <form asp-action="Create" method="post" id="worksheetForm">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-white border-bottom">
-                        <h5 class="mb-0"><i class="bi bi-gear-fill me-2"></i>Worksheet Configuration</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <!-- Source Text -->
-                        <div class="mb-4">
-                            <label asp-for="SourceText" class="form-label fw-bold">
-                                Source Text <span class="text-danger">*</span>
-                                <small class="text-muted fw-normal">(Paste the text you want to base the worksheet
-                                    on)</small>
+            <!-- Configuration -->
+            <div class="card border-0 mb-4">
+                <div class="card-header">
+                    <i class="bi bi-sliders me-2 text-primary"></i>Worksheet Configuration
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="TemplateId" class="form-label">
+                                Template <span class="text-danger">*</span>
                             </label>
-                            <textarea asp-for="SourceText" class="form-control" rows="6"
-                                placeholder="Paste your reading passage, story excerpt, or text content here..."></textarea>
-                            <span asp-validation-for="SourceText" class="text-danger"></span>
-                            <div class="form-text">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Tip: Longer passages work better for reading comprehension, while shorter texts are
-                                ideal for vocabulary exercises.
+                            <select asp-for="TemplateId" asp-items="Model.TemplateOptions" class="form-select" id="templateSelect">
+                                <option value="">Select a template...</option>
+                            </select>
+                            <span asp-validation-for="TemplateId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="DifficultyLevel" class="form-label">Difficulty Level</label>
+                            <select asp-for="DifficultyLevel" asp-items="Model.DifficultyLevelOptions" class="form-select"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CommonCoreStandardId" class="form-label">Common Core Standard</label>
+                            <select asp-for="CommonCoreStandardId" asp-items="Model.CommonCoreStandardOptions" class="form-select">
+                                <option value="">No specific standard (optional)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="BloomLevelId" class="form-label">Bloom's Taxonomy Level</label>
+                            <select asp-for="BloomLevelId" asp-items="Model.BloomLevelOptions" class="form-select"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Model -->
+            <div class="card border-0 mb-4">
+                <div class="card-header">
+                    <i class="bi bi-robot me-2 text-primary"></i>AI Model
+                </div>
+                <div class="card-body p-4">
+                    <label asp-for="PreferredLlmModel" class="form-label">
+                        Select Model <span class="text-danger">*</span>
+                    </label>
+                    <select asp-for="PreferredLlmModel" asp-items="Model.AvailableModelOptions"
+                        class="form-select mb-2" id="modelSelect" required>
+                        <option value="">Select an AI model...</option>
+                    </select>
+                    <span asp-validation-for="PreferredLlmModel" class="text-danger small"></span>
+
+                    <div id="modelInfo" class="alert alert-info d-none mt-2 py-2">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                            <div>
+                                <div class="fw-bold small" id="modelName"></div>
+                                <div class="text-muted" style="font-size:0.82rem;" id="modelDescription"></div>
+                                <div class="text-muted" style="font-size:0.78rem;" id="modelCapabilities"></div>
+                            </div>
+                            <div class="d-flex gap-1 flex-shrink-0">
+                                <span class="badge bg-primary" id="qualityBadge"></span>
+                                <span class="badge bg-success" id="speedBadge"></span>
                             </div>
                         </div>
-                        <div class="row">
-                            <!-- Template Selection (now required) -->
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="TemplateId" class="form-label fw-bold">
-                                    Template <span class="text-danger">*</span>
-                                </label>
-                                <select asp-for="TemplateId" asp-items="Model.TemplateOptions" class="form-select"
-                                    id="templateSelect">
-                                    <option value="">Select a template...</option>
-                                </select>
-                                <span asp-validation-for="TemplateId" class="text-danger"></span>
-                                <div class="form-text">
-                                    <i class="bi bi-info-circle me-1"></i>
-                                    Choose a template to define the worksheet type and structure.
-                                </div>
-                            </div>
+                    </div>
+                </div>
+            </div>
 
-                            <!-- Difficulty Level -->
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="DifficultyLevel" class="form-label fw-bold">Difficulty Level</label>
-                                <select asp-for="DifficultyLevel" asp-items="Model.DifficultyLevelOptions"
-                                    class="form-select">
-                                </select>
-                                <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
-                            </div>
+            <!-- Generation Options -->
+            <div class="card border-0 mb-4">
+                <div class="card-header">
+                    <i class="bi bi-gear me-2 text-primary"></i>Generation Options
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="MaxQuestions" class="form-label">Number of Questions</label>
+                            <input asp-for="MaxQuestions" type="number" class="form-control"
+                                min="1" max="@ViewBag.MaxQuestions" id="maxQuestions">
+                            <span asp-validation-for="MaxQuestions" class="text-danger small"></span>
                         </div>
-
-                        <!-- Standards Alignment -->
-                        <div class="mb-4">
-                            <h6 class="fw-bold">Standards Alignment</h6>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="CommonCoreStandardId" class="form-label">Common Core
-                                        Standard</label>
-                                    <select asp-for="CommonCoreStandardId" asp-items="Model.CommonCoreStandardOptions"
-                                        class="form-select">
-                                        <option value="">No specific standard (optional)</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="BloomLevelId" class="form-label">Bloom's Taxonomy Focus</label>
-                                    <select asp-for="BloomLevelId" asp-items="Model.BloomLevelOptions"
-                                        class="form-select">
-                                    </select>
-                                </div>
-                            </div>
-                        </div> <!-- AI Model Selection -->
-                        <div class="mb-4">
-                            <h6 class="fw-bold">AI Model Selection</h6>
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
-                                    <label asp-for="PreferredLlmModel" class="form-label">
-                                        AI Model <span class="text-danger">*</span>
-                                    </label>
-                                    <select asp-for="PreferredLlmModel" asp-items="Model.AvailableModelOptions"
-                                        class="form-select" id="modelSelect" required>
-                                        <option value="">Select an AI model...</option>
-                                    </select>
-                                    <span asp-validation-for="PreferredLlmModel" class="text-danger"></span>
-                                    <div class="form-text">
-                                        <i class="bi bi-info-circle me-1"></i>
-                                        Choose the AI model to generate your worksheet content.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Model Information Panel -->
-                            <div id="modelInfo" class="alert alert-light d-none">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h6 class="mb-1" id="modelName"></h6>
-                                        <p class="mb-1" id="modelDescription"></p>
-                                        <small class="text-muted" id="modelCapabilities"></small>
-                                    </div>
-                                    <div class="col-md-4 text-end">
-                                        <div class="badge bg-primary mb-1" id="qualityBadge"></div>
-                                        <div class="badge bg-success mb-1" id="speedBadge"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <!-- Generation Options -->
-                        <div class="mb-4">
-                            <h6 class="fw-bold">Generation Options</h6>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label asp-for="MaxQuestions" class="form-label">Number of Questions</label>
-                                    <input asp-for="MaxQuestions" type="number" class="form-control" min="1"
-                                        max="@ViewBag.MaxQuestions" id="maxQuestions">
-                                    <span asp-validation-for="MaxQuestions" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Advanced Options -->
-                        <div class="mb-4">
-                            <h6 class="fw-bold">Advanced Options</h6>
-                            <div class="mb-3">
-                                <label asp-for="CustomInstructions" class="form-label">Custom Instructions
-                                    (Optional)</label>
-                                <textarea asp-for="CustomInstructions" class="form-control" rows="2"
-                                    placeholder="Any specific requirements or preferences for the worksheet..."></textarea>
-                                <div class="form-text">
-                                    Example: "Focus on character analysis", "Include vocabulary from the text", "Add
-                                    visual elements"
-                                </div>
-                            </div>
-
-                            <div class="form-check mb-3">
+                        <div class="col-md-6 d-flex align-items-center mt-md-4">
+                            <div class="form-check">
                                 <input asp-for="IncludeAnswerKey" class="form-check-input" type="checkbox" checked>
-                                <label asp-for="IncludeAnswerKey" class="form-check-label">
+                                <label asp-for="IncludeAnswerKey" class="form-check-label fw-semibold">
                                     Include Answer Key
                                 </label>
                             </div>
                         </div>
-
-                        <!-- Success Notice -->
-                        <div class="alert alert-success">
-                            <i class="bi bi-check-circle-fill me-2"></i>
-                            <strong>Ready to Generate!</strong> The AI-powered worksheet generator is fully operational
-                            and ready to create educational content.
-                        </div>
-                    </div>
-
-                    <div class="card-footer bg-white border-top">
-                        <div class="d-flex justify-content-between">
-                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-2"></i>Back
-                            </a>
-                            <button type="submit" class="btn btn-primary" id="generateBtn">
-                                <span id="normalContent">
-                                    <i class="bi bi-magic me-2"></i>Generate Worksheet
-                                </span>
-                                <span id="loadingContent" class="d-none">
-                                    <span class="spinner-border spinner-border-sm me-2" role="status"
-                                        aria-hidden="true"></span>
-                                    Generating...
-                                </span>
-                            </button>
+                        <div class="col-12">
+                            <label asp-for="CustomInstructions" class="form-label">
+                                Custom Instructions <span class="text-muted fw-normal">(optional)</span>
+                            </label>
+                            <textarea asp-for="CustomInstructions" class="form-control" rows="2"
+                                placeholder="Any specific requirements or preferences..."></textarea>
+                            <div class="form-text">
+                                Example: "Focus on character analysis", "Include vocabulary from the text", "Target 6th grade reading level"
+                            </div>
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="d-flex justify-content-between align-items-center gap-3">
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Cancel
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg px-5" id="generateBtn">
+                    <span id="normalContent">
+                        <i class="bi bi-magic me-2"></i>Generate Worksheet
+                    </span>
+                    <span id="loadingContent" class="d-none">
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Generating...
+                    </span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script>
         let availableModels = [];
 
-        // Load available models on page load
-        document.addEventListener('DOMContentLoaded', function ()
-        {
+        document.addEventListener('DOMContentLoaded', function () {
             loadAvailableModels();
-            selectFirstModel();
-        });        // Dynamic form updates based on template selection
-        document.getElementById('templateSelect').addEventListener('change', function ()
-        {
-            const selectedTemplate = this.value;
+        });
 
-            // Update suggestions based on template
-            updateFormSuggestionsForTemplate(selectedTemplate);
-
-            // Update model recommendations
+        document.getElementById('templateSelect').addEventListener('change', function () {
+            updateFormSuggestionsForTemplate(this.value);
             updateModelRecommendations();
         });
 
-        // Model selection change handler
-        document.getElementById('modelSelect').addEventListener('change', function ()
-        {
-            const selectedModel = this.value;
-            updateModelInfo(selectedModel);
-        }); function loadAvailableModels()
-        {
+        document.getElementById('modelSelect').addEventListener('change', function () {
+            updateModelInfo(this.value);
+        });
+
+        function loadAvailableModels() {
             fetch('/api/worksheet-generator/models')
-                .then(response => response.json())
-                .then(data =>
-                {
-                    if (data.success)
-                    {
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
                         availableModels = data.data;
-                        console.log('Loaded models:', availableModels);
                         selectFirstModel();
                     }
                 })
-                .catch(error =>
-                {
-                    console.error('Error loading models:', error);
-                });
+                .catch(err => console.error('Error loading models:', err));
         }
 
-        function selectFirstModel()
-        {
-            const modelSelect = document.getElementById('modelSelect');
-            if (modelSelect.options.length > 1)
-            {
-                // Select the first actual model (skip the placeholder option)
-                modelSelect.selectedIndex = 1;
-                const selectedModel = modelSelect.value;
-                updateModelInfo(selectedModel);
+        function selectFirstModel() {
+            const sel = document.getElementById('modelSelect');
+            if (sel.options.length > 1) {
+                sel.selectedIndex = 1;
+                updateModelInfo(sel.value);
             }
-        } function updateModelRecommendations()
-        {
+        }
+
+        function updateModelRecommendations() {
             const templateId = document.getElementById('templateSelect').value;
             if (!templateId) return;
-
-            // Get template information for context but don't change auto-select behavior
             fetch(`/WorksheetGenerator/GetTemplate?id=${encodeURIComponent(templateId)}`)
-                .then(response => response.json())
-                .then(templateData =>
-                {
-                    if (templateData.success && templateData.data)
-                    {
-                        console.log('Template selected:', templateData.data.templateType);
-                    }
-                })
-                .catch(error =>
-                {
-                    console.error('Error getting template information:', error);
-                });
-        } function updateModelInfo(modelId)
-        {
-            const modelInfoPanel = document.getElementById('modelInfo');
+                .then(r => r.json())
+                .then(data => { if (data.success) console.log('Template:', data.data?.templateType); })
+                .catch(err => console.error(err));
+        }
 
-            if (!modelId)
-            {
-                modelInfoPanel.classList.add('d-none');
-                return;
-            }
-
+        function updateModelInfo(modelId) {
+            const panel = document.getElementById('modelInfo');
+            if (!modelId) { panel.classList.add('d-none'); return; }
             const model = availableModels.find(m => m.id === modelId);
             if (!model) return;
 
-            // Update model information display
             document.getElementById('modelName').textContent = model.name;
-            document.getElementById('modelDescription').textContent = model.description || 'No description available';
-
-            // Update capabilities based on available properties
-            const capabilities = [];
-            if (model.supportsStructuredOutput) capabilities.push('Structured Output');
-            if (model.isRecommendedForEducation) capabilities.push('Education Optimized');
-            if (model.strengths && model.strengths.length > 0) capabilities.push(...model.strengths);
-
-            document.getElementById('modelCapabilities').textContent =
-                `Features: ${capabilities.length > 0 ? capabilities.join(', ') : 'General purpose'}`;
-
-            // Update badges with calculated values
-            const qualityScore = model.isRecommendedForEducation ? '9' : '7'; // Simplified scoring
-            const speedScore = model.maxTokens > 100000 ? '8' : '6'; // Simplified scoring
-
-            document.getElementById('qualityBadge').textContent = `Quality: ${qualityScore}/10`;
-            document.getElementById('speedBadge').textContent = `Speed: ${speedScore}/10`;
-
-            modelInfoPanel.classList.remove('d-none');
-        } function updateFormSuggestionsForTemplate(templateId)
-        {
-            if (!templateId) return;
-
-            const customInstructions = document.getElementById('CustomInstructions');
-            // Get template information to determine worksheet type
-            fetch(`/WorksheetGenerator/GetTemplate?id=${encodeURIComponent(templateId)}`)
-                .then(response => response.json())
-                .then(data =>
-                {
-                    if (data.success && data.data)
-                    {
-                        const worksheetType = data.data.templateType;
-                        updateFormSuggestions(worksheetType);
-                    }
-                })
-                .catch(error =>
-                {
-                    console.error('Error getting template information:', error);
-                });
+            document.getElementById('modelDescription').textContent = model.description || '';
+            const caps = [];
+            if (model.supportsStructuredOutput) caps.push('Structured Output');
+            if (model.isRecommendedForEducation) caps.push('Education Optimized');
+            if (model.strengths?.length) caps.push(...model.strengths);
+            document.getElementById('modelCapabilities').textContent = caps.length ? `✓ ${caps.join(' · ')}` : '';
+            document.getElementById('qualityBadge').textContent = `Quality ${model.isRecommendedForEducation ? '9' : '7'}/10`;
+            document.getElementById('speedBadge').textContent = `Speed ${model.maxTokens > 100000 ? '8' : '6'}/10`;
+            panel.classList.remove('d-none');
         }
 
-        function updateFormSuggestions(worksheetType)
-        {
-            const customInstructions = document.getElementById('CustomInstructions');
+        function updateFormSuggestionsForTemplate(templateId) {
+            if (!templateId) return;
+            fetch(`/WorksheetGenerator/GetTemplate?id=${encodeURIComponent(templateId)}`)
+                .then(r => r.json())
+                .then(data => { if (data.success && data.data) updateFormSuggestions(data.data.templateType); })
+                .catch(err => console.error(err));
+        }
 
+        function updateFormSuggestions(worksheetType) {
             const suggestions = {
                 'reading-comprehension': 'Focus on main idea, supporting details, and inference questions',
                 'vocabulary': 'Include context clues, synonyms, antonyms, and word usage exercises',
@@ -345,66 +258,25 @@
                 'creative-writing': 'Provide engaging prompts with scaffolding and assessment rubrics',
                 'literary-analysis': 'Focus on theme, character development, and literary devices'
             };
-
-            if (suggestions[worksheetType])
-            {
-                customInstructions.placeholder = suggestions[worksheetType];
-            }
+            const el = document.getElementById('CustomInstructions');
+            if (suggestions[worksheetType]) el.placeholder = suggestions[worksheetType];
         }
 
-        // Handle form submission with loading overlay
-        document.getElementById('worksheetForm').addEventListener('submit', function (e)
-        {
-            showLoadingOverlay();
-
-            // Disable the submit button to prevent double submission
-            const generateBtn = document.getElementById('generateBtn');
-            generateBtn.disabled = true;
-
-            // Switch button content to loading state
+        document.getElementById('worksheetForm').addEventListener('submit', function () {
+            document.getElementById('loadingOverlay').classList.remove('d-none');
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
             document.getElementById('normalContent').classList.add('d-none');
             document.getElementById('loadingContent').classList.remove('d-none');
-        });
 
-        function showLoadingOverlay()
-        {
-            const overlay = document.getElementById('loadingOverlay');
-            const progressBar = document.getElementById('progressBar');
-            const statusText = document.getElementById('loadingStatus');
-
-            overlay.classList.remove('d-none');
-
-            // Simulate progress for better UX
             let progress = 0;
-            const messages = [
-                'Analyzing your content...',
-                'Processing with AI...',
-                'Generating questions...',
-                'Formatting worksheet...',
-                'Almost ready...'
-            ];
-
-            const interval = setInterval(() =>
-            {
-                progress += Math.random() * 15 + 5; // Random progress between 5-20%
-
-                if (progress >= 95)
-                {
-                    progress = 95; // Don't reach 100% until actual completion
-                }
-
-                progressBar.style.width = progress + '%';
-
-                // Update status message based on progress
-                const messageIndex = Math.min(Math.floor(progress / 20), messages.length - 1);
-                statusText.textContent = messages[messageIndex];
-
-                if (progress >= 95)
-                {
-                    clearInterval(interval);
-                    statusText.textContent = 'Finalizing your worksheet...';
-                }
+            const messages = ['Analyzing your content...', 'Processing with AI...', 'Generating questions...', 'Formatting worksheet...', 'Almost ready...'];
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress >= 95) { progress = 95; clearInterval(interval); }
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('loadingStatus').textContent = messages[Math.min(Math.floor(progress / 20), messages.length - 1)];
             }, 800);
-        }
+        });
     </script>
 }

@@ -1,312 +1,92 @@
-﻿@{
+@{
     ViewData["Title"] = "AI-Powered Worksheet Generator for Teachers | TeachSpark";
-    ViewData["Description"] = "Empower your teaching with TeachSpark's collaborative AI platform. Customize prompts, share templates, and lead AI integration in education. Create engaging, standards-aligned worksheets that match your teaching style.";
-    ViewData["Keywords"] = "AI worksheet generator, collaborative teaching platform, customizable templates, educational AI, teacher collaboration, prompt engineering, Common Core Standards, teaching tools, classroom innovation, educational technology";
+    ViewData["Description"] = "Empower your teaching with TeachSpark's collaborative AI platform. Create engaging, standards-aligned worksheets that match your teaching style in seconds.";
 }
 
 @if (User.Identity?.IsAuthenticated == true)
 {
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-person-check me-2"></i>
-        <strong>Welcome back, @User.Identity.Name!</strong>
-        Ready to create amazing worksheets?
-        <a asp-controller="WorksheetGenerator" asp-action="Create" class="alert-link ms-2">Start Generating</a>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="alert alert-success d-flex align-items-center gap-2 alert-dismissible fade show" role="alert">
+        <i class="bi bi-person-check-fill fs-5"></i>
+        <div>
+            <strong>Welcome back, @User.Identity.Name!</strong>
+            <a asp-controller="WorksheetGenerator" asp-action="Create" class="alert-link ms-2">Create a worksheet →</a>
+        </div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-<!-- Hero Section -->
-<section class="hero-section bg-primary text-white py-5 mb-5 rounded-3">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-3">
-                    Empower Your Teaching with Collaborative AI
-                </h1>
-                <p class="lead mb-4">
-                    Take control of AI-powered worksheet generation with TeachSpark's customizable platform. Refine prompts, 
-                    shape templates, and collaborate with educators worldwide to perfect AI integration in education.
-                </p>
-                <div class="d-flex flex-wrap gap-3 mb-4">
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <a asp-controller="WorksheetGenerator" asp-action="Create" class="btn btn-light btn-lg">
-                            <i class="bi bi-lightning-charge me-2"></i>Create Worksheet Now
-                        </a>
-                        <a asp-controller="Account" asp-action="Dashboard" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-speedometer2 me-2"></i>My Dashboard
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-light btn-lg">
-                            <i class="bi bi-person-plus me-2"></i>Get Started Free
-                        </a>
-                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
-                        </a>
-                    }
-                </div>
-                <div class="d-flex flex-wrap gap-2">
-                    <span class="badge bg-light text-primary fs-6">🎯 Customizable Templates</span>
-                    <span class="badge bg-light text-primary fs-6">📚 Common Core Aligned</span>
-                    <span class="badge bg-light text-primary fs-6">🤝 Teacher Collaboration</span>
-                </div>
+<!-- ── Hero ──────────────────────────────────────────────── -->
+<section class="ts-hero fade-in">
+    <div class="row align-items-center">
+        <div class="col-lg-7 mb-4 mb-lg-0">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <span class="ts-badge-pill"><i class="bi bi-mortarboard-fill"></i> Common Core Aligned</span>
+                <span class="ts-badge-pill"><i class="bi bi-people-fill"></i> Teacher Community</span>
+                <span class="ts-badge-pill"><i class="bi bi-lightning-charge-fill"></i> AI-Powered</span>
             </div>
-            <div class="col-lg-6 text-center">
-                <i class="bi bi-lightbulb display-1 opacity-75"></i>
-                <div class="row g-2 mt-3">
-                    <div class="col-6">
-                        <div class="card bg-light text-dark">
-                            <div class="card-body p-3">
-                                <h6 class="card-title mb-1">Reading Comprehension</h6>
-                                <small class="text-muted">Deep thinking questions</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card bg-light text-dark">
-                            <div class="card-body p-3">
-                                <h6 class="card-title mb-1">Vocabulary Builder</h6>
-                                <small class="text-muted">Context-based exercises</small>
-                            </div>
+            <h1 class="display-5 fw-bold text-white mb-3">
+                Create Professional Worksheets in Seconds
+            </h1>
+            <p class="lead text-white mb-4">
+                TeachSpark puts you in control of AI — customize templates, align to standards, and collaborate
+                with educators worldwide to build worksheets that truly fit your classroom.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="WorksheetGenerator" asp-action="Create" class="btn btn-lg" style="background:#fff;color:#4f46e5;font-weight:700;border-radius:0.6rem;">
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Create Worksheet
+                    </a>
+                    <a asp-controller="Account" asp-action="Dashboard" class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.35);border-radius:0.6rem;">
+                        <i class="bi bi-grid-1x2 me-2"></i>My Dashboard
+                    </a>
+                }
+                else
+                {
+                    <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-lg" style="background:#fff;color:#4f46e5;font-weight:700;border-radius:0.6rem;">
+                        <i class="bi bi-person-plus-fill me-2"></i>Get Started Free
+                    </a>
+                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.35);border-radius:0.6rem;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="card border-0 h-100" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);">
+                        <div class="card-body p-3 text-white">
+                            <i class="bi bi-book-fill fs-4 mb-2 d-block" style="color:#fcd34d;"></i>
+                            <div class="fw-bold small">Reading Comprehension</div>
+                            <div class="opacity-75" style="font-size:0.78rem;">Deep thinking questions</div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Problem & Solution Section -->
-<section class="problem-solution py-5 mb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <div class="card border-danger h-100">
-                    <div class="card-header bg-danger text-white">
-                        <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Teaching Challenges</h4>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled">
-                            <li class="mb-3"><i class="bi bi-clock text-danger me-2"></i><strong>Time Crunch:</strong> Hours spent creating worksheets instead of teaching</li>
-                            <li class="mb-3"><i class="bi bi-arrow-repeat text-danger me-2"></i><strong>Generic Content:</strong> One-size-fits-all worksheets that don't match your style</li>
-                            <li class="mb-3"><i class="bi bi-graph-down text-danger me-2"></i><strong>Engagement Issues:</strong> Students lose interest in cookie-cutter activities</li>
-                            <li class="mb-3"><i class="bi bi-puzzle text-danger me-2"></i><strong>AI Confusion:</strong> Overwhelming tech tools without educator input</li>
-                            <li class="mb-0"><i class="bi bi-layers text-danger me-2"></i><strong>Isolation:</strong> Limited collaboration on best practices with AI</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-4">
-                <div class="card border-success h-100">
-                    <div class="card-header bg-success text-white">
-                        <h4 class="mb-0"><i class="bi bi-lightbulb me-2"></i>TeachSpark Solutions</h4>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled">
-                            <li class="mb-3"><i class="bi bi-lightning-charge text-success me-2"></i><strong>Teacher Control:</strong> Customize AI prompts and templates to match your style</li>
-                            <li class="mb-3"><i class="bi bi-people-fill text-success me-2"></i><strong>Collaborative Platform:</strong> Share and refine best practices with educators</li>
-                            <li class="mb-3"><i class="bi bi-gear text-success me-2"></i><strong>Template Mastery:</strong> Edit system and user prompts for perfect results</li>
-                            <li class="mb-3"><i class="bi bi-mortarboard text-success me-2"></i><strong>Educational AI Leadership:</strong> Help shape the future of AI in classrooms</li>
-                            <li class="mb-0"><i class="bi bi-arrow-up-circle text-success me-2"></i><strong>Continuous Improvement:</strong> Platform evolves with teacher feedback</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- How It Works Section -->
-<section class="how-it-works bg-light py-5 mb-5 rounded-3">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">How TeachSpark Works</h2>
-            <p class="lead text-muted">From text to worksheet in three simple steps</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-4 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <span class="h4 mb-0">1</span>
-                </div>
-                <h4>Paste Your Text</h4>
-                <p class="text-muted">Copy any reading passage, story, or article into TeachSpark. It can be from your textbook, online article, or any educational content.</p>
-                <i class="bi bi-file-text display-4 text-primary opacity-50"></i>
-            </div>
-            <div class="col-lg-4 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <span class="h4 mb-0">2</span>
-                </div>
-                <h4>Customize & Collaborate</h4>
-                <p class="text-muted">Refine worksheet templates by editing system prompts and user prompts. Share improvements with the teaching community to perfect AI integration in education.</p>
-                <i class="bi bi-gear display-4 text-primary opacity-50"></i>
-            </div>
-            <div class="col-lg-4 text-center">
-                <div class="step-number bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <span class="h4 mb-0">3</span>
-                </div>
-                <h4>Generate & Share</h4>
-                <p class="text-muted">Create professional worksheets instantly, then share your template improvements to help build the future of educational AI technology.</p>
-                <i class="bi bi-share display-4 text-success opacity-50"></i>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Worksheet Types Section -->
-<section class="worksheet-types py-5 mb-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Worksheet Types You'll Love</h2>
-            <p class="lead text-muted">Every worksheet type designed with pedagogy in mind</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-6 col-md-6">
-                <div class="card h-100 border-primary">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-book text-primary fs-1 me-3"></i>
-                            <div>
-                                <h5 class="card-title mb-1">Reading Comprehension</h5>
-                                <small class="text-muted">Deep thinking questions</small>
-                            </div>
+                <div class="col-6">
+                    <div class="card border-0 h-100" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);">
+                        <div class="card-body p-3 text-white">
+                            <i class="bi bi-alphabet-uppercase fs-4 mb-2 d-block" style="color:#6ee7b7;"></i>
+                            <div class="fw-bold small">Vocabulary Builder</div>
+                            <div class="opacity-75" style="font-size:0.78rem;">Context-based exercises</div>
                         </div>
-                        <ul class="list-unstyled">
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Literal comprehension questions</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Inferential thinking prompts</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Critical analysis activities</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Text evidence exercises</li>
-                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="card h-100 border-success">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-alphabet text-success fs-1 me-3"></i>
-                            <div>
-                                <h5 class="card-title mb-1">Vocabulary Building</h5>
-                                <small class="text-muted">Context-based learning</small>
-                            </div>
+                <div class="col-6">
+                    <div class="card border-0 h-100" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);">
+                        <div class="card-body p-3 text-white">
+                            <i class="bi bi-pencil-square fs-4 mb-2 d-block" style="color:#93c5fd;"></i>
+                            <div class="fw-bold small">Grammar Focus</div>
+                            <div class="opacity-75" style="font-size:0.78rem;">Rules in context</div>
                         </div>
-                        <ul class="list-unstyled">
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Context clue activities</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Synonym and antonym exercises</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Word definition matching</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Sentence creation prompts</li>
-                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="card h-100 border-info">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-pencil-square text-info fs-1 me-3"></i>
-                            <div>
-                                <h5 class="card-title mb-1">Grammar Focus</h5>
-                                <small class="text-muted">Rules in context</small>
-                            </div>
-                        </div>
-                        <ul class="list-unstyled">
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Parts of speech identification</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Sentence structure analysis</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Punctuation practice</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Usage correction exercises</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="card h-100 border-warning">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-lightbulb text-warning fs-1 me-3"></i>
-                            <div>
-                                <h5 class="card-title mb-1">Creative Writing</h5>
-                                <small class="text-muted">Inspire creativity</small>
-                            </div>
-                        </div>
-                        <ul class="list-unstyled">
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Text-inspired prompts</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Character development activities</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Story extension exercises</li>
-                            <li><i class="bi bi-check-circle text-success me-2"></i>Perspective writing tasks</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Template Customization & Collaboration Section -->
-<section class="template-customization py-5 mb-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">You're in Control: Customize Everything</h2>
-            <p class="lead text-muted">Shape AI to work exactly how you teach</p>
-        </div>
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="card h-100 border-primary">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-code-slash text-primary fs-1 me-3"></i>
-                            <div>
-                                <h5 class="card-title mb-1">Template Mastery</h5>
-                                <small class="text-muted">Your classroom, your rules</small>
-                            </div>
-                        </div>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i><strong>Edit System Prompts:</strong> Control how AI interprets your content</li>
-                            <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i><strong>Refine User Prompts:</strong> Shape the questions and activities generated</li>
-                            <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i><strong>Save Your Style:</strong> Create templates that match your teaching approach</li>
-                            <li class="mb-0"><i class="bi bi-check-circle text-success me-2"></i><strong>Iterate & Improve:</strong> Test, refine, and perfect your AI interactions</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card h-100 border-success">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <i class="bi bi-people-fill text-success fs-1 me-3"></i>
-                            <div>
-                                <h5 class="card-title mb-1">Collaborative Community</h5>
-                                <small class="text-muted">Better together</small>
-                            </div>
-                        </div>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i><strong>Share Best Practices:</strong> Contribute successful prompt strategies</li>
-                            <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i><strong>Learn from Peers:</strong> Discover how other teachers optimize AI</li>
-                            <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i><strong>Shape the Future:</strong> Help improve AI integration in education</li>
-                            <li class="mb-0"><i class="bi bi-check-circle text-success me-2"></i><strong>Build Community:</strong> Connect with innovative educators worldwide</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card bg-light border-0">
-                    <div class="card-body p-4 text-center">
-                        <h5 class="mb-3"><i class="bi bi-mortarboard me-2"></i>Our Mission: Advancing Educational AI</h5>
-                        <p class="lead mb-3">TeachSpark isn't just about creating worksheets—it's about pioneering the thoughtful integration of AI in education.</p>
-                        <p class="text-muted">
-                            We believe teachers should lead AI adoption in classrooms, not follow it. By giving you control over every aspect of the AI interaction, 
-                            we're creating a collaborative space where educators can experiment, refine, and share the most effective ways to use LLM technologies. 
-                            Your expertise combined with AI's capabilities is reshaping how we teach and learn.
-                        </p>
-                        <div class="mt-3">
-                            <a href="https://github.com/markhazleton/TeachSpark/issues" target="_blank" class="btn btn-primary me-2">
-                                <i class="bi bi-github me-2"></i>Join the Conversation
-                            </a>
-                            <a asp-controller="Home" asp-action="Plan" class="btn btn-outline-primary">
-                                <i class="bi bi-info-circle me-2"></i>Learn About Our Technology
-                            </a>
+                <div class="col-6">
+                    <div class="card border-0 h-100" style="background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);">
+                        <div class="card-body p-3 text-white">
+                            <i class="bi bi-lightbulb-fill fs-4 mb-2 d-block" style="color:#fca5a5;"></i>
+                            <div class="fw-bold small">Creative Writing</div>
+                            <div class="opacity-75" style="font-size:0.78rem;">Inspire creativity</div>
                         </div>
                     </div>
                 </div>
@@ -315,169 +95,297 @@
     </div>
 </section>
 
-<!-- Benefits Section -->
-<section class="benefits bg-primary text-white py-5 mb-5 rounded-3">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Why Teachers Love TeachSpark's Approach</h2>
-            <p class="lead opacity-75">Empowerment through collaboration and control</p>
+<!-- ── Problem / Solution ─────────────────────────────── -->
+<section class="mb-5">
+    <div class="text-center mb-4">
+        <div class="ts-section-label">Why TeachSpark?</div>
+        <h2 class="ts-section-title fs-2">From Frustration to Flow</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card ts-challenge-card h-100 border-0">
+                <div class="card-header-ts">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Teaching Challenges
+                </div>
+                <div class="card-body p-4">
+                    <ul class="ts-check-list">
+                        <li><i class="bi bi-x-circle-fill text-danger"></i><span><strong>Time Crunch</strong> — Hours spent creating materials instead of teaching</span></li>
+                        <li><i class="bi bi-x-circle-fill text-danger"></i><span><strong>Generic Content</strong> — One-size-fits-all worksheets that don't match your class</span></li>
+                        <li><i class="bi bi-x-circle-fill text-danger"></i><span><strong>Engagement Issues</strong> — Students tune out cookie-cutter activities</span></li>
+                        <li><i class="bi bi-x-circle-fill text-danger"></i><span><strong>AI Confusion</strong> — Overwhelming tools without educator voice</span></li>
+                        <li><i class="bi bi-x-circle-fill text-danger"></i><span><strong>Isolation</strong> — No easy way to share best practices on AI use</span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6 text-center">
-                <i class="bi bi-gear-fill display-4 mb-3"></i>
-                <h4>Complete Control</h4>
-                <p>Customize every aspect of AI generation to match your teaching style</p>
-            </div>
-            <div class="col-lg-3 col-md-6 text-center">
-                <i class="bi bi-people display-4 mb-3"></i>
-                <h4>Teacher Community</h4>
-                <p>Collaborate with educators to improve AI integration in education</p>
-            </div>
-            <div class="col-lg-3 col-md-6 text-center">
-                <i class="bi bi-lightbulb display-4 mb-3"></i>
-                <h4>Innovation Leadership</h4>
-                <p>Help shape the future of educational technology from the classroom</p>
-            </div>
-            <div class="col-lg-3 col-md-6 text-center">
-                <i class="bi bi-arrow-up-circle display-4 mb-3"></i>
-                <h4>Continuous Growth</h4>
-                <p>Platform evolves with your feedback and collaborative improvements</p>
+        <div class="col-lg-6">
+            <div class="card ts-solution-card h-100 border-0">
+                <div class="card-header-ts">
+                    <i class="bi bi-lightbulb-fill me-2"></i>TeachSpark Solutions
+                </div>
+                <div class="card-body p-4">
+                    <ul class="ts-check-list">
+                        <li><i class="bi bi-check-circle-fill"></i><span><strong>Teacher Control</strong> — Customize AI prompts and templates to your style</span></li>
+                        <li><i class="bi bi-check-circle-fill"></i><span><strong>Collaborative Platform</strong> — Share and refine best practices with educators</span></li>
+                        <li><i class="bi bi-check-circle-fill"></i><span><strong>Template Mastery</strong> — Edit system and user prompts for perfect results</span></li>
+                        <li><i class="bi bi-check-circle-fill"></i><span><strong>Educational AI Leadership</strong> — Shape AI's role in your classroom</span></li>
+                        <li><i class="bi bi-check-circle-fill"></i><span><strong>Continuous Improvement</strong> — Platform evolves with teacher feedback</span></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Getting Started Section -->
-<section class="getting-started py-5 mb-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h2 class="display-5 fw-bold mb-3">Join the Educational AI Revolution</h2>
-                <p class="lead mb-4">
-                    Become part of a community of educators leading the integration of AI in classrooms. 
-                    Take control of your teaching tools and help shape the future of educational technology.
-                </p>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Customize AI prompts to match your style</li>
-                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Collaborate with innovative educators</li>
-                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Shape the future of AI in education</li>
-                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Professional results that reflect your teaching</li>
-                </ul>
+<!-- ── How It Works ───────────────────────────────────── -->
+<section class="mb-5 p-4 p-lg-5 rounded-3" style="background:#f1f5f9;">
+    <div class="text-center mb-5">
+        <div class="ts-section-label">Simple Process</div>
+        <h2 class="ts-section-title fs-2">How TeachSpark Works</h2>
+        <p class="text-muted mt-2">From passage to polished worksheet in three easy steps</p>
+    </div>
+    <div class="row g-4 text-center">
+        <div class="col-lg-4">
+            <div class="ts-step-circle bg-primary text-white mx-auto">1</div>
+            <h5 class="fw-bold mb-2">Paste Your Text</h5>
+            <p class="text-muted small">Copy any reading passage, story, or article into TeachSpark — from your textbook, online article, or any educational source.</p>
+            <i class="bi bi-file-text fs-2 text-primary opacity-50"></i>
+        </div>
+        <div class="col-lg-4">
+            <div class="ts-step-circle bg-primary text-white mx-auto">2</div>
+            <h5 class="fw-bold mb-2">Customize &amp; Configure</h5>
+            <p class="text-muted small">Choose your template, set the difficulty level, align to Common Core standards, and add any custom instructions.</p>
+            <i class="bi bi-sliders fs-2 text-primary opacity-50"></i>
+        </div>
+        <div class="col-lg-4">
+            <div class="ts-step-circle" style="background:#059669;color:#fff;margin:0 auto 1rem;">3</div>
+            <h5 class="fw-bold mb-2">Generate &amp; Use</h5>
+            <p class="text-muted small">Your professional worksheet is ready in seconds. Download, print, or share — with a full answer key included.</p>
+            <i class="bi bi-download fs-2 text-success opacity-50"></i>
+        </div>
+    </div>
+</section>
+
+<!-- ── Worksheet Types ────────────────────────────────── -->
+<section class="mb-5">
+    <div class="text-center mb-4">
+        <div class="ts-section-label">Worksheet Types</div>
+        <h2 class="ts-section-title fs-2">Every Format Designed for Learning</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-6 col-md-6">
+            <div class="card h-100 card-hover border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="feature-icon-wrap" style="background:rgba(79,70,229,0.1);color:#4f46e5;">
+                            <i class="bi bi-book-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Reading Comprehension</h5>
+                            <small class="text-muted">Deep thinking questions</small>
+                        </div>
+                    </div>
+                    <ul class="ts-check-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Literal comprehension questions</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Inferential thinking prompts</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Critical analysis activities</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Text evidence exercises</li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-lg-4 text-center">
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="card h-100 card-hover border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="feature-icon-wrap" style="background:rgba(5,150,105,0.1);color:#059669;">
+                            <i class="bi bi-alphabet-uppercase"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Vocabulary Building</h5>
+                            <small class="text-muted">Context-based learning</small>
+                        </div>
+                    </div>
+                    <ul class="ts-check-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Context clue activities</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Synonym and antonym exercises</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Word definition matching</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Sentence creation prompts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="card h-100 card-hover border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="feature-icon-wrap" style="background:rgba(8,145,178,0.1);color:#0891b2;">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Grammar Focus</h5>
+                            <small class="text-muted">Rules taught in context</small>
+                        </div>
+                    </div>
+                    <ul class="ts-check-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Parts of speech identification</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Sentence structure analysis</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Punctuation practice</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Usage correction exercises</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="card h-100 card-hover border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="feature-icon-wrap" style="background:rgba(245,158,11,0.1);color:#d97706;">
+                            <i class="bi bi-lightbulb-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">Creative Writing</h5>
+                            <small class="text-muted">Inspire student creativity</small>
+                        </div>
+                    </div>
+                    <ul class="ts-check-list">
+                        <li><i class="bi bi-check-circle-fill"></i>Text-inspired writing prompts</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Character development activities</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Story extension exercises</li>
+                        <li><i class="bi bi-check-circle-fill"></i>Perspective writing tasks</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Benefits Banner ────────────────────────────────── -->
+<section class="ts-cta-banner mb-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold mb-2">Why Teachers Love TeachSpark</h2>
+        <p class="opacity-75 mb-0">Empowerment through collaboration, customization, and control</p>
+    </div>
+    <div class="row g-4 text-center">
+        <div class="col-lg-3 col-6">
+            <div class="benefit-icon mx-auto"><i class="bi bi-gear-fill"></i></div>
+            <h6 class="fw-bold text-white mb-1">Complete Control</h6>
+            <p class="small opacity-75 mb-0">Customize every aspect of AI generation to match your style</p>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="benefit-icon mx-auto"><i class="bi bi-people-fill"></i></div>
+            <h6 class="fw-bold text-white mb-1">Teacher Community</h6>
+            <p class="small opacity-75 mb-0">Collaborate to improve AI integration in education</p>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="benefit-icon mx-auto"><i class="bi bi-award-fill"></i></div>
+            <h6 class="fw-bold text-white mb-1">Standards-Aligned</h6>
+            <p class="small opacity-75 mb-0">Every worksheet tied to Common Core ELA standards</p>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="benefit-icon mx-auto"><i class="bi bi-arrow-up-circle-fill"></i></div>
+            <h6 class="fw-bold text-white mb-1">Always Improving</h6>
+            <p class="small opacity-75 mb-0">Platform evolves with your feedback and ideas</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── Getting Started CTA ────────────────────────────── -->
+<section class="mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-8 mb-4 mb-lg-0">
+            <div class="ts-section-label">Ready?</div>
+            <h2 class="ts-section-title fs-2 mt-1">Join the Educational AI Revolution</h2>
+            <p class="text-muted mt-2 mb-3">
+                Become part of a community of educators leading the integration of AI in classrooms.
+                Take control of your teaching tools and help shape the future of educational technology.
+            </p>
+            <ul class="ts-check-list">
+                <li><i class="bi bi-check-circle-fill"></i>Customize AI prompts to match your teaching style</li>
+                <li><i class="bi bi-check-circle-fill"></i>Collaborate with innovative educators worldwide</li>
+                <li><i class="bi bi-check-circle-fill"></i>Professional results that reflect your classroom</li>
+                <li><i class="bi bi-check-circle-fill"></i>Free to get started — no credit card needed</li>
+            </ul>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 p-4 text-center" style="background:linear-gradient(135deg,#f1f5f9,#e2e8f0);">
                 @if (User.Identity?.IsAuthenticated != true)
                 {
                     <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg mb-3 w-100">
-                        <i class="bi bi-person-plus me-2"></i>Create Free Account
+                        <i class="bi bi-person-plus-fill me-2"></i>Create Free Account
                     </a>
-                    <p class="small text-muted">Already have an account? <a asp-area="Identity" asp-page="/Account/Login">Sign in here</a></p>
+                    <p class="small text-muted mb-0">Already have an account? <a asp-area="Identity" asp-page="/Account/Login">Sign in</a></p>
                 }
                 else
                 {
                     <a asp-controller="WorksheetGenerator" asp-action="Create" class="btn btn-primary btn-lg mb-3 w-100">
-                        <i class="bi bi-lightning-charge me-2"></i>Create Your First Worksheet
+                        <i class="bi bi-lightning-charge-fill me-2"></i>Create a Worksheet
                     </a>
-                    <p class="small text-muted">Ready to revolutionize your teaching?</p>
+                    <p class="small text-muted mb-0">Ready to revolutionize your teaching?</p>
                 }
             </div>
         </div>
     </div>
 </section>
 
-<!-- FAQ Section -->
-<section class="faq bg-light py-5 mb-5 rounded-3">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Frequently Asked Questions</h2>
-        </div>
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="accordion" id="faqAccordion">
-                    <div class="accordion-item">
-                        <h3 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                How quickly can I create a worksheet?
-                            </button>
-                        </h3>
-                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Most worksheets are generated in under 60 seconds. Simply paste your text, select your preferences, and TeachSpark's AI creates a professional, standards-aligned worksheet instantly.
-                            </div>
+<!-- ── FAQ ────────────────────────────────────────────── -->
+<section class="mb-2 p-4 p-lg-5 rounded-3" style="background:#f1f5f9;">
+    <div class="text-center mb-4">
+        <div class="ts-section-label">FAQs</div>
+        <h2 class="ts-section-title fs-2">Common Questions</h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How quickly can I create a worksheet?
+                        </button>
+                    </h3>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Most worksheets are generated in under 60 seconds. Paste your text, select your preferences, and TeachSpark's AI creates a professional, standards-aligned worksheet instantly.
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <h3 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                Are the worksheets really aligned with Common Core Standards?
-                            </button>
-                        </h3>
-                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Yes! TeachSpark automatically analyzes your content and ensures all generated questions and activities align with appropriate Common Core ELA standards for 8th grade. Each worksheet includes standard references.
-                            </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Can I customize the worksheet templates?
+                        </button>
+                    </h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Absolutely. TeachSpark lets you edit both the system and user prompts used by the AI, giving you fine-grained control over the output — from question types to tone and difficulty.
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <h3 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                Can I customize the difficulty level?
-                            </button>
-                        </h3>
-                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Absolutely! TeachSpark offers simplified, standard, and advanced difficulty levels, automatically adjusting question complexity and vocabulary to match your students' needs.
-                            </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Are worksheets aligned to Common Core Standards?
+                        </button>
+                    </h3>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes. You can optionally select a specific Common Core standard when creating a worksheet, and TeachSpark will align the content and questions accordingly.
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <h3 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                                Can I customize how the AI generates worksheets?
-                            </button>
-                        </h3>
-                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Absolutely! TeachSpark gives you complete control over AI generation. You can edit both system prompts (how AI interprets content) and user prompts (what questions get asked) in worksheet templates. This ensures the AI works exactly how you teach, not the other way around.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h3 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                                What if I have suggestions or need help?
-                            </button>
-                        </h3>
-                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                We'd love to hear from you! Share your ideas, feedback, or feature requests on our <a href="https://github.com/markhazleton/TeachSpark/issues" target="_blank" class="text-decoration-none">GitHub Issues page</a>. Your input helps make TeachSpark better for all teachers and advances AI integration in education.
-                            </div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            Is TeachSpark free to use?
+                        </button>
+                    </h3>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Creating an account is free. Worksheet generation uses AI models with small per-request costs that are tracked transparently so you're always in control of usage.
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<!-- Footer CTA -->
-<section class="footer-cta bg-gradient text-white py-5 rounded-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <div class="container text-center">
-        <h2 class="display-5 fw-bold mb-3">Your Students Deserve Better Worksheets</h2>
-        <p class="lead mb-4">Stop spending weekends creating worksheets. Start creating memories.</p>
-        @if (User.Identity?.IsAuthenticated != true)
-        {
-            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-light btn-lg me-3">
-                <i class="bi bi-rocket-takeoff me-2"></i>Start Creating Today
-            </a>
-        }
-        else
-        {
-            <a asp-controller="WorksheetGenerator" asp-action="Create" class="btn btn-light btn-lg me-3">
-                <i class="bi bi-lightning-charge me-2"></i>Generate Worksheet Now
-            </a>
-        }
-        <a asp-controller="Home" asp-action="Plan" class="btn btn-outline-light btn-lg">
-            <i class="bi bi-info-circle me-2"></i>Learn More
-        </a>
     </div>
 </section>

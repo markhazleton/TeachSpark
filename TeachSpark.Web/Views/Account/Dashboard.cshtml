@@ -4,105 +4,125 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Welcome back, @Model.FirstName @Model.LastName</h1>
-            <div class="text-muted">
-                <small>Last login: @(Model.LastLoginAt?.ToString("MMM dd, yyyy HH:mm") ?? "First time")</small>
-            </div>
-        </div>
+<div class="ts-page-header">
+    <div>
+        <h1 class="page-title">
+            <i class="bi bi-grid-1x2 me-2 text-primary"></i>Welcome back, @Model.FirstName!
+        </h1>
+        <p class="page-subtitle">
+            @if (Model.LastLoginAt.HasValue)
+            {
+                <span><i class="bi bi-clock me-1"></i>Last login: @Model.LastLoginAt.Value.ToString("MMM dd, yyyy 'at' h:mm tt")</span>
+            }
+            else
+            {
+                <span>First time here — welcome to TeachSpark!</span>
+            }
+        </p>
     </div>
+    <a asp-controller="WorksheetGenerator" asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-lightning-charge-fill me-2"></i>New Worksheet
+    </a>
 </div>
 
-<div class="row">
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                        <i class="bi bi-person-circle display-4 text-primary"></i>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h5 class="card-title mb-1">Profile</h5>
-                        <p class="card-text text-muted mb-2">Manage your account information</p>
-                        <a asp-action="Profile" class="btn btn-outline-primary btn-sm">View Profile</a>
-                    </div>
+<!-- Quick Action Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card card-hover h-100 border-0">
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+                <div class="feature-icon-wrap mb-0" style="background:rgba(79,70,229,0.1);color:#4f46e5;flex-shrink:0;">
+                    <i class="bi bi-person-circle fs-3"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1">My Profile</h5>
+                    <p class="text-muted small mb-2">Manage your account information</p>
+                    <a asp-action="Profile" class="btn btn-outline-primary btn-sm">View Profile</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                        <i class="bi bi-gear display-4 text-success"></i>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h5 class="card-title mb-1">Settings</h5>
-                        <p class="card-text text-muted mb-2">Update your preferences</p>
-                        <a asp-area="Identity" asp-page="/Account/Manage/Index"
-                            class="btn btn-outline-success btn-sm">Manage Account</a>
-                    </div>
+    <div class="col-md-4">
+        <div class="card card-hover h-100 border-0">
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+                <div class="feature-icon-wrap mb-0" style="background:rgba(5,150,105,0.1);color:#059669;flex-shrink:0;">
+                    <i class="bi bi-gear-fill fs-3"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1">Account Settings</h5>
+                    <p class="text-muted small mb-2">Update your preferences and details</p>
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-outline-success btn-sm">Settings</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="col-md-4 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                        <i class="bi bi-shield-check display-4 text-warning"></i>
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h5 class="card-title mb-1">Security</h5>
-                        <p class="card-text text-muted mb-2">Change password and security settings</p>
-                        <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword"
-                            class="btn btn-outline-warning btn-sm">Security</a>
-                    </div>
+    <div class="col-md-4">
+        <div class="card card-hover h-100 border-0">
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+                <div class="feature-icon-wrap mb-0" style="background:rgba(245,158,11,0.12);color:#d97706;flex-shrink:0;">
+                    <i class="bi bi-shield-check-fill fs-3"></i>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Account Information</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="text-muted">Personal Details</h6>
-                        <p><strong>Name:</strong> @Model.FirstName @Model.LastName</p>
-                        <p><strong>Email:</strong> @Model.Email</p>
-                        <p><strong>Username:</strong> @Model.UserName</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="text-muted">Account Status</h6>
-                        <p><strong>Status:</strong>
-                            <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger")">
-                                @(Model.IsActive ? "Active" : "Inactive")
-                            </span>
-                        </p>
-                        <p><strong>Email Confirmed:</strong>
-                            <span class="badge @(Model.EmailConfirmed ? "bg-success" : "bg-warning")">
-                                @(Model.EmailConfirmed ? "Verified" : "Pending")
-                            </span>
-                        </p>
-                        <p><strong>Member Since:</strong> @Model.CreatedAt.ToString("MMMM dd, yyyy")</p>
-                    </div>
+                <div>
+                    <h5 class="fw-bold mb-1">Security</h5>
+                    <p class="text-muted small mb-2">Change password and security settings</p>
+                    <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="btn btn-outline-warning btn-sm">Security</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-                           
-                           
+<!-- Account Summary -->
+<div class="card border-0">
+    <div class="card-header d-flex align-items-center gap-2">
+        <i class="bi bi-person-lines-fill text-primary"></i>
+        <span>Account Information</span>
+    </div>
+    <div class="card-body p-4">
+        <div class="row">
+            <div class="col-md-6 mb-4 mb-md-0">
+                <h6 class="fw-bold text-muted text-uppercase" style="font-size:0.75rem;letter-spacing:0.07em;">Personal Details</h6>
+                <div class="mt-3">
+                    <div class="d-flex align-items-center mb-2 gap-2">
+                        <i class="bi bi-person text-muted"></i>
+                        <span class="text-muted small">Name:</span>
+                        <span class="fw-semibold">@Model.FirstName @Model.LastName</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-2 gap-2">
+                        <i class="bi bi-envelope text-muted"></i>
+                        <span class="text-muted small">Email:</span>
+                        <span class="fw-semibold">@Model.Email</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-at text-muted"></i>
+                        <span class="text-muted small">Username:</span>
+                        <span class="fw-semibold">@Model.UserName</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6 class="fw-bold text-muted text-uppercase" style="font-size:0.75rem;letter-spacing:0.07em;">Account Status</h6>
+                <div class="mt-3">
+                    <div class="d-flex align-items-center mb-2 gap-2">
+                        <i class="bi bi-circle-fill text-muted" style="font-size:0.5rem;"></i>
+                        <span class="text-muted small">Status:</span>
+                        <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger")">
+                            @(Model.IsActive ? "Active" : "Inactive")
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center mb-2 gap-2">
+                        <i class="bi bi-circle-fill text-muted" style="font-size:0.5rem;"></i>
+                        <span class="text-muted small">Email:</span>
+                        <span class="badge @(Model.EmailConfirmed ? "bg-success" : "bg-warning text-dark")">
+                            @(Model.EmailConfirmed ? "Verified" : "Pending Verification")
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar-check text-muted"></i>
+                        <span class="text-muted small">Member since:</span>
+                        <span class="fw-semibold">@Model.CreatedAt.ToString("MMMM dd, yyyy")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

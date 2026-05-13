@@ -1,43 +1,49 @@
-﻿@inject TeachSpark.Web.IAssetsService AssetsService
+@inject TeachSpark.Web.IAssetsService AssetsService
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />    <title>@ViewData["Title"] - TeachSpark.Web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="@(ViewData["Description"] ?? "TeachSpark — AI-powered worksheet generator for teachers")" />
+    <title>@ViewData["Title"] - TeachSpark</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="@AssetsService.GetAssetPath("vendors.css")" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link rel="stylesheet" href="@AssetsService.GetAssetPath("site.css")" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light border-bottom">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TeachSpark.Web</a>
+        <nav class="navbar navbar-ts navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand-ts" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-icon"><i class="bi bi-lightning-charge-fill"></i></span>
+                    Teach<span class="brand-spark">Spark</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Plan">Plan</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door"></i> Home
+                            </a>
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="WorksheetGenerator" asp-action="Index">
-                                    <i class="bi bi-magic me-1"></i>Generate
+                                    <i class="bi bi-magic"></i> Generator
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account"
-                                    asp-action="Dashboard">Dashboard</a>
+                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Dashboard">
+                                    <i class="bi bi-grid-1x2"></i> Dashboard
+                                </a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarAdminDropdown" role="button"
@@ -45,47 +51,47 @@
                                     <i class="bi bi-gear"></i> Admin
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarAdminDropdown">
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard"
-                                            asp-action="Index">
-                                            <i class="bi bi-speedometer2"></i> Dashboard
-                                        </a></li>
                                     <li>
-                                        <hr class="dropdown-divider">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header">Content</h6></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="BloomLevels" asp-action="Index">
+                                            <i class="bi bi-diagram-3 me-2"></i>Bloom Levels
+                                        </a>
                                     </li>
                                     <li>
-                                        <h6 class="dropdown-header">Content Management</h6>
-                                    </li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="BloomLevels"
-                                            asp-action="Index">
-                                            <i class="bi bi-diagram-3"></i> Bloom Levels
-                                        </a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="CommonCoreStandards"
-                                            asp-action="Index">
-                                            <i class="bi bi-bookmarks"></i> Standards
-                                        </a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="WorksheetTemplates"
-                                            asp-action="Index">
-                                            <i class="bi bi-file-earmark-text"></i> Templates
-                                        </a></li>
-                                    <li>
-                                        <hr class="dropdown-divider">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="CommonCoreStandards" asp-action="Index">
+                                            <i class="bi bi-bookmarks me-2"></i>Standards
+                                        </a>
                                     </li>
                                     <li>
-                                        <h6 class="dropdown-header">Data Management</h6>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="WorksheetTemplates" asp-action="Index">
+                                            <i class="bi bi-file-earmark-text me-2"></i>Templates
+                                        </a>
                                     </li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="Worksheets"
-                                            asp-action="Index">
-                                            <i class="bi bi-files"></i> Worksheets
-                                        </a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="ApiKeys"
-                                            asp-action="Index">
-                                            <i class="bi bi-key"></i> API Keys
-                                        </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header">Data</h6></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Worksheets" asp-action="Index">
+                                            <i class="bi bi-files me-2"></i>Worksheets
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="ApiKeys" asp-action="Index">
+                                            <i class="bi bi-key me-2"></i>API Keys
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Plan">
+                                <i class="bi bi-map"></i> Roadmap
+                            </a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -100,24 +106,31 @@
         </div>
     </main>
 
-    <footer class="bg-light py-3 border-top">
+    <footer class="ts-footer">
         <div class="container">
-            <span class="text-muted">&copy; 2025 - TeachSpark.Web - <a asp-area="" asp-controller="Home"
-                    asp-action="Privacy" class="text-muted">Privacy</a></span>
-            <p class="text-muted mb-0 mt-1 small">
-                <a href="https://teach.makeboldspark.com">TeachSpark</a> &mdash;
-                built by <a href="https://markhazleton.com">Mark Hazleton</a> &middot;
-                <a href="https://makeboldspark.com">MakeBoldSpark</a>
-            </p>
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <div class="footer-brand mb-1">Teach<span class="spark">Spark</span></div>
+                    <p class="footer-meta mb-0">
+                        Built by <a href="https://markhazleton.com" target="_blank">Mark Hazleton</a> &middot;
+                        <a href="https://makeboldspark.com" target="_blank">MakeBoldSpark</a>
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="me-3">Privacy</a>
+                    <a href="https://github.com/markhazleton/TeachSpark" target="_blank" class="me-3">
+                        <i class="bi bi-github me-1"></i>GitHub
+                    </a>
+                    <a asp-area="" asp-controller="Home" asp-action="Plan">Roadmap</a>
+                </div>
+            </div>
+            <hr class="footer-divider" />
+            <p class="footer-meta mb-0">&copy; @DateTime.Now.Year TeachSpark &mdash; AI-powered worksheet generation for educators.</p>
         </div>
     </footer>
-    <script src="@AssetsService.GetAssetPath("runtime.js")"></script>
-    <script src="@AssetsService.GetAssetPath("jquery.js")"></script>
-    <script src="@AssetsService.GetAssetPath("bootstrap.js")"></script>
-    <script src="@AssetsService.GetAssetPath("vendors.js")"></script>
+
     <script src="@AssetsService.GetAssetPath("site.js")"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>
-

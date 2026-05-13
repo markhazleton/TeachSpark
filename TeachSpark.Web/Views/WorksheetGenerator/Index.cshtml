@@ -2,159 +2,135 @@
     ViewData["Title"] = "Worksheet Generator";
 }
 
-<div class="container-fluid">
-    <!-- Hero Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="bg-primary text-white p-4 rounded">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h1 class="h2 mb-2">AI-Powered Worksheet Generator</h1>
-                        <p class="mb-0">Create engaging, standards-aligned worksheets in minutes using advanced AI technology.</p>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <i class="bi bi-robot display-1"></i>
-                    </div>
+<!-- Page Header -->
+<div class="ts-page-header">
+    <div>
+        <h1 class="page-title"><i class="bi bi-magic me-2 text-primary"></i>Worksheet Generator</h1>
+        <p class="page-subtitle">Create engaging, standards-aligned worksheets using AI — in seconds.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle-fill me-2"></i>New Worksheet
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>@TempData["Info"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- Quick Start Cards -->
+<div class="ts-section-label mb-3">Choose a Worksheet Type</div>
+<div class="row g-4 mb-5">
+    <div class="col-lg-4 col-md-6">
+        <div class="card h-100 card-hover border-0 text-center">
+            <div class="card-body p-4">
+                <div class="feature-icon-wrap mx-auto" style="background:rgba(79,70,229,0.1);color:#4f46e5;">
+                    <i class="bi bi-book-fill fs-4"></i>
                 </div>
+                <h5 class="fw-bold mb-2">Reading Comprehension</h5>
+                <p class="text-muted small mb-3">Generate comprehension questions based on any text passage with automatic difficulty adjustment.</p>
+                <a href="@Url.Action("Create", new { type = "reading-comprehension" })" class="btn btn-primary w-100">
+                    <i class="bi bi-plus-circle me-1"></i>Create Worksheet
+                </a>
             </div>
         </div>
     </div>
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    @if (TempData["Info"] != null)
-    {
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <i class="bi bi-info-circle-fill me-2"></i>@TempData["Info"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    <!-- Quick Start Cards -->
-    <div class="row g-4 mb-5">
-        <div class="col-lg-4 col-md-6">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center p-4">
-                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                        <i class="bi bi-book text-primary fs-2"></i>
-                    </div>
-                    <h5 class="card-title">Reading Comprehension</h5>
-                    <p class="card-text text-muted">Generate comprehension questions based on any text passage with automatic difficulty adjustment.</p>
-                    <a href="@Url.Action("Create", new { type = "reading-comprehension" })" class="btn btn-primary">Create Worksheet</a>
+    <div class="col-lg-4 col-md-6">
+        <div class="card h-100 card-hover border-0 text-center">
+            <div class="card-body p-4">
+                <div class="feature-icon-wrap mx-auto" style="background:rgba(5,150,105,0.1);color:#059669;">
+                    <i class="bi bi-chat-quote-fill fs-4"></i>
                 </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-4 col-md-6">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center p-4">
-                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                        <i class="bi bi-chat-quote text-success fs-2"></i>
-                    </div>
-                    <h5 class="card-title">Vocabulary Building</h5>
-                    <p class="card-text text-muted">Create vocabulary exercises with context clues, definitions, and usage examples.</p>
-                    <a href="@Url.Action("Create", new { type = "vocabulary" })" class="btn btn-success">Create Worksheet</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-4 col-md-6">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center p-4">
-                    <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                        <i class="bi bi-pencil-square text-info fs-2"></i>
-                    </div>
-                    <h5 class="card-title">Creative Writing</h5>
-                    <p class="card-text text-muted">Generate engaging writing prompts with scaffolding and rubrics for assessment.</p>
-                    <a href="@Url.Action("Create", new { type = "creative-writing" })" class="btn btn-info">Create Worksheet</a>
-                </div>
+                <h5 class="fw-bold mb-2">Vocabulary Building</h5>
+                <p class="text-muted small mb-3">Create vocabulary exercises with context clues, definitions, and usage examples from your text.</p>
+                <a href="@Url.Action("Create", new { type = "vocabulary" })" class="btn btn-success w-100">
+                    <i class="bi bi-plus-circle me-1"></i>Create Worksheet
+                </a>
             </div>
         </div>
     </div>
-
-    <!-- Features Overview -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h2 class="h3 mb-4">Platform Features</h2>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="d-flex">
-                        <div class="flex-shrink-0">
-                            <div class="bg-warning bg-opacity-10 rounded p-2">
-                                <i class="bi bi-award-fill text-warning"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6>Common Core Aligned</h6>
-                            <p class="text-muted mb-0">All worksheets automatically align with 8th-grade Common Core ELA standards.</p>
-                        </div>
-                    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="card h-100 card-hover border-0 text-center">
+            <div class="card-body p-4">
+                <div class="feature-icon-wrap mx-auto" style="background:rgba(8,145,178,0.1);color:#0891b2;">
+                    <i class="bi bi-pencil-square fs-4"></i>
                 </div>
-                <div class="col-md-6">
-                    <div class="d-flex">
-                        <div class="flex-shrink-0">
-                            <div class="bg-danger bg-opacity-10 rounded p-2">
-                                <i class="bi bi-ladder text-danger"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6>Bloom's Taxonomy Integration</h6>
-                            <p class="text-muted mb-0">Questions span all cognitive levels from remember to create.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex">
-                        <div class="flex-shrink-0">
-                            <div class="bg-success bg-opacity-10 rounded p-2">
-                                <i class="bi bi-universal-access text-success"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6>Accessibility Features</h6>
-                            <p class="text-muted mb-0">Built-in accommodations for diverse learning needs and abilities.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex">
-                        <div class="flex-shrink-0">
-                            <div class="bg-primary bg-opacity-10 rounded p-2">
-                                <i class="bi bi-download text-primary"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6>Multiple Export Formats</h6>
-                            <p class="text-muted mb-0">Download as PDF, Word document, or print-ready format.</p>
-                        </div>
-                    </div>
-                </div>
+                <h5 class="fw-bold mb-2">Creative Writing</h5>
+                <p class="text-muted small mb-3">Generate engaging writing prompts with scaffolding and rubrics for assessment.</p>
+                <a href="@Url.Action("Create", new { type = "creative-writing" })" class="btn btn-info w-100 text-white">
+                    <i class="bi bi-plus-circle me-1"></i>Create Worksheet
+                </a>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Quick Actions -->
-    <div class="row">
-        <div class="col-12">
-            <div class="bg-light p-4 rounded">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h4>Ready to Get Started?</h4>
-                        <p class="mb-0">Create your first AI-generated worksheet in just a few clicks.</p>
-                    </div>
-                    <div class="col-md-4 text-md-end">
-                        <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">
-                            <i class="bi bi-plus-circle me-2"></i>Create Worksheet
-                        </a>
-                    </div>
-                </div>
+<!-- Platform Features -->
+<div class="ts-section-label mb-3">Platform Features</div>
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div class="d-flex gap-3 align-items-start">
+            <div class="feature-icon-wrap mb-0 flex-shrink-0" style="background:rgba(245,158,11,0.1);color:#d97706;width:48px;height:48px;border-radius:12px;font-size:1.2rem;">
+                <i class="bi bi-award-fill"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">Common Core Aligned</h6>
+                <p class="text-muted small mb-0">All worksheets automatically align with Common Core ELA standards at your chosen grade level.</p>
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="d-flex gap-3 align-items-start">
+            <div class="feature-icon-wrap mb-0 flex-shrink-0" style="background:rgba(220,38,38,0.1);color:#dc2626;width:48px;height:48px;border-radius:12px;font-size:1.2rem;">
+                <i class="bi bi-diagram-3-fill"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">Bloom's Taxonomy Integration</h6>
+                <p class="text-muted small mb-0">Questions span all cognitive levels — from remember and understand through to create.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="d-flex gap-3 align-items-start">
+            <div class="feature-icon-wrap mb-0 flex-shrink-0" style="background:rgba(5,150,105,0.1);color:#059669;width:48px;height:48px;border-radius:12px;font-size:1.2rem;">
+                <i class="bi bi-universal-access-circle"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">Accessibility Features</h6>
+                <p class="text-muted small mb-0">Built-in accommodations for diverse learning needs and ability levels.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="d-flex gap-3 align-items-start">
+            <div class="feature-icon-wrap mb-0 flex-shrink-0" style="background:rgba(79,70,229,0.1);color:#4f46e5;width:48px;height:48px;border-radius:12px;font-size:1.2rem;">
+                <i class="bi bi-printer-fill"></i>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-1">Print-Ready Output</h6>
+                <p class="text-muted small mb-0">Download or print worksheets with included answer keys — ready to hand out immediately.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom CTA -->
+<div class="p-4 p-lg-5 rounded-3 d-flex flex-wrap align-items-center justify-content-between gap-3" style="background:linear-gradient(135deg,#f1f5f9,#e2e8f0);">
+    <div>
+        <h4 class="fw-bold mb-1">Ready to get started?</h4>
+        <p class="text-muted mb-0 small">Create your first AI-generated worksheet in just a few clicks.</p>
+    </div>
+    <a href="@Url.Action("Create")" class="btn btn-primary btn-lg">
+        <i class="bi bi-plus-circle-fill me-2"></i>Create Worksheet
+    </a>
 </div>
