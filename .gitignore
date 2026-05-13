@@ -410,3 +410,14 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Runtime database artifacts (do not commit)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Guard against cross-platform invalid Windows filenames containing ':'
+*:*
