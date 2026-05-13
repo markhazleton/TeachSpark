@@ -1,713 +1,352 @@
 @{
-    ViewData["Title"] = "TeachSpark Development Plan";
+    ViewData["Title"] = "Roadmap";
+    ViewData["Description"] = "TeachSpark development roadmap — shipped features, active work, and what's coming next.";
 }
 
-<!-- Hero Section -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="bg-success text-white p-5 rounded-3">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <h1 class="display-4 fw-bold mb-3">✅ TeachSpark: Live & Operational!</h1>
-                    <p class="lead mb-4">Successfully deployed LLM-powered educational platform with full worksheet
-                        generation,
-                        user authentication, admin management, and comprehensive logging systems</p>
-                    <div class="d-flex flex-wrap gap-2">
-                        <span class="badge bg-light text-success fs-6">✅ Live Production</span>
-                        <span class="badge bg-light text-success fs-6">✅ OpenAI Integration</span>
-                        <span class="badge bg-light text-success fs-6">✅ User Management</span>
-                        <span class="badge bg-light text-success fs-6">✅ Admin Dashboard</span>
-                        <span class="badge bg-warning text-dark fs-6">🔄 Educational Lab</span>
+<!-- Page Header -->
+<div class="ts-page-header">
+    <div class="ts-page-header-content">
+        <span class="ts-label mb-2">Development Roadmap</span>
+        <h1 class="ts-page-title">Where We Are &amp; Where We're Going</h1>
+        <p class="ts-page-subtitle">
+            TeachSpark is a live educational laboratory. Core features are shipped and running.
+            Development is driven by real teacher feedback, not a fixed release schedule.
+        </p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <span class="badge rounded-pill" style="background:var(--ts-success-light);color:var(--ts-success);font-size:.85rem;padding:.45em 1em;">
+                <i class="bi bi-check-circle me-1"></i> Core Platform Live
+            </span>
+            <span class="badge rounded-pill" style="background:var(--ts-amber-light);color:var(--ts-amber-dark);font-size:.85rem;padding:.45em 1em;">
+                <i class="bi bi-lightning-charge me-1"></i> .NET 10 &amp; AI-Powered
+            </span>
+            <span class="badge rounded-pill" style="background:rgba(99,102,241,.12);color:var(--ts-primary);font-size:.85rem;padding:.45em 1em;">
+                <i class="bi bi-flask me-1"></i> Educational Lab
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Status Summary -->
+<div class="row g-4 mb-5">
+    <div class="col-sm-6 col-lg-3">
+        <div class="ts-card text-center p-4">
+            <div class="ts-card-icon mx-auto mb-3" style="background:var(--ts-success-light);color:var(--ts-success);">
+                <i class="bi bi-check2-circle"></i>
+            </div>
+            <div class="fw-bold fs-4 mb-1" style="color:var(--ts-success);">6</div>
+            <div class="text-muted small">Features Shipped</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="ts-card text-center p-4">
+            <div class="ts-card-icon mx-auto mb-3" style="background:var(--ts-amber-light);color:var(--ts-amber-dark);">
+                <i class="bi bi-hammer"></i>
+            </div>
+            <div class="fw-bold fs-4 mb-1" style="color:var(--ts-amber-dark);">3</div>
+            <div class="text-muted small">In Development</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="ts-card text-center p-4">
+            <div class="ts-card-icon mx-auto mb-3">
+                <i class="bi bi-map"></i>
+            </div>
+            <div class="fw-bold fs-4 mb-1" style="color:var(--ts-primary);">4</div>
+            <div class="text-muted small">Planned Ahead</div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="ts-card text-center p-4">
+            <div class="ts-card-icon mx-auto mb-3" style="background:rgba(99,102,241,.1);color:var(--ts-primary);">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <div class="fw-bold fs-4 mb-1" style="color:var(--ts-primary);">&lt;60s</div>
+            <div class="text-muted small">Avg. Generation Time</div>
+        </div>
+    </div>
+</div>
+
+<!-- Shipped Section -->
+<div class="mb-5">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <span class="ts-status-dot" style="background:var(--ts-success);width:12px;height:12px;border-radius:50%;flex-shrink:0;"></span>
+        <h2 class="h4 mb-0 fw-bold">Shipped &amp; Live</h2>
+        <hr class="flex-grow-1 mb-0">
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="ts-card h-100">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="ts-card-icon flex-shrink-0" style="background:var(--ts-success-light);color:var(--ts-success);">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-semibold mb-1">AI Worksheet Generation</h5>
+                            <span class="badge" style="background:var(--ts-success-light);color:var(--ts-success);font-size:.75rem;">Live</span>
+                        </div>
                     </div>
+                    <p class="text-muted small mb-0">GPT-4o-mini integration via Microsoft.Extensions.AI. Real-time generation with cost tracking, token monitoring, and comprehensive error handling.</p>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <i class="bi bi-check-circle display-1"></i>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="ts-card h-100">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="ts-card-icon flex-shrink-0" style="background:var(--ts-success-light);color:var(--ts-success);">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-semibold mb-1">User Authentication</h5>
+                            <span class="badge" style="background:var(--ts-success-light);color:var(--ts-success);font-size:.75rem;">Live</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">Full ASP.NET Core Identity — registration, login, profile management, and secure session handling with 14-day sliding expiry.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="ts-card h-100">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="ts-card-icon flex-shrink-0" style="background:var(--ts-success-light);color:var(--ts-success);">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-semibold mb-1">Admin Dashboard</h5>
+                            <span class="badge" style="background:var(--ts-success-light);color:var(--ts-success);font-size:.75rem;">Live</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">Full CRUD for worksheets, templates, standards, API keys, and usage analytics — all in a dedicated admin area.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="ts-card h-100">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="ts-card-icon flex-shrink-0" style="background:var(--ts-success-light);color:var(--ts-success);">
+                            <i class="bi bi-bookmarks"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-semibold mb-1">Standards Alignment</h5>
+                            <span class="badge" style="background:var(--ts-success-light);color:var(--ts-success);font-size:.75rem;">Live</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">Common Core Standards database with Bloom's Taxonomy integration. Every worksheet is aligned to grade-level learning objectives.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="ts-card h-100">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="ts-card-icon flex-shrink-0" style="background:var(--ts-success-light);color:var(--ts-success);">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-semibold mb-1">Logging &amp; Monitoring</h5>
+                            <span class="badge" style="background:var(--ts-success-light);color:var(--ts-success);font-size:.75rem;">Live</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">Serilog structured logging with LLM interaction logs, performance metrics, daily cost limits, and usage analytics.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="ts-card h-100">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="ts-card-icon flex-shrink-0" style="background:var(--ts-success-light);color:var(--ts-success);">
+                            <i class="bi bi-palette"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-semibold mb-1">Modern UI Redesign</h5>
+                            <span class="badge" style="background:var(--ts-success-light);color:var(--ts-success);font-size:.75rem;">Live</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">Teacher-first design system with indigo/amber palette, mobile-first responsive layout, and running on .NET 10 with webpack asset pipeline.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Executive Summary -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4">
-                <h2 class="h3 mb-0 text-success">
-                    <i class="bi bi-check-circle-fill me-2"></i>Project Completion Status
-                </h2>
+<!-- Worksheet Types -->
+<div class="mb-5">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <span style="background:var(--ts-success);width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block;"></span>
+        <h2 class="h4 mb-0 fw-bold">Supported Worksheet Types</h2>
+        <hr class="flex-grow-1 mb-0">
+    </div>
+    <div class="row g-3">
+        @{
+            var worksheetTypes = new[]
+            {
+                new { Icon = "bi-book", Label = "Reading Comprehension", Detail = "Vocabulary exercises, deep questions, character analysis, theme exploration" },
+                new { Icon = "bi-pencil-square", Label = "Grammar Focus", Detail = "Rules in context, practice exercises, sentence structure activities" },
+                new { Icon = "bi-lightbulb", Label = "Creative Writing", Detail = "Prompts, story planning templates, original composition guides" },
+                new { Icon = "bi-search", Label = "Literary Analysis", Detail = "Comparison charts, cause-and-effect, argument evaluation" },
+                new { Icon = "bi-journal-text", Label = "Vocabulary Builder", Detail = "Context-based exercises, definitions, usage in sentences" },
+                new { Icon = "bi-bar-chart-steps", Label = "Critical Thinking", Detail = "Evidence assessment, source analysis, reasoning frameworks" },
+            };
+        }
+        @foreach (var t in worksheetTypes)
+        {
+            <div class="col-sm-6 col-lg-4">
+                <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background:var(--ts-surface-alt);border:1px solid var(--ts-border);">
+                    <i class="bi @t.Icon fs-5" style="color:var(--ts-primary);flex-shrink:0;"></i>
+                    <div>
+                        <div class="fw-semibold small">@t.Label</div>
+                        <div class="text-muted" style="font-size:.78rem;">@t.Detail</div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body p-4">
-                <p class="lead">TeachSpark is now a <strong>fully operational</strong> LLM-powered educational platform
-                    with complete worksheet generation capabilities, user management, and admin tools.
-                    All core features are implemented and working in production as an <strong>educational
-                        laboratory</strong>
-                    for iterating on teacher-driven improvements and research.</p>
+        }
+    </div>
+</div>
 
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <h5 class="text-success mb-3">✅ Completed & Working</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>OpenAI GPT-4o-mini
-                                integration</li>
-                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Real-time
-                                worksheet generation</li>
-                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>User
-                                authentication & authorization</li>
-                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Complete admin
-                                management system</li>
-                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Comprehensive
-                                logging & monitoring</li>
+<!-- In Development -->
+<div class="mb-5">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <span style="background:var(--ts-amber);width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block;"></span>
+        <h2 class="h4 mb-0 fw-bold">In Development</h2>
+        <hr class="flex-grow-1 mb-0">
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="ts-card h-100" style="border-left:3px solid var(--ts-amber);">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-people fs-5" style="color:var(--ts-amber-dark);"></i>
+                        <h5 class="fw-semibold mb-0">Student Cohort Management</h5>
+                    </div>
+                    <p class="text-muted small mb-3">Group students by grade level, Bloom's taxonomy readiness, and learning style. Generate differentiated worksheets for each cohort automatically.</p>
+                    <span class="badge" style="background:var(--ts-amber-light);color:var(--ts-amber-dark);font-size:.75rem;">In Progress</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="ts-card h-100" style="border-left:3px solid var(--ts-amber);">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-code-slash fs-5" style="color:var(--ts-amber-dark);"></i>
+                        <h5 class="fw-semibold mb-0">REST API Endpoints</h5>
+                    </div>
+                    <p class="text-muted small mb-3">Programmatic access to worksheet generation, template management, and analytics. Enables LMS integrations and third-party tooling.</p>
+                    <span class="badge" style="background:var(--ts-amber-light);color:var(--ts-amber-dark);font-size:.75rem;">In Progress</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="ts-card h-100" style="border-left:3px solid var(--ts-amber);">
+                <div class="ts-card-body">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-chat-dots fs-5" style="color:var(--ts-amber-dark);"></i>
+                        <h5 class="fw-semibold mb-0">Teacher Feedback Loop</h5>
+                    </div>
+                    <p class="text-muted small mb-3">In-app feedback on generated worksheets feeds directly into prompt refinement. Teacher ratings guide model fine-tuning priorities.</p>
+                    <span class="badge" style="background:var(--ts-amber-light);color:var(--ts-amber-dark);font-size:.75rem;">In Progress</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tech Stack -->
+<div class="mb-5">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <span style="background:var(--ts-primary);width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block;"></span>
+        <h2 class="h4 mb-0 fw-bold">Technical Stack</h2>
+        <hr class="flex-grow-1 mb-0">
+    </div>
+    <div class="row g-3">
+        @{
+            var stackItems = new[]
+            {
+                new { Layer = "Platform", Items = new[] { ".NET 10 / ASP.NET Core", "Razor MVC + Razor Pages", "Entity Framework Core 10", "SQLite (production-ready)" } },
+                new { Layer = "Frontend", Items = new[] { "Bootstrap 5 + Bootstrap Icons", "Webpack 5 asset pipeline", "Custom SCSS design system", "Mobile-first responsive" } },
+                new { Layer = "AI & Services", Items = new[] { "Microsoft.Extensions.AI", "OpenAI GPT-4o-mini", "Rate limiting & cost caps", "Caching & retry logic" } },
+                new { Layer = "Identity & Auth", Items = new[] { "ASP.NET Core Identity", "Cookie auth (14-day sliding)", "Role-based admin area", "Secure session management" } },
+            };
+        }
+        @foreach (var s in stackItems)
+        {
+            <div class="col-sm-6 col-lg-3">
+                <div class="ts-card h-100">
+                    <div class="ts-card-body">
+                        <h6 class="fw-bold mb-3" style="color:var(--ts-primary);">@s.Layer</h6>
+                        <ul class="list-unstyled mb-0">
+                            @foreach (var item in s.Items)
+                            {
+                                <li class="d-flex align-items-start gap-2 mb-2 small text-muted">
+                                    <i class="bi bi-check2 mt-1 flex-shrink-0" style="color:var(--ts-success);"></i>
+                                    @item
+                                </li>
+                            }
                         </ul>
-                        <h5 class="text-warning mb-3">🔄 In Development</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2"><i class="bi bi-clock-fill text-warning me-2"></i>Complete API endpoints
-                            </li>
-                            <li class="mb-2"><i class="bi bi-clock-fill text-warning me-2"></i>Student cohort management
-                            </li>
-                            <li class="mb-2"><i class="bi bi-clock-fill text-warning me-2"></i>Teacher feedback
-                                integration</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="text-success mb-3">Educational Lab Status</h5>
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <div class="text-center p-3 bg-light rounded">
-                                    <div class="h2 text-success mb-1">Core</div>
-                                    <small class="text-muted">Features Ready</small>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text-center p-3 bg-light rounded">
-                                    <div class="h2 text-warning mb-1">Lab</div>
-                                    <small class="text-muted">Research Phase</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3 p-2 bg-warning bg-opacity-10 rounded">
-                            <small class="text-warning">
-                                <i class="bi bi-lightbulb me-1"></i>
-                                Iterating based on actual teacher feedback and classroom experience
-                            </small>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
 </div>
 
-<!-- Implemented Features -->
-<div class="row mb-5">
-    <div class="col-12">
-        <h2 class="h3 mb-4 text-success">
-            <i class="bi bi-gear-fill me-2"></i>✅ Fully Implemented & Working Features
-        </h2>
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                                <i class="bi bi-robot text-success fs-4"></i>
-                            </div>
-                            <h5 class="mb-0">✅ OpenAI Integration</h5>
-                        </div>
-                        <p class="text-muted">Live GPT-4o-mini integration with full worksheet generation,
-                            cost tracking, token usage monitoring, and comprehensive error handling.</p>
-                        <small class="text-success"><strong>Status:</strong> Operational in Production</small>
+<!-- Planned -->
+<div class="mb-5">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <span style="background:var(--ts-border-dark);width:12px;height:12px;border-radius:50%;flex-shrink:0;display:inline-block;"></span>
+        <h2 class="h4 mb-0 fw-bold">On the Horizon</h2>
+        <hr class="flex-grow-1 mb-0">
+    </div>
+    <div class="row g-4">
+        @{
+            var planned = new[]
+            {
+                new { Icon = "bi-star", Title = "Worksheet Rating &amp; Favorites", Desc = "Teachers save, rate, and remix worksheets. High-rated prompts surface more often in future generation." },
+                new { Icon = "bi-printer", Title = "Print-Optimised Export", Desc = "One-click PDF with classroom-ready formatting — proper fonts, line spacing, and answer-key generation." },
+                new { Icon = "bi-person-lines-fill", Title = "Differentiated Output", Desc = "Same topic, three reading levels. Generate scaffolded, standard, and enrichment versions simultaneously." },
+                new { Icon = "bi-bar-chart", Title = "Usage &amp; Impact Analytics", Desc = "Track which worksheet types teachers use most, generation latency trends, and AI cost-per-worksheet metrics." },
+            };
+        }
+        @foreach (var p in planned)
+        {
+            <div class="col-sm-6 col-lg-3">
+                <div class="ts-card h-100" style="opacity:.85;">
+                    <div class="ts-card-body">
+                        <i class="bi @p.Icon fs-4 mb-3 d-block" style="color:var(--ts-text-muted);"></i>
+                        <h6 class="fw-semibold mb-2">@Html.Raw(p.Title)</h6>
+                        <p class="text-muted small mb-0">@p.Desc</p>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                                <i class="bi bi-person-check text-success fs-4"></i>
-                            </div>
-                            <h5 class="mb-0">✅ User Management</h5>
-                        </div>
-                        <p class="text-muted">Complete ASP.NET Core Identity implementation with registration,
-                            login, profile management, and secure session handling.</p>
-                        <small class="text-success"><strong>Status:</strong> Fully Functional</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                                <i class="bi bi-shield-check text-success fs-4"></i>
-                            </div>
-                            <h5 class="mb-0">✅ Admin Dashboard</h5>
-                        </div>
-                        <p class="text-muted">Comprehensive admin area with full CRUD operations for worksheets,
-                            templates, standards, API keys, and usage analytics.</p>
-                        <small class="text-success"><strong>Status:</strong> Production Ready</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                                <i class="bi bi-database-check text-success fs-4"></i>
-                            </div>
-                            <h5 class="mb-0">✅ Database System</h5>
-                        </div>
-                        <p class="text-muted">Full Entity Framework Core implementation with SQLite, complete
-                            migrations, seeded data, and optimized queries.</p>
-                        <small class="text-success"><strong>Status:</strong> Production Database</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                                <i class="bi bi-file-text-fill text-success fs-4"></i>
-                            </div>
-                            <h5 class="mb-0">✅ Worksheet Generation</h5>
-                        </div>
-                        <p class="text-muted">Real-time AI-powered worksheet creation with Common Core alignment,
-                            Bloom's taxonomy levels, and multiple format support.</p>
-                        <small class="text-success"><strong>Status:</strong> Live & Generating</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-success border-2">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-                                <i class="bi bi-graph-up text-success fs-4"></i>
-                            </div>
-                            <h5 class="mb-0">✅ Logging & Analytics</h5>
-                        </div>
-                        <p class="text-muted">Comprehensive Serilog implementation with detailed LLM interaction
-                            logging, performance monitoring, and usage analytics.</p>
-                        <small class="text-success"><strong>Status:</strong> Monitoring Active</small>
-                    </div>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
 
-<!-- Technical Implementation -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4">
-                <h2 class="h3 mb-0 text-success">
-                    <i class="bi bi-diagram-3 me-2"></i>✅ Production Technical Stack
-                </h2>
-            </div>
-            <div class="card-body p-4">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <h5 class="text-success mb-3">✅ Core Infrastructure</h5>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <div class="border border-success rounded p-3">
-                                    <h6 class="text-success mb-2">ASP.NET Core 9.0 Platform</h6>
-                                    <ul class="list-unstyled mb-0 small">
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> MVC Pattern with Razor
-                                            Pages</li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Bootstrap 5 Responsive
-                                            UI</li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Webpack Asset Pipeline
-                                        </li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> JWT Authentication</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="border border-success rounded p-3">
-                                    <h6 class="text-success mb-2">Database & Identity</h6>
-                                    <ul class="list-unstyled mb-0 small">
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> SQLite with EF Core 9.0
-                                        </li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> ASP.NET Core Identity
-                                        </li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Complete Migration
-                                            System</li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Seeded Reference Data
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <h5 class="text-success mb-3">✅ AI & Services</h5>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <div class="border border-success rounded p-3">
-                                    <h6 class="text-success mb-2">OpenAI Integration</h6>
-                                    <ul class="list-unstyled mb-0 small">
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Microsoft.Extensions.AI
-                                        </li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> GPT-4o-mini Model</li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Cost & Token Tracking
-                                        </li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Comprehensive Error
-                                            Handling</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="border border-success rounded p-3">
-                                    <h6 class="text-success mb-2">Logging & Monitoring</h6>
-                                    <ul class="list-unstyled mb-0 small">
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Serilog Structured
-                                            Logging</li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> LLM Interaction Logs
-                                        </li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Performance Metrics
-                                        </li>
-                                        <li><i class="bi bi-check-circle-fill text-success"></i> Usage Analytics</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Live Worksheet Generation -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4">
-                <h2 class="h3 mb-0 text-success">
-                    <i class="bi bi-lightning-charge me-2"></i>✅ Live Worksheet Generation System
-                </h2>
-            </div>
-            <div class="card-body p-4">
-                <div class="row g-4">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="card border-start border-4 border-success">
-                            <div class="card-body">
-                                <h6 class="text-success fw-bold">✅ Basic Comprehension</h6>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Vocabulary exercises with
-                                        definitions</li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Reading comprehension with
-                                        questions</li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Character identification
-                                        worksheets</li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Theme exploration activities
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="card border-start border-4 border-success">
-                            <div class="card-body">
-                                <h6 class="text-success fw-bold">✅ Analysis & Application</h6>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Grammar practice with
-                                        examples</li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Literary analysis worksheets
-                                    </li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Comparison and contrast
-                                        charts</li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Cause-and-effect exercises
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="card border-start border-4 border-success">
-                            <div class="card-body">
-                                <h6 class="text-success fw-bold">✅ Critical Evaluation</h6>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Argument evaluation forms
-                                    </li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Source analysis worksheets
-                                    </li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Critical thinking exercises
-                                    </li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Evidence assessment tools
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="card border-start border-4 border-success">
-                            <div class="card-body">
-                                <h6 class="text-success fw-bold">✅ Creative Synthesis</h6>
-                                <ul class="list-unstyled mb-0 small">
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Creative writing prompts
-                                    </li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Story planning templates
-                                    </li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Original composition guides
-                                    </li>
-                                    <li><i class="bi bi-check-circle text-success me-2"></i>Project design frameworks
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 p-3 bg-success bg-opacity-10 rounded">
-                    <h6 class="text-success mb-2">🚀 Live Features</h6>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Real-time generation (30-60
-                                    seconds)</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Common Core Standards
-                                    integration</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Bloom's Taxonomy alignment
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Difficulty level
-                                    customization</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Template-based generation
-                                </li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Markdown to HTML rendering
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Project Timeline - Completed -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4">
-                <h2 class="h3 mb-0 text-success">
-                    <i class="bi bi-check-circle-fill me-2"></i>✅ Development Completed Successfully
-                </h2>
-            </div>
-            <div class="card-body p-4">
-                <div class="row g-4">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="text-center">
-                            <div class="bg-success bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center"
-                                style="width: 80px; height: 80px;">
-                                <i class="bi bi-check-circle-fill text-success fs-1"></i>
-                            </div>
-                            <h6 class="mt-3 mb-2 text-success">✅ Foundation Phase</h6>
-                            <p class="small text-muted mb-0">ASP.NET Core 9.0 setup, SQLite database with full
-                                migrations,
-                                OpenAI integration, and core worksheet generation system</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="text-center">
-                            <div class="bg-success bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center"
-                                style="width: 80px; height: 80px;">
-                                <i class="bi bi-check-circle-fill text-success fs-1"></i>
-                            </div>
-                            <h6 class="mt-3 mb-2 text-success">✅ Core Features</h6>
-                            <p class="small text-muted mb-0">Bloom's Taxonomy integration, Common Core standards
-                                database,
-                                template system, and real-time worksheet generation</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="text-center">
-                            <div class="bg-success bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center"
-                                style="width: 80px; height: 80px;">
-                                <i class="bi bi-check-circle-fill text-success fs-1"></i>
-                            </div>
-                            <h6 class="mt-3 mb-2 text-success">✅ Advanced Features</h6>
-                            <p class="small text-muted mb-0">Complete admin dashboard, user management system,
-                                comprehensive logging, and analytics implementation</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="text-center">
-                            <div class="bg-success bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center"
-                                style="width: 80px; height: 80px;">
-                                <i class="bi bi-rocket-takeoff-fill text-success fs-1"></i>
-                            </div>
-                            <h6 class="mt-3 mb-2 text-success">🚀 Production Launch</h6>
-                            <p class="small text-muted mb-0">Live production deployment with full functionality,
-                                monitoring systems active, and ready for teachers to use</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 p-3 bg-success bg-opacity-10 rounded">
-                    <h6 class="text-success mb-2">🎉 Project Completion Summary</h6>
-                    <p class="mb-2">All planned features have been successfully implemented and are operational in
-                        production.
-                        The TeachSpark platform is now ready for teacher use with:</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Real-time AI worksheet
-                                    generation</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Complete user
-                                    authentication system</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Full admin management
-                                    interface</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Comprehensive logging &
-                                    monitoring</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Educational standards
-                                    integration</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Production-ready deployment
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- API Endpoints -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4">
-                <h2 class="h3 mb-0 text-warning">
-                    <i class="bi bi-code-slash me-2"></i>🔄 API & Integration Development (In Progress)
-                </h2>
-            </div>
-            <div class="card-body p-4">
-                <div class="alert alert-warning mb-4">
-                    <i class="bi bi-info-circle me-2"></i>
-                    <strong>Development Status:</strong> Core API endpoints are functional but not yet complete.
-                    Full API documentation and expanded integration features are planned for future iterations.
-                </div>
-                <div class="row g-3">
-                    <div class="col-lg-6">
-                        <div class="card border-success">
-                            <div class="card-header bg-success bg-opacity-10">
-                                <h6 class="mb-0 text-success">✅ Working Endpoints</h6>
-                            </div>
-                            <div class="card-body p-3">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <code class="text-success">POST /api/worksheets/generate</code>
-                                    <span class="badge bg-success">Live</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <code class="text-success">GET /api/worksheets/{id}</code>
-                                    <span class="badge bg-success">Live</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <code class="text-success">GET /Admin/Dashboard</code>
-                                    <span class="badge bg-success">Live</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card border-warning">
-                            <div class="card-header bg-warning bg-opacity-10">
-                                <h6 class="mb-0 text-warning">🔄 Planned API Features</h6>
-                            </div>
-                            <div class="card-body p-3">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <code class="text-muted">GET /api/cohorts</code>
-                                    <span class="badge bg-warning">Planned</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <code class="text-muted">POST /api/cohorts/create</code>
-                                    <span class="badge bg-warning">Planned</span>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <code class="text-muted">GET /api/analytics/usage</code>
-                                    <span class="badge bg-warning">Planned</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 p-3 bg-warning bg-opacity-10 rounded">
-                    <h6 class="text-warning mb-2">🔌 Integration Development Status</h6>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Basic OpenAI API
-                                    integration</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Core authentication
-                                    endpoints</li>
-                                <li><i class="bi bi-clock-fill text-warning me-2"></i>Extended API documentation</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-clock-fill text-warning me-2"></i>Student cohort APIs</li>
-                                <li><i class="bi bi-clock-fill text-warning me-2"></i>Advanced analytics endpoints</li>
-                                <li><i class="bi bi-clock-fill text-warning me-2"></i>Webhook support</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Live Metrics & Performance -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4">
-                <h2 class="h3 mb-0 text-success">
-                    <i class="bi bi-graph-up me-2"></i>✅ Live System Metrics & Performance
-                </h2>
-            </div>
-            <div class="card-body p-4">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="text-center p-4 bg-success bg-opacity-10 rounded">
-                            <div class="h2 text-success mb-1">100%</div>
-                            <small class="text-muted">System Uptime</small>
-                            <p class="small text-success mt-2 mb-0">All core features operational</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="text-center p-4 bg-success bg-opacity-10 rounded">
-                            <div class="h2 text-success mb-1">&lt;60s</div>
-                            <small class="text-muted">Generation Time</small>
-                            <p class="small text-success mt-2 mb-0">Average worksheet creation</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="text-center p-4 bg-success bg-opacity-10 rounded">
-                            <div class="h2 text-success mb-1">Live</div>
-                            <small class="text-muted">OpenAI API</small>
-                            <p class="small text-success mt-2 mb-0">Real-time AI integration</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 p-3 bg-success bg-opacity-10 rounded">
-                    <h6 class="text-success mb-2">📊 Production Capabilities</h6>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Multi-user concurrent
-                                    access</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Secure session management
-                                </li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Comprehensive error
-                                    handling</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="list-unstyled mb-0 small">
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Real-time monitoring &
-                                    logging</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Cost tracking &
-                                    optimization</li>
-                                <li><i class="bi bi-check-circle-fill text-success me-2"></i>Scalable infrastructure
-                                    ready</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Future Expansion & Research -->
-<div class="row mb-5">
-    <div class="col-12">
-        <div class="card border-0 shadow-sm bg-gradient"
-            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            <div class="card-body p-5 text-white">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <h2 class="h3 mb-3">Educational Lab: Research & Development Roadmap</h2>
-                        <p class="mb-4">As an educational laboratory, TeachSpark focuses on iterative improvements
-                            based on real teacher feedback and classroom experience rather than commercial product
-                            development.</p>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5 class="mb-2">🔬 Research Focus Areas</h5>
-                                <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>Teacher workflow optimization
-                                    </li>
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>Student engagement metrics
-                                    </li>
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>AI prompt effectiveness
-                                        studies</li>
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>Accessibility improvements
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <h5 class="mb-2">👥 Student Cohort System</h5>
-                                <ul class="list-unstyled">
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>Grade-level grouping</li>
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>Bloom's taxonomy level
-                                        clustering</li>
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>Learning style adaptation
-                                    </li>
-                                    <li class="mb-2"><i class="bi bi-arrow-right me-2"></i>Progress tracking by cohort
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 p-3 bg-white bg-opacity-20 rounded">
-                            <h6 class="mb-2">🔄 Iterative Development Approach</h6>
-                            <p class="mb-0 small">
-                                Development priorities are driven by actual teacher feedback, classroom testing results,
-                                and observed student learning outcomes rather than traditional product roadmaps.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 text-center">
-                        <i class="bi bi-flask display-1 opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Call to Action -->
-<div class="row">
-    <div class="col-12">
-        <div class="text-center p-5 bg-light rounded-3">
-            <h3 class="mb-3">Join Our Educational Research Laboratory</h3>
-            <p class="lead text-muted mb-4">Help us improve AI-powered education through teacher feedback,
-                classroom testing, and collaborative research in student cohort management and personalized learning.
+<!-- Lab Philosophy + CTA -->
+<div class="ts-hero-section" style="margin-left:calc(var(--bs-gutter-x)*-.5);margin-right:calc(var(--bs-gutter-x)*-.5);border-radius:var(--ts-radius-lg);">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+            <span class="ts-label mb-2" style="color:rgba(255,255,255,.65);">Educational Laboratory</span>
+            <h2 class="h3 text-white fw-bold mb-3">Built with Teachers, for Teachers</h2>
+            <p class="mb-4" style="color:rgba(255,255,255,.8);max-width:580px;">
+                TeachSpark isn't driven by a product roadmap — it's driven by what teachers actually need in the classroom.
+                Every feature starts as a conversation with an educator.
+                If you have ideas, friction points, or requests, we want to hear them.
             </p>
-            <div class="d-flex flex-wrap justify-content-center gap-3">
-                <a href="#" class="btn btn-primary btn-lg">Try the Lab</a>
-                <a href="#" class="btn btn-outline-primary btn-lg">Provide Feedback</a>
-                <a href="#" class="btn btn-outline-secondary btn-lg">Research Partnership</a>
+            <div class="d-flex flex-wrap gap-3">
+                <a asp-area="" asp-controller="WorksheetGenerator" asp-action="Index" class="btn btn-light fw-semibold px-4">
+                    <i class="bi bi-magic me-2"></i>Try the Generator
+                </a>
+                <a href="https://github.com/markhazleton/TeachSpark" target="_blank" class="btn btn-outline-light fw-semibold px-4">
+                    <i class="bi bi-github me-2"></i>GitHub
+                </a>
             </div>
-            <div class="mt-3">
-                <small class="text-muted">
-                    <i class="bi bi-lightbulb me-1"></i>
-                    This is an educational research platform, not a commercial product
-                </small>
-            </div>
+        </div>
+        <div class="col-lg-4 text-center d-none d-lg-block">
+            <i class="bi bi-flask" style="font-size:6rem;color:rgba(255,255,255,.2);"></i>
         </div>
     </div>
 </div>

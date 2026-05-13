@@ -21057,7 +21057,16 @@ textarea.form-control-lg {
   --ts-brand: #4f46e5;
   --ts-brand-dark: #3730a3;
   --ts-brand-light: #818cf8;
+  --ts-primary: #4f46e5;
   --ts-amber: #f59e0b;
+  --ts-amber-dark: #d97706;
+  --ts-amber-light: rgba(245, 158, 11, 0.13);
+  --ts-success: #059669;
+  --ts-success-light: rgba(5, 150, 105, 0.1);
+  --ts-border: #e2e8f0;
+  --ts-border-dark: #64748b;
+  --ts-surface-alt: #f8fafc;
+  --ts-text-muted: #64748b;
   --ts-shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(79,70,229,0.06);
   --ts-shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(79,70,229,0.1);
   --ts-shadow-lg: 0 8px 24px rgba(0,0,0,0.1), 0 24px 48px rgba(79,70,229,0.12);
@@ -21437,6 +21446,93 @@ main > .container {
   color: #64748b;
   font-size: 0.92rem;
   margin: 0.2rem 0 0;
+}
+
+.ts-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4f46e5;
+}
+
+.ts-page-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+.ts-page-subtitle {
+  font-size: 1.05rem;
+  color: #64748b;
+  line-height: 1.65;
+  max-width: 640px;
+  margin: 0;
+}
+
+.ts-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(79,70,229,0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.ts-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(79,70,229,0.1);
+  transform: translateY(-2px);
+}
+
+.ts-card-body {
+  padding: 1.5rem;
+}
+
+.ts-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  background: rgba(79, 70, 229, 0.1);
+  color: #4f46e5;
+  flex-shrink: 0;
+}
+
+.ts-hero-section {
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 50%, rgb(44.36492891, 38.7184834123, 131.4815165877) 100%);
+  border-radius: 1rem;
+  padding: 3rem 2.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+.ts-hero-section::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 240px;
+  height: 240px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.ts-hero-section::after {
+  content: "";
+  position: absolute;
+  bottom: -60px;
+  left: 10%;
+  width: 180px;
+  height: 180px;
+  background: rgba(245, 158, 11, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .ts-challenge-card {

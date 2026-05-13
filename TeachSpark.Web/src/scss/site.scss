@@ -68,15 +68,24 @@ $navbar-nav-link-padding-x: 0.875rem;
 
 // ── CSS Custom Properties ────────────────────────────────────
 :root {
-  --ts-brand:       #{$ts-indigo};
-  --ts-brand-dark:  #{$ts-indigo-dark};
-  --ts-brand-light: #{$ts-indigo-light};
-  --ts-amber:       #{$ts-amber};
-  --ts-shadow-sm:   0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(79,70,229,0.06);
-  --ts-shadow-md:   0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(79,70,229,0.1);
-  --ts-shadow-lg:   0 8px 24px rgba(0,0,0,0.1), 0 24px 48px rgba(79,70,229,0.12);
-  --ts-radius:      0.75rem;
-  --ts-radius-lg:   1rem;
+  --ts-brand:         #{$ts-indigo};
+  --ts-brand-dark:    #{$ts-indigo-dark};
+  --ts-brand-light:   #{$ts-indigo-light};
+  --ts-primary:       #{$ts-indigo};
+  --ts-amber:         #{$ts-amber};
+  --ts-amber-dark:    #{$ts-amber-dark};
+  --ts-amber-light:   #{rgba($ts-amber, 0.13)};
+  --ts-success:       #{$ts-green};
+  --ts-success-light: #{rgba($ts-green, 0.1)};
+  --ts-border:        #{$ts-slate-200};
+  --ts-border-dark:   #{$ts-slate-500};
+  --ts-surface-alt:   #{$ts-slate-50};
+  --ts-text-muted:    #{$ts-slate-500};
+  --ts-shadow-sm:     0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(79,70,229,0.06);
+  --ts-shadow-md:     0 4px 12px rgba(0,0,0,0.08), 0 12px 32px rgba(79,70,229,0.1);
+  --ts-shadow-lg:     0 8px 24px rgba(0,0,0,0.1), 0 24px 48px rgba(79,70,229,0.12);
+  --ts-radius:        0.75rem;
+  --ts-radius-lg:     1rem;
 }
 
 // ── Google Font (Inter) ───────────────────────────────────────
@@ -471,6 +480,103 @@ main > .container {
     color: $ts-slate-500;
     font-size: 0.92rem;
     margin: 0.2rem 0 0;
+  }
+}
+
+// Standalone page header text helpers
+.ts-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $ts-indigo;
+}
+
+.ts-page-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: $ts-slate-900;
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+.ts-page-subtitle {
+  font-size: 1.05rem;
+  color: $ts-slate-500;
+  line-height: 1.65;
+  max-width: 640px;
+  margin: 0;
+}
+
+// ============================================================
+// TS CARD COMPONENT
+// ============================================================
+.ts-card {
+  background: #fff;
+  border-radius: var(--ts-radius);
+  border: 1px solid $ts-slate-200;
+  box-shadow: var(--ts-shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--ts-shadow-md);
+    transform: translateY(-2px);
+  }
+}
+
+.ts-card-body {
+  padding: 1.5rem;
+}
+
+.ts-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  background: rgba($ts-indigo, 0.1);
+  color: $ts-indigo;
+  flex-shrink: 0;
+}
+
+// ============================================================
+// HERO SECTION VARIANT (full-width gradient)
+// ============================================================
+.ts-hero-section {
+  background: linear-gradient(135deg, $ts-indigo 0%, $ts-indigo-dark 50%, color.adjust($ts-indigo-dark, $lightness: -8%) 100%);
+  border-radius: var(--ts-radius-lg);
+  padding: 3rem 2.5rem;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  margin-top: 2rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 240px;
+    height: 240px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: 10%;
+    width: 180px;
+    height: 180px;
+    background: rgba($ts-amber, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
   }
 }
 
