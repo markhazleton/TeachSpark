@@ -116,6 +116,8 @@ try
 }
 finally
 {
-    // Cleanup logging resources
     Console.WriteLine("Application shutting down...");
 }
+
+// Expose Program to the test assembly (WebApplicationFactory<Program>)
+public partial class Program { }
