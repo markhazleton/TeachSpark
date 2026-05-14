@@ -5,10 +5,6 @@ const bootstrap = require('bootstrap');
 const $ = require('jquery');
 window.$ = window.jQuery = $;
 
-// Import DataTables
-require('datatables.net');
-require('datatables.net-bs5');
-
 // Main application JavaScript
 (function () {
     'use strict';
@@ -50,10 +46,13 @@ require('datatables.net-bs5');
         initializeDataTables();
     }
 
-    // Initialize DataTables for all tables with .datatable class
+    // Initialize DataTables — only loaded on pages that actually have .datatable tables
     function initializeDataTables() {
-        // Check if DataTables is available and there are tables to initialize
-        if (typeof $.fn.DataTable !== 'undefined') {
+        if (!document.querySelector('.datatable')) {
+            return;
+        }
+
+        import(/* webpackChunkName: "datatables" */ 'datatables.net-bs5').then(function () {
             $('.datatable').each(function () {
                 if (!$.fn.DataTable.isDataTable(this)) {
                     $(this).DataTable({
@@ -77,7 +76,7 @@ require('datatables.net-bs5');
                     });
                 }
             });
-        }
+        });
     }
 
     // Set active navigation item based on current page

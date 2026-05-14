@@ -42,8 +42,14 @@ bld/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
-# Uncomment if you have tasks that create the project's static files in wwwroot
-#wwwroot/
+# Webpack-compiled assets (run `npm run build` in TeachSpark.Web to generate)
+TeachSpark.Web/wwwroot/js/
+TeachSpark.Web/wwwroot/css/
+TeachSpark.Web/wwwroot/fonts/
+TeachSpark.Web/wwwroot/images/
+TeachSpark.Web/wwwroot/favicon.ico
+TeachSpark.Web/wwwroot/assets-manifest.json
+!TeachSpark.Web/wwwroot/**/.gitkeep
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/

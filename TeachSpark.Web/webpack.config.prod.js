@@ -275,7 +275,7 @@ module.exports = {
                 vendor: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
-                    chunks: 'all',
+                    chunks: 'initial',
                     priority: 10,
                     reuseExistingChunk: true
                 },
@@ -314,8 +314,8 @@ module.exports = {
         }
     },
     performance: {
-        maxAssetSize: 250000,
-        maxEntrypointSize: 250000,
+        maxAssetSize: 350000,
+        maxEntrypointSize: 600000,
         hints: 'warning'
     },
     stats: {
