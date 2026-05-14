@@ -1,1 +1,2 @@
-﻿<script src="~/js/validation.js" asp-append-version="true"></script>
+﻿@inject TeachSpark.Web.IAssetsService AssetsService
+<script src="@AssetsService.GetAssetPath("validation.js")"></script>

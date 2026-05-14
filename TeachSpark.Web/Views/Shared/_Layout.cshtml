@@ -129,6 +129,10 @@
         </div>
     </footer>
 
+    <script src="@AssetsService.GetAssetPath("runtime.js")"></script>
+    <script src="@AssetsService.GetAssetPath("jquery.js")"></script>
+    <script src="@AssetsService.GetAssetPath("bootstrap.js")"></script>
+    <script src="@AssetsService.GetAssetPath("vendors.js")"></script>
     <script src="@AssetsService.GetAssetPath("site.js")"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
